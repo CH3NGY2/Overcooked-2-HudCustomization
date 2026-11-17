@@ -1,0 +1,66 @@
+{
+  "checkedAt": "2026-11-17T22:18:24.9307926+08:00",
+  "level": "static source and original DLL metadata and IL only; no new feature implementation",
+  "game": {
+    "path": "E:\\SteamLibrary\\steamapps\\common\\Overcooked! 2\\Overcooked2_Data\\Managed\\Assembly-CSharp.dll",
+    "sha256": "9BB6A3791331201D32CA89C3509F019A9780309DA7110002F04020E8491E1908",
+    "mvid": "114d606a-29d5-472c-8ebe-c2c20fbe3be3",
+    "methods": [
+      {
+        "signature": "System.Void TimeManager::SetPaused(TimeManager/PauseLayer,System.Boolean,System.Object)",
+        "access": "public"
+      },
+      {
+        "signature": "System.Void TimeManager::OnPauseStatusChange(TimeManager/PauseLayer,System.Boolean)",
+        "access": "private"
+      },
+      {
+        "signature": "System.Void TimeManager::Update()",
+        "access": "private"
+      },
+      {
+        "signature": "TimeManager/PauseLayer[] PauseMenuManager::GetLayersToPause()",
+        "access": "private"
+      },
+      {
+        "signature": "Suppressor PlayerControls::Suppress(UnityEngine.Object)",
+        "access": "public"
+      },
+      {
+        "signature": "System.Void PlayerControls::ReleaseSuppressor(Suppressor)",
+        "access": "public"
+      },
+      {
+        "signature": "System.Void ClientRoundTimer::Update()",
+        "access": "public"
+      }
+    ]
+  },
+  "modSettings": {
+    "path": "E:\\SteamLibrary\\steamapps\\common\\Overcooked! 2\\BepInEx\\plugins\\OC2ModSettings\\OC2ModSettings.dll",
+    "sha256": "0A61B5C40E6BC893C36628DF16E8D01D41DBD4DE9B5B5D3E35534813F304B8B1",
+    "guid": "com.ch3ngyz.plugin.overcooked2.modsettings",
+    "version": "1.1.1",
+    "registerAction": "System.IDisposable OC2ModSettings.ModSettingsPlugin::RegisterActionV1(System.String,System.String,System.Collections.Generic.IDictionary`2<System.String,System.Object>)",
+    "closePageField": "System.Boolean OC2ModSettings.RegisteredAction::ClosePage",
+    "runActionRelevantIL": [
+      "IL_0012: ldfld System.Boolean OC2ModSettings.RegisteredAction::ClosePage",
+      "IL_0021: callvirt System.Boolean BaseMenuBehaviour::Hide(System.Boolean,System.Boolean)",
+      "IL_0028: ldfld System.Action OC2ModSettings.RegisteredAction::Execute",
+      "IL_002d: callvirt System.Void System.Action::Invoke()"
+    ]
+  },
+  "designScope": [
+    "single action below Enabled, no fake persisted action value",
+    "ClosePage then editor entry",
+    "keyboard new press saves, excludes mouse and ignores entry activation until release",
+    "per-category relative offset shared by existing and future instances",
+    "native local pause; online full game pause not established"
+  ],
+  "notVerified": [
+    "button layout and actual invocation",
+    "freeze and unscaled editor interaction",
+    "input capture, persistence, pause cleanup",
+    "online visual snapshot preview"
+  ]
+}

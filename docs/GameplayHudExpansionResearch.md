@@ -158,11 +158,11 @@
 | 上/下边缘拖动 | 只改高度，对边位置保持不动。 |
 | 四角拖动 | 以对角为固定点，按开始拖动时的宽高比等比缩放。角落命中优先于边缘。 |
 | 悬停边缘/角落 | 画出轮廓与对应方向的缩放鼠标提示；建议命中带按参考分辨率缩放，初始可用1080p下8屏幕像素，实机再验。 |
-| 松开鼠标 | 一次提交本次最终布局并保存；拖动期间只预览。 |
-| Esc/窗口失焦/切关/打开其他交互面板 | 取消未提交手势并恢复按下前布局，释放自身指针/输入/光标占用；已经完成的布局不回滚。 |
+| 松开鼠标 | 结束本次手势，保留本轮编辑草稿并继续预览；统一保存退出的最新要求见 §10。 |
+| 键盘按键/窗口失焦/切关/打开其他交互面板 | 键盘按键按 §10 统一保存退出；失焦/切关/异常打断则取消本轮未保存草稿，并释放自身指针/输入/光标占用；已有落盘配置不回滚。 |
 | 编辑状态内“恢复原位” | 清除自定义布局启用标记并保存，回到当前 prefab 的原生位置尺寸，不猜统一默认像素。 |
 
-建议通过一个明确的入口进入/退出编辑状态；进入后显示可拖区域，退出后保持布局。可见入口与**隐藏持久数据**是两回事：用户要求隐藏的是保存的坐标/尺寸，不意味着不得提供编辑入口。入口形式与快捷键尚未产品定稿。
+通过总开关下唯一的“进入 HUD 编辑模式”动作进入；具体界面关闭、冻结、按键保存与同类全局应用规则已由本轮用户要求细化，见 §10。可见入口与**隐藏持久数据**是两回事：坐标/尺寸仍隐藏，不新增可见数值副本。
 
 **为什么需要专用交互状态**：原生 `T17StandaloneInputModule.Process → ProcessMouseEvent → ProcessMousePress` 已消费左键/拖动，表情轮也直接读 `Input.GetMouseButtonDown(0)`。设置页还会持有自己的光标与玩家输入占用。因此 HUD 编辑必须处理与暂停/ModSettings/表情轮的优先级、关闭恢复和点击透传；不能给每张图片随意加可点击组件、常驻占用 EventSystem 或只改 Cursor.visible。〔`GAME/T17StandaloneInputModule.cs:241-263,552-607,624-640`；`GAME/ClientEmoteWheel.cs:141-149,209-232`；本地 ModSettings `src/Native/GlobalSettingsHost.cs:43-62`、`src/Native/NativePage.Gameplay.cs:15-30,64-77`〕
 
@@ -187,7 +187,7 @@
 - 普通分数/普通倒计时跨关卡共用；双队分数分Team角色，生存倒计时/累计时间分角色。只对实际出现的角色应用，不因少一个控件写回零，也不把Horde混用到同一坐标。
 - 切换分辨率/宽高比时按当前安全区重建位置并做边界/最小尺寸约束，保存的是逻辑布局，不是上次屏幕的绝对像素；只拖尺寸不改变业务值。布局完全越界或非有限值需可恢复原位。
 - 所有位置/尺寸/启用标记均 `Browsable=false`，不通过 IsAdvanced伪装隐藏，不在 ModSettings里增加同义可见副本；cfg文本仍按正常BepInEx规则保留可编辑值。
-- 拖动时只改内存预览，松开后一次批量更新ConfigEntry并 `Config.Save()`；提交期间临时关闭该ConfigFile的 `SaveOnConfigSet`，finally还原原设置，避免多个键各保存一次。不能整个拖动期间关掉自动保存，影响别的设置。安装BepInEx 5.4.23.5的Cecil已确认公开Save/SaveOnConfigSet和自动保存调用链（§9）。
+- 拖动和松开后只保留本轮内存草稿，按键退出时才一次批量更新ConfigEntry并 `Config.Save()`（最新交互见 §10）；提交期间临时关闭该ConfigFile的 `SaveOnConfigSet`，finally还原原设置，避免多个键各保存一次。不能整个编辑期间关掉自动保存，影响别的设置。安装BepInEx 5.4.23.5的Cecil已确认公开Save/SaveOnConfigSet和自动保存调用链（§9）。
 
 ### 8.5 固定 HUD 的后续验收
 
@@ -202,3 +202,48 @@
 - 安装BepInEx检查：5.4.23.5，`ConfigFile.Save()` / `get_SaveOnConfigSet()` / `set_SaveOnConfigSet(bool)`均public；私有 `OnSettingChanged(object,ConfigEntryBase)` 的IL包含读取SaveOnConfigSet并调用Save。此为存储API可用性核验，不是新布局保存测试。
 - 外部一手参考（Unity 2017.4）：`https://docs.unity3d.com/2017.4/Documentation/ScriptReference/RectTransformUtility.ScreenPointToLocalPointInRectangle.html`（事件相机、平面命中语义）；`https://docs.unity3d.com/2017.4/Documentation/Manual/class-CanvasGroup.html`（组alpha与子元素alpha相乘、Ignore Parent Groups）。这些通用规则支持适配方向，不证明本游戏UI_Move自定义shader及资源的最终表现。
 - 当前只形成研究与源码访问证据，未改生产代码、配置、游戏文件、版本、远端或已发布包；无需用户重启。真实实现的编译、输入/几何、跨场景持久化和多人验收均待后续工作。
+
+## 10. 编辑入口细化：关闭设置、冻结、按键保存与同类全局调整
+
+本节记录用户对方案的最新细化和本轮可行性核验，**尚未实现**。生产代码、安装DLL、真实cfg和游戏进程均未改动。
+
+### 10.1 总开关下只放一个操作按钮
+
+- 使用独立 `client.Action` 动作行，名称建议“进入 HUD 编辑模式”；和总开关同属General分区，稳定排序建议总开关100、动作90，从而位于总开关正下方。无布尔勾选、无假ConfigEntry值、无重复入口；几何参数仍使用隐藏ConfigEntry。
+- 描述包含 `ClosePage=true`，由提供端先原生Hide，释放自己的页面、编辑器和输入占用，再同步执行HUD消费者的进入回调。不能直接销毁、关闭或反射操纵ModSettings的私有UI对象。
+- 本项目现有复制SDK已经有SupportsActions/Action；本地当前安装的ModSettings **1.1.1** 实际包含公开RegisterActionV1、RegisteredAction.ClosePage，且RunAction的IL确实是 `Hide → Execute.Invoke` 顺序。对应源码 `MODSETTINGS/src/Editors/EditorRow.Actions.cs:68-75` 与 `src/Native/NativePage.cs:139-147`；规范 `MODSETTINGS/docs/api-v1.md:63-91`。`MODSETTINGS = E:/code/OC2/OtherMOD/Overcooked-2-ModSettings`。因此本需求不必修改提供端。
+- 用CanExecute轻量检查总开关、厨房HUD已就绪、没有正在进行的编辑会话；具体在线冻结支持不能伪装已实现。动作名称、说明和屏幕提示接入本项目现有12语言/默认英文/游戏语言同步链；语言变化重新登记同一owner/actionId，先换租约再释放旧租约。
+
+### 10.2 编辑会话与按任意键保存
+
+建议会话顺序：`Idle → Entering（ModSettings已Hide）→ Editing → Saving → Leaving → Idle`，任何失败都进入统一清理。首次进入捕获已保存布局与本轮草稿、原生显示/输入/光标状态，退出只释放本会话所有权，不清空其他MOD的占用。
+
+1. ModSettings关闭后进入独立HUD编辑层，显示可编辑边框、鼠标和操作提示；当前先提供分数/倒计时。明确提示“拖动主体移动；拖动边框调整大小；按任意键保存并退出”。
+2. 进入时等待打开按钮产生的鼠标/键盘/手柄确认全部释放，再接受新的保存按键，防止点击进入或按住确认当帧立即退出。拖动期间鼠标仍用于移动/缩放，松手仅结束本次手势，不落盘、不退出。
+3. “任意键”解释为键盘新按下的按键（可扩展手柄按钮）；**不包括鼠标按键/滚轮**，否则第一次拖动就误保存退出。Unity 2017.4 `Input.anyKeyDown` 同时包含键盘和鼠标，因此不能直接拿它作为退出判断；应识别非鼠标键的down事件，先完成入口释放屏障。屏幕文案应明确“键盘任意键”。如果以后在编辑层添加数值输入框/分类快捷键，先由控件消费该键，不能输入首字即退出。
+4. 用户指定“任意键保存”，因此Esc也按保存退出处理；不同时把Esc定义为取消。若保存键出现时仍按住鼠标，先按当前指针结算手势，再保存最终草稿。
+5. 保存统一走一个提交入口：验证有限值/边界/类型，批量更新隐藏ConfigEntry并写盘一次，成功后恢复画面和鼠标/输入，保持新布局。保存失败必须显示错误并允许重试，不显示成功，也不丢失本轮草稿；失败或异常恢复输入/暂停不能依赖之后还会有一次Update。
+6. 编辑失焦、对象消失、断线、切关、插件禁用或异常退出，按中断取消本轮未提交草稿并恢复已有配置；释放自有暂停/光标/输入/预览对象，不能让玩家留在冻结画面。若进入前游戏已经暂停，退出编辑只恢复进入前的暂停状态，不擅自解除其他来源暂停。无需自动重新打开ModSettings。
+
+Unity一手API：`https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Input-anyKeyDown.html`（包含鼠标）；`https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Time-unscaledDeltaTime.html`（不依赖timeScale的编辑层时序）。本段是设计约束，尚无硬件输入或实机结果。
+
+### 10.3 “冻结画面”与联机边界
+
+**本地厨房暂停有原生入口**：实际DLL中 `TimeManager.SetPaused(PauseLayer,bool,object)` 是public，支持按owner仲裁；Main/UI/Camera具有不同LayerMask。`ClientRoundTimer.Update` 读取TimeManager默认层delta，暂停状态变化还会处理对应层Animator/粒子/物理等。编辑器应持有自己的暂停键、输入抑制和不依赖暂停计时的交互层；退出只释放自己的键。不能单独写 `Time.timeScale=0`：本游戏TimeManager.Update每帧会重写timeScale，而且现有原生暂停并不只靠timeScale。哪些实际层和prefab必须暂停需实机测量，不能仅凭枚举名承诺整幅画面冻结。〔`GAME/TimeManager.cs:25-28,38-49,65-92,146-226`；`GAME/ClientRoundTimer.cs:54-65`〕
+
+**有远程玩家时不是全房暂停**：原生PauseMenuManager.GetLayersToPause检测到远程玩家时只选Network；TimeManager.OnPauseStatusChange对Network直接return，并非停止服务器游戏推进。因此“隐藏面板+编辑”可在本地接入，但不能声称客户端能暂停主机/其他玩家，也不能用冻结网络收包冒充冻结画面。〔`GAME/PauseMenuManager.cs:170-180`；`GAME/TimeManager.cs:97-121`〕
+
+若要求联机时也呈现静止背景，建议另做**本地静态预览**：冻结显示快照并在独立编辑层显示可拖预览，后台会话仍继续；退出回到最新局面。快照必须排除被拖动元素原始图像，避免背景残影，且不能简单克隆带业务MonoBehaviour的整个对象（其Awake可能重订阅事件）。这是一条待验证路径，尚未核验捕获与遮挡资源，不把它写成已支持。严格“游戏时间一起停止”若作为硬要求，首版应只在无远程玩家时提供该编辑按钮，在线给出明确原因，不能静默降级。
+
+### 10.4 为切菜等悬浮条保留同一编辑入口
+
+共享编辑会话和手势处理，不为切菜条再造一套编辑模式。后续通过目标登记层接入明确类型：目标身份/类别、可用操作、当前视觉边界、读取基准、按草稿预览、提交配置和恢复；没有支持的目标类型不注册空壳UI或假业务对象。
+
+- **分数/倒计时**：保存各自角色的固定HUD布局，跨关卡恢复；移动分数不连带移动倒计时。
+- **切菜**：以“切菜工作进度”类别共享偏移/大小等草稿。拖动任意一条，计算相对其原生跟随点的屏幕XY增量，所有已登记切菜条实时应用同一增量；以后新建/复用的切菜条也读同一隐藏配置。不按食材、砧板、关卡或instanceID分别保存，且不能把所有条都写成同一个屏幕绝对位置。
+- **类别独立**：切菜变化不默认连带烹饪、洗碗或炉温，虽可复用底层展示能力，但各自有稳定类别和参数。屏幕二维拖动不能决定世界/目标局部Z；Z仍需明确的独立设置，不能暗中从二维坐标推导。
+- **没有实际切菜条**：将来可提供同类的纯展示样例入口；实际生成方式要在UI资源核验后确定，不能改生成配方/加工状态来强迫出现进度条。当前先保留目标登记/类别设计，不把样例克隆声称已验证。
+
+### 10.5 本轮核验范围
+
+只核对现有SDK源码、安装ModSettings 1.1.1的按钮关闭执行顺序、原始游戏暂停/输入抑制成员与计时消费链；原始游戏SHA256保持§1值，新增静态证据见 [hud-editor-entry-contracts.json](evidence/hud-editor-entry-contracts.json)。未编译、未创建按钮/编辑器、未操作游戏，无冻结截图、拖动几何、按键防误触、磁盘保存、暂停恢复、联机静态预览证据。
