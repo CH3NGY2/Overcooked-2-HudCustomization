@@ -1,12 +1,12 @@
 {
-  "checkedAt": "2026-11-18T00:43:18.5378213+08:00",
+  "checkedAt": "2026-11-18T01:48:26.5734720+08:00",
   "level": "static-metadata-and-compiled-IL; no Unity UI execution",
   "gameAssembly": "E:\\SteamLibrary\\steamapps\\common\\Overcooked! 2\\Overcooked2_Data\\Managed\\Assembly-CSharp.dll",
   "gameSha256": "9BB6A3791331201D32CA89C3509F019A9780309DA7110002F04020E8491E1908",
   "gameMvid": "114d606a-29d5-472c-8ebe-c2c20fbe3be3",
   "gameRuntime": "v2.0.50727",
   "pluginPath": "E:\\code\\OC2\\OtherMOD\\Overcooked-2-HudCustomization\\bin\\Release\\OC2HudCustomization.dll",
-  "pluginSha256": "2BAECB386F24B94423B2A6845A5DCC05FB9599033170237C78EF65ED2FD4E5FD",
+  "pluginSha256": "B66EABB8A93B8741BBAF51AAE76878B61FED71D806A3B8B615811684642B2048",
   "pluginGuid": "com.ch3ngyz.plugin.overcooked2.hudcustomization",
   "pluginVersion": "0.1.0",
   "assemblyVersion": "0.1.0.0",
@@ -115,6 +115,10 @@
     {
       "Signature": "System.Void PauseMenuManager::UpdateWhileClosed()",
       "Access": "private"
+    },
+    {
+      "Signature": "System.Boolean FrontendMenuBehaviour::Show(GamepadUser,BaseMenuBehaviour,UnityEngine.GameObject,System.Boolean)",
+      "Access": "public"
     }
   ],
   "fields": [
@@ -207,7 +211,7 @@
       "Access": "private"
     }
   ],
-  "directGameMemberReferences": 70,
+  "directGameMemberReferences": 77,
   "nonPublicDirectAccess": [],
   "dependencies": [
     "mscorlib",
@@ -217,9 +221,9 @@
     "UnityEngine.CoreModule",
     "UnityEngine.UI",
     "0Harmony",
-    "UnityEngine.TextRenderingModule",
     "UnityEngine.IMGUIModule",
     "UnityEngine.UIModule",
+    "UnityEngine.TextRenderingModule",
     "UnityEngine.AnimationModule"
   ],
   "languageContract": [

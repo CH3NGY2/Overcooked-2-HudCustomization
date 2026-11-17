@@ -1,0 +1,210 @@
+{
+  "checkedAt": "2026-11-18T01:55:51.741813+08:00",
+  "scope": "Native-artwork uGUI HUD editor, draggable panel, unified category selection/preview and original layout-option drafts. No new release or permanent installation.",
+  "plugin": {
+    "guid": "com.ch3ngyz.plugin.overcooked2.hudcustomization",
+    "version": "0.1.0",
+    "file": "bin/Release/OC2HudCustomization.dll",
+    "bytes": 150016,
+    "sha256": "B66EABB8A93B8741BBAF51AAE76878B61FED71D806A3B8B615811684642B2048"
+  },
+  "installationAfterRestoration": {
+    "bytes": 126464,
+    "sha256": "2BAECB386F24B94423B2A6845A5DCC05FB9599033170237C78EF65ED2FD4E5FD",
+    "containsNativePanel": false,
+    "description": "Previous HUD editor build restored; not the earlier 75776-byte release."
+  },
+  "configs": {
+    "visible": 9,
+    "hidden": 56,
+    "hiddenAttribute": "Browsable=false",
+    "newConfigKeys": 0,
+    "draftLayoutOptions": 8,
+    "previewPersisted": false,
+    "panelPositionPersistedToDisk": false
+  },
+  "nativeUi": {
+    "artworkSource": "FrontendRootMenu/FixedAspectRootCanvas/ScreenSpaceCanvas/GameOptions",
+    "artworkOwnership": "Owned Sprite and Texture2D copies; no native menu/callback clone",
+    "fontOwnership": "Identity-checked bundle22 lease, retaining native fallback dependencies; no dynamic Font copy or shared material mutation",
+    "input": "Owned uGUI Canvas, GraphicRaycaster and private EventSystem; existing T17/player suppression retained",
+    "categoryButtons": 10,
+    "totalButtons": 13,
+    "reusableNumberRows": 6,
+    "geometry": {
+      "uiWidth": 470,
+      "uiHeight": 836,
+      "scale": 2,
+      "pixelWidth": 940,
+      "pixelHeight": 1672,
+      "panelDragUiX": -120,
+      "panelDragUiDownY": 40,
+      "panelDragPixelX": -240,
+      "panelDragPixelDownY": 80
+    }
+  },
+  "checks": [
+    {
+      "command": "scripts/Test.ps1",
+      "assertions": 1262,
+      "evidence": ".validation/logic-20261118-014824-100"
+    },
+    {
+      "command": "scripts/Test-ModSettings.ps1",
+      "assertions": 622,
+      "evidence": ".validation/modsettings-20261118-014825-321"
+    },
+    {
+      "command": "scripts/Test-RecipeBounds.ps1",
+      "assertions": 45,
+      "evidence": ".validation/recipe-bounds-20261118-014826-914"
+    },
+    {
+      "command": "scripts/Test-RecipeBounds.ps1 -Entrance",
+      "assertions": 1,
+      "evidence": ".validation/recipe-bounds-20261118-014827-640"
+    },
+    {
+      "command": "scripts/Verify-Contracts.ps1",
+      "patchSignatures": 27,
+      "reflectedFields": 22,
+      "directPublicGameReferences": 77,
+      "nonPublicDirectAccess": 0,
+      "evidence": "docs/evidence/implementation-verification.json"
+    }
+  ],
+  "unityRuns": [
+    {
+      "run": ".validation/unity-recipes-20261118-014634-573",
+      "result": "PASS: 116 actual Unity HUD editor assertions; native UI fixture in kitchen, scripted startup/input.",
+      "loaded": [
+        "com.ch3ngyz.plugin.overcooked2.hudcustomization 0.1.0 B66EABB8A93B8741BBAF51AAE76878B61FED71D806A3B8B615811684642B2048",
+        "Screen=3840x2160"
+      ],
+      "scenarioError": null,
+      "restorationErrors": [],
+      "manifestFiles": 22,
+      "originalFileMismatches": 0,
+      "originalProductionSha256": "2BAECB386F24B94423B2A6845A5DCC05FB9599033170237C78EF65ED2FD4E5FD",
+      "testDllRemoved": true,
+      "keptProductionBuild": false,
+      "originalSaves": [
+        {
+          "file": "[user save root]/[SteamID]/Meta_SaveFile.save",
+          "originalSha256": "CBDC7DF96D7E96967CD4AE7C5B8CC768E708B4BFD248A1C8BB49F021790A1AB2",
+          "finalSha256": "CBDC7DF96D7E96967CD4AE7C5B8CC768E708B4BFD248A1C8BB49F021790A1AB2"
+        }
+      ],
+      "screenshots": [
+        {
+          "file": "editor-native-panel.png",
+          "width": 3840,
+          "height": 2160,
+          "sha256": "508E005547AE7982D0A659EC7286DDDDF9EE80E53872033D5814569B1F68B5E4"
+        }
+      ]
+    },
+    {
+      "run": ".validation/unity-recipes-20261118-015240-024",
+      "result": "PASS: 65 actual Unity recipe assertions; native UI fixture in kitchen, scripted startup/input.",
+      "loaded": [
+        "com.ch3ngyz.plugin.overcooked2.hudcustomization 0.1.0 B66EABB8A93B8741BBAF51AAE76878B61FED71D806A3B8B615811684642B2048",
+        "Screen=2560x1440",
+        "NativeRecipe=ChickenBurger"
+      ],
+      "scenarioError": null,
+      "restorationErrors": [],
+      "manifestFiles": 22,
+      "originalFileMismatches": 0,
+      "originalProductionSha256": "2BAECB386F24B94423B2A6845A5DCC05FB9599033170237C78EF65ED2FD4E5FD",
+      "testDllRemoved": true,
+      "keptProductionBuild": false,
+      "originalSaves": [
+        {
+          "file": "[user save root]/[SteamID]/Meta_SaveFile.save",
+          "originalSha256": "CBDC7DF96D7E96967CD4AE7C5B8CC768E708B4BFD248A1C8BB49F021790A1AB2",
+          "finalSha256": "CBDC7DF96D7E96967CD4AE7C5B8CC768E708B4BFD248A1C8BB49F021790A1AB2"
+        }
+      ],
+      "screenshots": [
+        {
+          "file": "single-column.png",
+          "width": 2560,
+          "height": 1440,
+          "sha256": "FE4D0D07565E84777158E069AD58935003E8C24418BFF98EA3E1CE632FFFED7C"
+        }
+      ]
+    }
+  ],
+  "geometryEvidence": ".validation/unity-recipes-20261118-014634-573/editor-geometry.tsv",
+  "failuresRetained": [
+    {
+      "run": ".validation/unity-recipes-20261118-012854-942",
+      "assertionsBeforeFailure": 8,
+      "reason": "Native artwork was not ready after Show-only capture; added bounded root retry until ready."
+    },
+    {
+      "run": ".validation/unity-recipes-20261118-013059-501",
+      "assertionsBeforeFailure": 63,
+      "reason": "Timer test clicked underneath the moved panel; move panel clear before HUD resize test. Screenshot also exposed slider/layout styling issues corrected before final run."
+    },
+    {
+      "run": ".validation/unity-recipes-20261118-013357-216",
+      "assertionsBeforeFailure": 95,
+      "reason": "Test raycast preceded first rendered Canvas frame; wait for rendering before actual raycast."
+    },
+    {
+      "run": ".validation/unity-recipes-20261118-014909-245",
+      "assertionsBeforeFailure": 47,
+      "reason": "Single-column native clip wrapped shader offset to 1920 at normalizedTime 1.000153. Only violating frame occurred after completion; destination error 0.00003051758. Restrict horizontal-phase assertion to pre-completion frames; keep destination/completion assertions and all raw samples.",
+      "restorationConflicts": 0,
+      "testDllRemoved": true
+    }
+  ],
+  "intermediatePasses": [
+    {
+      "run": ".validation/unity-recipes-20261118-013620-341",
+      "assertions": 106
+    },
+    {
+      "run": ".validation/unity-recipes-20261118-014012-957",
+      "assertions": 115
+    },
+    {
+      "run": ".validation/unity-recipes-20261118-014316-019",
+      "assertions": 65,
+      "scope": "Recipe regression before numeric shortcut filter; superseded by final same-hash run."
+    }
+  ],
+  "logClassification": {
+    "productionHudErrors": 0,
+    "productionHudWarnings": 0,
+    "testPluginErrors": 0,
+    "externalError": "LobbyLevelRandomizer logs ordinary Sushi selection at Error level in final runs.",
+    "otherWarnings": "Installed Harmony/BepInEx/DIYLevel loader and arcade warnings; raw logs retained."
+  },
+  "evidenceBoundary": [
+    "Real game and native presentation objects with scripted EventSystem/OnGUI input; not physical-device acceptance.",
+    "Layout sliders exercised through real uGUI value-change events; saves through actual raycast/click and ConfigEntry.",
+    "Recipe/contents use existing adapters and draft options, with no gameplay operation creation.",
+    "Screenshot dimensions read from PNG headers; viewer preview dimensions are not used.",
+    "Owned runner processes exited; 22 manifest files per final run restored with zero mismatches; original save hash verified unchanged."
+  ],
+  "notVerified": [
+    "Physical mouse/controller",
+    "All twelve language glyphs and long text fit",
+    "Complete actual gameplay lifecycle of every progress category",
+    "Two-peer remote join / independent per-team parameters",
+    "Survival dedicated timer controllers",
+    "Horde adaptation"
+  ],
+  "runtime": {
+    "modSettingsMinimum": "1.1.1",
+    "unity": "2017.4.8f1",
+    "framework": ".NET 3.5 / CLR2 / C#3"
+  },
+  "remoteWrites": false,
+  "modSourceChanged": false,
+  "permanentDeployment": false,
+  "implementationCommit": "83ec07e"
+}
