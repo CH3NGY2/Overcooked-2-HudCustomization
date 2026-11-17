@@ -1,0 +1,359 @@
+{
+  "checkedAt": "2026-11-18T00:55:53.707147+08:00",
+  "scope": "Development HUD editor and session-only hidden-display preview; no new release or retained production deployment.",
+  "plugin": {
+    "guid": "com.ch3ngyz.plugin.overcooked2.hudcustomization",
+    "version": "0.1.0",
+    "file": "bin/Release/OC2HudCustomization.dll",
+    "bytes": 126464,
+    "sha256": "2BAECB386F24B94423B2A6845A5DCC05FB9599033170237C78EF65ED2FD4E5FD"
+  },
+  "configs": {
+    "visible": 9,
+    "hidden": 56,
+    "total": 65,
+    "hiddenAttribute": "Browsable=false",
+    "previewPersisted": false
+  },
+  "runtime": {
+    "gameAssemblySha256": "9BB6A3791331201D32CA89C3509F019A9780309DA7110002F04020E8491E1908",
+    "modSettingsMinimum": "1.1.1",
+    "unity": "2017.4.8f1",
+    "framework": ".NET 3.5 / CLR2 / C#3"
+  },
+  "checks": [
+    {
+      "command": "scripts/Test.ps1",
+      "assertions": 1175,
+      "evidence": ".validation/logic-20261118-004316-269"
+    },
+    {
+      "command": "scripts/Test-ModSettings.ps1",
+      "assertions": 622,
+      "evidence": ".validation/modsettings-20261118-004317-292"
+    },
+    {
+      "command": "scripts/Test-RecipeBounds.ps1",
+      "assertions": 45,
+      "evidence": ".validation/recipe-bounds-20261118-004318-859"
+    },
+    {
+      "command": "scripts/Test-RecipeBounds.ps1 -Entrance",
+      "assertions": 1,
+      "evidence": ".validation/recipe-bounds-20261118-004319-549"
+    },
+    {
+      "command": "scripts/Verify-Contracts.ps1",
+      "patchSignatures": 26,
+      "reflectedFields": 22,
+      "directPublicGameReferences": 70,
+      "nonPublicDirectAccess": 0,
+      "evidence": "docs/evidence/implementation-verification.json"
+    }
+  ],
+  "unityRuns": [
+    {
+      "run": ".validation/unity-recipes-20261118-004024-605",
+      "result": "PASS: 82 actual Unity HUD editor assertions; native UI fixture in kitchen, scripted startup/input.",
+      "loaded": [
+        "com.ch3ngyz.plugin.overcooked2.hudcustomization 0.1.0 2BAECB386F24B94423B2A6845A5DCC05FB9599033170237C78EF65ED2FD4E5FD",
+        "Screen=3840x2160"
+      ],
+      "originalProductionSha256": "ECC1D3CEAC22000C0BEE2F1A544DAE7A07A8957318E598FBE24A14F118AB8FF5",
+      "restorationConflicts": [],
+      "manifestFiles": 22,
+      "testDllRemoved": true,
+      "keptProductionBuild": false,
+      "originalSaves": [
+        {
+          "path": "[user save root]/[SteamID]/Meta_SaveFile.save",
+          "originalSha256": "ED446E0099AC902BC8DDD42586B094ECCF7658F7AC39587144511F0734EF61AD",
+          "finalSha256": "ED446E0099AC902BC8DDD42586B094ECCF7658F7AC39587144511F0734EF61AD"
+        }
+      ],
+      "screenshots": [
+        {
+          "file": "editor-before.png",
+          "width": 3840,
+          "height": 2160,
+          "sha256": "C8F391EBFB052EED185738EB1532B55A9633DBADFE36FD2A5B44453327DE2C81"
+        },
+        {
+          "file": "editor-preview.png",
+          "width": 3840,
+          "height": 2160,
+          "sha256": "8445C9F8F94E79F7A2512241AE609567B2F3A3AAE8BC29E47F2A498E053F1241"
+        },
+        {
+          "file": "editor-progress.png",
+          "width": 3840,
+          "height": 2160,
+          "sha256": "EA8F6A922B082CCFF979C4E99DBA5BB9C4F2C5550CA97034A3DBD708F79A1DD6"
+        },
+        {
+          "file": "editor-selected.png",
+          "width": 3840,
+          "height": 2160,
+          "sha256": "FBA469FEC8DFBE2B041BC295D2E7D1D356410E48E1516497622B124F1F361E53"
+        },
+        {
+          "file": "editor-timer.png",
+          "width": 3840,
+          "height": 2160,
+          "sha256": "BA451E541FDA60B0049605417FE0E09FBA300C4BCE3BB85673D0D97D70BCED44"
+        }
+      ],
+      "geometry": [
+        "action\t(3492.3, 1329.8)\tfirst=Action_edit-hud",
+        "Timer-path\tCampaignGameEnvironment/Canvases/FixedAspectRootCanvas/ScalingHUDCanvas/SafeZoneElements/CampaignMode(Clone)/LevelTimerUI",
+        "Score-path\tCampaignGameEnvironment/Canvases/FixedAspectRootCanvas/ScalingHUDCanvas/SafeZoneElements/CampaignMode(Clone)/ScoreUI",
+        "score-before\t(x:17.25, y:1850.65, width:709.75, height:276.70)",
+        "score-after-drag\t(x:324.45, y:1591.45, width:709.75, height:276.70)",
+        "score-after-edge\t(x:324.10, y:1591.45, width:851.70, height:276.70)",
+        "score-after-corner\t(x:323.88, y:1613.66, width:936.87, height:304.37)",
+        "timer-before\t(x:3113.00, y:1878.00, width:652.25, height:222.00)",
+        "timer-after-drag\t(x:2844.20, y:1554.00, width:652.25, height:222.00)",
+        "timer-after-edge\t(x:2844.20, y:1509.60, width:652.25, height:266.40)",
+        "preview-state\tchecked=True\thasInstance=True\tactive=True/True\tlease=True\tenabled=True",
+        "chopping-offset-a\t(0.0, 0.1)\t(0.0, 0.2)",
+        "chopping-offset-b\t(0.0, 0.1)\t(0.0, 0.2)",
+        "chopping-before\t(x:1281.20, y:956.88, width:125.60, height:36.72)",
+        "chopping-after\t(x:1281.20, y:740.88, width:125.60, height:36.72)"
+      ]
+    },
+    {
+      "run": ".validation/unity-recipes-20261118-004531-162",
+      "result": "PASS: 65 actual Unity recipe assertions; native UI fixture in kitchen, scripted startup/input.",
+      "loaded": [
+        "com.ch3ngyz.plugin.overcooked2.hudcustomization 0.1.0 2BAECB386F24B94423B2A6845A5DCC05FB9599033170237C78EF65ED2FD4E5FD",
+        "Screen=1920x1080",
+        "NativeRecipe=ChickenBurger"
+      ],
+      "originalProductionSha256": "ECC1D3CEAC22000C0BEE2F1A544DAE7A07A8957318E598FBE24A14F118AB8FF5",
+      "restorationConflicts": [],
+      "manifestFiles": 22,
+      "testDllRemoved": true,
+      "keptProductionBuild": false,
+      "originalSaves": [
+        {
+          "path": "[user save root]/[SteamID]/Meta_SaveFile.save",
+          "originalSha256": "ED446E0099AC902BC8DDD42586B094ECCF7658F7AC39587144511F0734EF61AD",
+          "finalSha256": "ED446E0099AC902BC8DDD42586B094ECCF7658F7AC39587144511F0734EF61AD"
+        }
+      ],
+      "screenshots": [
+        {
+          "file": "entrance-descending.png",
+          "width": 1920,
+          "height": 1080,
+          "sha256": "E610C3C7771B319FE0B2A6F37A4CF0F8BEA681DF44BD48C85D78971D3BBE0C63"
+        },
+        {
+          "file": "entrance-first-row.png",
+          "width": 1920,
+          "height": 1080,
+          "sha256": "4768EF4D8B57B07727D2350A51CB5CC0775D5BACB10D1BE160014BC91B0EE206"
+        },
+        {
+          "file": "entrance-horizontal.png",
+          "width": 1920,
+          "height": 1080,
+          "sha256": "B1259291888303640B8AC01E2D86AB9159156EC088D5E50802D0103EA60D39B8"
+        },
+        {
+          "file": "entrance-settled.png",
+          "width": 1920,
+          "height": 1080,
+          "sha256": "A08BE11D1DAD8C789F3DEE8802ACE470EF90D3B761A39C43824859713708CF1D"
+        },
+        {
+          "file": "rebuilt-scale-05.png",
+          "width": 1920,
+          "height": 1080,
+          "sha256": "197B83795702C7EC1E668BF61D2CEE9326F2D6B8691D0796E07C7E479FFA7076"
+        },
+        {
+          "file": "scale-05.png",
+          "width": 1920,
+          "height": 1080,
+          "sha256": "6BCA4C4D8CE4B0784CE966492229B854AECBE6588FC3EDC6F35973234C0163E2"
+        },
+        {
+          "file": "scale-1.png",
+          "width": 1920,
+          "height": 1080,
+          "sha256": "455EA7340DA565A0C11A036E81595229C169DF12FB63383E0D8E2E0E86DC2088"
+        },
+        {
+          "file": "scale-2.png",
+          "width": 1920,
+          "height": 1080,
+          "sha256": "28902F423DACA9BB99061D5FA20F261AFF5B8526F027AE354558E3368A92AB7A"
+        },
+        {
+          "file": "single-column.png",
+          "width": 1920,
+          "height": 1080,
+          "sha256": "2FE82DAD17D07B5EB1044B7C08FFFCD0D541113C91C492FAA227A05376CD2EF2"
+        },
+        {
+          "file": "single-entrance-descending.png",
+          "width": 1920,
+          "height": 1080,
+          "sha256": "24C59E531EA186AD140440FC8C16F9FF55F1330B87254E0B313001E045849BEF"
+        },
+        {
+          "file": "single-entrance-first-row.png",
+          "width": 1920,
+          "height": 1080,
+          "sha256": "39275E8E26E9F72D770140B8DB505804B85A5BE8A06A0BAD5C5B5556513EEE30"
+        },
+        {
+          "file": "single-entrance-horizontal.png",
+          "width": 1920,
+          "height": 1080,
+          "sha256": "6F23B7979F32DBDD542FC7CCBE69420B9BDA423EB329830BDD862E4BF4F1693A"
+        },
+        {
+          "file": "single-entrance-settled.png",
+          "width": 1920,
+          "height": 1080,
+          "sha256": "B90810EC8350CBBCD9929D49C24C3DC655DE5D1DD13691F7C688B8F83D5F1DF8"
+        }
+      ],
+      "geometry": [
+        "scale-05-initial\t0\t-954.5\t444\t-858.525\t550",
+        "scale-05-initial\t1\t-853.525\t444\t-757.55\t550",
+        "scale-05-initial\t2\t-954.5\t317.229\t-858.525\t423.229",
+        "scale-05-initial\t3\t-853.525\t317.229\t-757.55\t423.229",
+        "scale-05\t0\t-954.5\t444\t-858.525\t550",
+        "scale-05\t1\t-853.525\t444\t-757.55\t550",
+        "scale-05\t2\t-954.5\t317.229\t-858.525\t423.229",
+        "scale-05\t3\t-853.525\t317.229\t-757.55\t423.229",
+        "scale-05\t4\t-954.5\t190.458\t-858.525\t296.458",
+        "rebuilt-scale-05\t0\t-954.5\t444\t-858.525\t550",
+        "rebuilt-scale-05\t1\t-853.525\t444\t-757.55\t550",
+        "rebuilt-scale-05\t2\t-954.5\t317.229\t-858.525\t423.229",
+        "rebuilt-scale-05\t3\t-853.525\t317.229\t-757.55\t423.229",
+        "rebuilt-scale-05\t4\t-954.5\t190.458\t-858.525\t296.458",
+        "scale-1\t0\t-954.5\t348\t-810.55\t545",
+        "scale-1\t1\t-805.55\t348\t-661.6001\t545",
+        "scale-1\t2\t-954.5\t130.229\t-810.55\t327.229",
+        "scale-1\t3\t-805.55\t130.229\t-661.6001\t327.229",
+        "scale-1\t4\t-954.5\t-87.54199\t-810.55\t109.458",
+        "scale-2\t0\t-954.5\t156\t-714.6\t545",
+        "scale-2\t1\t-709.6\t156\t-469.7\t545",
+        "scale-2\t2\t-954.5\t-253.771\t-714.6\t135.229",
+        "scale-2\t3\t-709.6\t-253.771\t-469.7\t135.229",
+        "scale-2\t4\t-954.4999\t-663.542\t-714.5999\t-274.542",
+        "single-column\t0\t-954.5\t444\t-858.525\t550",
+        "single-column\t1\t-954.5\t317.229\t-858.525\t423.229",
+        "single-column\t2\t-954.5\t190.458\t-858.525\t296.458",
+        "single-column\t3\t-954.5\t63.68701\t-858.525\t169.687",
+        "single-column\t4\t-954.5\t-63.08398\t-858.525\t42.91602",
+        "single-column-added\t0\t-954.5\t444\t-858.525\t550",
+        "single-column-added\t1\t-954.5\t317.229\t-858.525\t423.229",
+        "single-column-added\t2\t-954.5\t190.458\t-858.525\t296.458",
+        "single-column-added\t3\t-954.5\t63.68701\t-858.525\t169.687",
+        "single-column-added\t4\t-954.5\t-63.08398\t-858.525\t42.91602",
+        "single-column-added\t5\t-954.5\t-189.855\t-858.525\t-83.85498",
+        "column-change\t0\t-954.5\t444\t-858.525\t550",
+        "column-change\t1\t-853.525\t444\t-757.55\t550",
+        "column-change\t2\t-954.5\t317.229\t-858.525\t423.229",
+        "column-change\t3\t-853.525\t317.229\t-757.55\t423.229",
+        "column-change\t4\t-954.5\t190.458\t-858.525\t296.458",
+        "column-change\t5\t-853.525\t190.458\t-757.55\t296.458"
+      ]
+    }
+  ],
+  "failedRunsRetained": [
+    {
+      "run": ".validation/unity-recipes-20261117-235058-929",
+      "reason": "Random selection entered excluded Horde; process ended without scenario result; HostUtilities cfg restore conflict preserved with backup.",
+      "restoreConflictCount": 1,
+      "testDllRemoved": true
+    },
+    {
+      "run": ".validation/unity-recipes-20261117-235639-781",
+      "reason": "Test incorrectly assumed native progress anchor zero; native prefab uses Y=0.1.",
+      "result": "FAIL after 39 assertions",
+      "restoreConflictCount": 0,
+      "testDllRemoved": true
+    },
+    {
+      "run": ".validation/unity-recipes-20261118-001042-180",
+      "reason": "Fixed HUD canvas filtering excluded native HUD.",
+      "result": "FAIL after 19 assertions",
+      "restoreConflictCount": 0,
+      "testDllRemoved": true
+    },
+    {
+      "run": ".validation/unity-recipes-20261118-001326-292",
+      "reason": "ScalingHUDCanvas is a hierarchy node, not a Canvas component.",
+      "result": "FAIL after 19 assertions",
+      "restoreConflictCount": 0,
+      "testDllRemoved": true
+    },
+    {
+      "run": ".validation/unity-recipes-20261118-002039-400",
+      "reason": "Native ancestor reparenting changed the root without changing immediate parent; cache invalidation repaired.",
+      "result": "FAIL after 19 assertions",
+      "restoreConflictCount": 0,
+      "testDllRemoved": true
+    },
+    {
+      "run": ".validation/unity-recipes-20261118-002336-881",
+      "reason": "IMGUI scripted pointer lost after GUI.matrix changed; preview toggle not hit.",
+      "result": "FAIL after 46 assertions",
+      "restoreConflictCount": 0,
+      "testDllRemoved": true
+    },
+    {
+      "run": ".validation/unity-recipes-20261118-002846-371",
+      "reason": "Retained failure; diagnostic confirmed instances exist but preview unchecked.",
+      "result": "FAIL after 46 assertions",
+      "restoreConflictCount": 0,
+      "testDllRemoved": true
+    },
+    {
+      "run": ".validation/unity-recipes-20261118-003329-500",
+      "reason": "Retained failure; native GUIClip recomputed physical pointer.",
+      "result": "FAIL after 46 assertions",
+      "restoreConflictCount": 0,
+      "testDllRemoved": true
+    },
+    {
+      "run": ".validation/unity-recipes-20261118-003656-972",
+      "reason": "Mutating current Event did not preserve injected local mouse coordinates through GUIClip.",
+      "result": "FAIL after 46 assertions",
+      "restoreConflictCount": 0,
+      "testDllRemoved": true
+    }
+  ],
+  "logClassification": {
+    "productionHudErrors": 0,
+    "productionHudWarnings": 0,
+    "testPluginErrors": 0,
+    "externalError": "LobbyLevelRandomizer records native ordinary Sushi selection at Error level in both final runs.",
+    "otherWarnings": "Existing Harmony optional contracts, native assets and external loader/frame diagnostics; raw logs retained per run."
+  },
+  "evidenceBoundary": [
+    "Actual native ModSettings action with first eligible raycast hit; production IMGUI receives scripted events, not physical hardware input.",
+    "Test-only GUI.matrix postfix preserves injected mouse coordinates after GUIClip recomputes them; production controls and assertions are not bypassed.",
+    "Progress fixtures instantiate loaded native presentation prefabs; do not create or mutate gameplay operations.",
+    "Geometry from production TryBounds, compared with rendered screenshots; not claimed as independent algorithm measurement.",
+    "Final recipe run has 65 assertions because existing new-GUID cfg skips the historical legacy migration branch.",
+    "Original production DLL restored after both final runs; installed build does not contain this development editor."
+  ],
+  "notVerified": [
+    "Physical mouse/controller",
+    "All twelve language glyphs and long text fit",
+    "Complete actual gameplay lifecycle of every progress category",
+    "Two-peer remote-join cancellation and independent per-team parameters",
+    "Survival dedicated timer controllers",
+    "Horde adaptation"
+  ],
+  "remoteWrites": false,
+  "modSourceChanged": false,
+  "implementationCommit": "9597b78"
+}

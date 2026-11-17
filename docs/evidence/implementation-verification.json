@@ -1,12 +1,12 @@
 {
-  "checkedAt": "2026-11-17T19:40:00.7260505+08:00",
+  "checkedAt": "2026-11-18T00:43:18.5378213+08:00",
   "level": "static-metadata-and-compiled-IL; no Unity UI execution",
   "gameAssembly": "E:\\SteamLibrary\\steamapps\\common\\Overcooked! 2\\Overcooked2_Data\\Managed\\Assembly-CSharp.dll",
   "gameSha256": "9BB6A3791331201D32CA89C3509F019A9780309DA7110002F04020E8491E1908",
   "gameMvid": "114d606a-29d5-472c-8ebe-c2c20fbe3be3",
   "gameRuntime": "v2.0.50727",
   "pluginPath": "E:\\code\\OC2\\OtherMOD\\Overcooked-2-HudCustomization\\bin\\Release\\OC2HudCustomization.dll",
-  "pluginSha256": "ECC1D3CEAC22000C0BEE2F1A544DAE7A07A8957318E598FBE24A14F118AB8FF5",
+  "pluginSha256": "2BAECB386F24B94423B2A6845A5DCC05FB9599033170237C78EF65ED2FD4E5FD",
   "pluginGuid": "com.ch3ngyz.plugin.overcooked2.hudcustomization",
   "pluginVersion": "0.1.0",
   "assemblyVersion": "0.1.0.0",
@@ -51,6 +51,70 @@
     {
       "Signature": "System.Void UISubElementContainer::RefreshSubElements()",
       "Access": "public"
+    },
+    {
+      "Signature": "System.Void ClientWorkableItem::StartSynchronising(UnityEngine.Component)",
+      "Access": "public"
+    },
+    {
+      "Signature": "System.Void ClientCookingHandler::StartSynchronising(UnityEngine.Component)",
+      "Access": "public"
+    },
+    {
+      "Signature": "System.Void ClientMixingHandler::StartSynchronising(UnityEngine.Component)",
+      "Access": "public"
+    },
+    {
+      "Signature": "System.Void ClientHeatedStationGUI::OnHeatValueChanged(System.Single)",
+      "Access": "private"
+    },
+    {
+      "Signature": "System.Void ClientWashingStation::Awake()",
+      "Access": "private"
+    },
+    {
+      "Signature": "System.Void ClientWashable::StartSynchronising(UnityEngine.Component)",
+      "Access": "public"
+    },
+    {
+      "Signature": "System.Void ClientFlammable::Ignite()",
+      "Access": "private"
+    },
+    {
+      "Signature": "System.Void ScoreUIController::Awake()",
+      "Access": "protected"
+    },
+    {
+      "Signature": "System.Void LevelTimerUIController::Awake()",
+      "Access": "protected"
+    },
+    {
+      "Signature": "System.Void RectTransformExtension::UpdateAspectRatio()",
+      "Access": "private"
+    },
+    {
+      "Signature": "System.Void UI_Move::UpdateGraphics()",
+      "Access": "public"
+    },
+    {
+      "Signature": "System.Void ScoreUIController::ScoreUpdate(TeamID,TeamMonitor/TeamScoreStats)",
+      "Access": "public"
+    },
+    {
+      "Signature": "UnityEngine.GameObject GameUtils::InstantiateUIControllerOnScalingHUDCanvas(UnityEngine.GameObject)",
+      "Access": "public"
+    },
+    {
+      "Signature": "System.Void PlayerControls::Awake()",
+      "Access": "private"
+    },
+    {
+      "Signature": "System.Void T17EventSystem::Awake()",
+      "Access": "protected"
+    },
+    {
+      "Signature": "System.Void PauseMenuManager::UpdateWhileClosed()",
+      "Access": "private"
     }
   ],
   "fields": [
@@ -101,9 +165,49 @@
     {
       "Signature": "UnityEngine.Sprite IngredientContentsUIContainer::m_emptySprite",
       "Access": "private"
+    },
+    {
+      "Signature": "ProgressUIController ClientWorkableItem::m_guibar",
+      "Access": "private"
+    },
+    {
+      "Signature": "CookingUIController ClientCookingHandler::m_gui",
+      "Access": "private"
+    },
+    {
+      "Signature": "CookingUIController ClientMixingHandler::m_progressUI",
+      "Access": "private"
+    },
+    {
+      "Signature": "HeatValueUIController ClientHeatedStationGUI::m_uiInstance",
+      "Access": "private"
+    },
+    {
+      "Signature": "ProgressUIController ClientWashingStation::m_progressUI",
+      "Access": "private"
+    },
+    {
+      "Signature": "ProgressUIController ClientWashable::m_progressBar",
+      "Access": "private"
+    },
+    {
+      "Signature": "ProgressUIController ClientFlammable::m_fireGUIBar",
+      "Access": "private"
+    },
+    {
+      "Signature": "ProgressBarUI ProgressUIController::m_progressBar",
+      "Access": "private"
+    },
+    {
+      "Signature": "ProgressBarUI CookingUIController::m_progressBar",
+      "Access": "private"
+    },
+    {
+      "Signature": "ProgressGaugeUI HeatValueUIController::m_progressBar",
+      "Access": "private"
     }
   ],
-  "directGameMemberReferences": 25,
+  "directGameMemberReferences": 70,
   "nonPublicDirectAccess": [],
   "dependencies": [
     "mscorlib",
@@ -113,6 +217,8 @@
     "UnityEngine.CoreModule",
     "UnityEngine.UI",
     "0Harmony",
+    "UnityEngine.TextRenderingModule",
+    "UnityEngine.IMGUIModule",
     "UnityEngine.UIModule",
     "UnityEngine.AnimationModule"
   ],
@@ -138,6 +244,10 @@
     "System.Boolean OC2ModSettings.SDK.ModSettingsClient::Connect()",
     "System.Void OC2ModSettings.SDK.ModSettingsClient::Refresh()"
   ],
+  "editorExitKey": "BackQuote (96); one Input.GetKeyDown call",
+  "editorShortcutContract": "System.Void OC2ModSettings.NativeShortcut::Tick(System.Boolean)",
+  "installedModSettingsVersion": "1.1.1.0",
+  "installedModSettingsSha256": "0A61B5C40E6BC893C36628DF16E8D01D41DBD4DE9B5B5D3E35534813F304B8B1",
   "runtimeFiles": [
     "OC2HudCustomization.dll"
   ]

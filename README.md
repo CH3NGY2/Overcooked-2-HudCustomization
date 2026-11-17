@@ -4,6 +4,8 @@
 
 当前状态：**0.1.0 已安装到本机游戏，插件标题为 `OC2 HUD 自定义 / OC2 HUD Customization`；已修复跨行炊具遮挡、去除主菜卡上方多余纸面，并验证“第一行滑入→快速落位→展开食材与步骤”的入场节奏**。其余功能的完整实机验收范围见 [实施记录](docs/Implementation.md)。
 
+开发新增：**局内 HUD 编辑器与隐藏元素临时预览**已实现，需 ModSettings ≥1.1.1。支持计分板、倒计时及六类进度显示的同类移动、缩放和不透明度调整，按反引号保存退出；56 项参数保存在隐藏 ConfigEntry。用法、预览限制与实机证据见 [编辑器说明](docs/HudEditor.md)。该功能尚未更新公开 Release；本轮隔离测试后恢复了本机原 DLL，使用需安装本轮构建并重启。
+
 ## 首版功能
 
 - 调整常规局内菜谱卡片大小、每行显示数量。
@@ -51,6 +53,8 @@
 
 设置使用原生 BepInEx `ConfigEntry`，公共 ModSettings 可按其自动发现契约读取，不需要本插件引用它。共 9 项，包含大小、列数、三类不透明度、总开关和菜谱行间距；默认保持原生显示。插件 GUID 为 `com.ch3ngyz.plugin.overcooked2.hudcustomization`，设置文件是 `BepInEx/config/com.ch3ngyz.plugin.overcooked2.hudcustomization.cfg`，参数范围见实施记录；面板修改在主线程应用，手工编辑磁盘文件需重启或由工具 Reload。
 
+开发版另有 56 项 `HudEditor.*` 隐藏设置，不在设置页逐项列出；ModSettings 1.1.1 通过一个操作按钮进入编辑器。缺少该服务时，原有设置和已保存的隐藏参数仍可应用，但不能打开编辑器。
+
 从早期 `com.oc2.hudcustomization` 升级时，仅在新配置文件不存在时自动复制旧 cfg 并加载，保留全部旧配置原文及旧文件；已有新文件始终优先，后续只使用新文件。不要同时安装新、旧 GUID 的两个插件 DLL。
 
 配置名称、说明和分区默认英文；游戏语言就绪后自动跟随游戏的 12 种语言（含简体/繁体中文、日语、韩语），未知语言回退英文。主线程每秒检查一次；同批文案更新后通过源码 SDK 通知 ModSettings 刷新，语言不变不会重复重建面板。翻译保持 Section/Key 与设置值，不保存或重读 cfg；本次 GUID 调整的文件迁移见上段。显示元数据需要支持 `ModSettingsAttributes` 的 ModSettings 1.1.0 或更新版本；缺少服务时仍可使用配置和 HUD 功能。
@@ -64,3 +68,5 @@
 新菜谱先沿第一行从右向左进入，横向剩余距离降到约 20% 时快速落位，再显示食材与烹饪步骤，接原生展开。落位进度跟随原生 Animator，不另按墙上时钟计时；当前原生 1.5 秒动画下，快速落位约 0.21 秒。已有卡片换行使用平滑回流，不重播入场。
 
 `scripts/Test-RecipeBounds.ps1` 可运行生产测量/排布代码的桌面边界替换回归；`scripts/Test-UnityRecipes.ps1` 会临时部署测试插件、隔离存档并启动真实游戏，只能在玩家游戏未运行时使用。它默认恢复原 DLL，`-KeepProductionBuild` 保留本轮正式构建；两种方式均恢复配置、共享日志及临时测试文件。实机结果见 [菜谱布局核验](docs/evidence/recipe-layout-verification.json)。
+
+`scripts/Test-UnityRecipes.ps1 -Editor` 沿用同一隔离和恢复入口，检查真实设置页编辑按钮、原生 HUD 拖动/缩放、隐藏元素预览及退出恢复。编辑器构建与公开 v0.1.0 是不同产物，现有 `Package.ps1` 的发布证据锁不会自动把开发构建当作已发布包。
