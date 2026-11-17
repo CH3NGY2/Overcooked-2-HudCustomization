@@ -1,7 +1,9 @@
 param(
     [string]$GameRoot = 'E:\SteamLibrary\steamapps\common\Overcooked! 2',
     [string]$OutputDirectory = '',
-    [string]$ExpectedSha256 = 'ECC1D3CEAC22000C0BEE2F1A544DAE7A07A8957318E598FBE24A14F118AB8FF5'
+    [Parameter(Mandatory = $true)]
+    [ValidatePattern('^[A-Fa-f0-9]{64}$')]
+    [string]$ExpectedSha256
 )
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot

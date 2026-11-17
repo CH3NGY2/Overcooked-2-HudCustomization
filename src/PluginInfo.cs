@@ -12,6 +12,6 @@ namespace OC2HudCustomization
         internal const string Guid = "com.ch3ngyz.plugin.overcooked2.hudcustomization";
         internal const string LegacyGuid = "com.oc2.hudcustomization";
         internal const string Name = "OC2 HUD 自定义 / OC2 HUD Customization";
-        internal const string Version = "0.1.0";
+        internal const string Version = "0.2.0";
     }
 }
