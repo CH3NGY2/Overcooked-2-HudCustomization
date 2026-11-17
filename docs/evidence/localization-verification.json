@@ -1,11 +1,11 @@
 {
-  "checkedAt": "2026-11-18T02:47:04.2678327+08:00",
+  "checkedAt": "2026-11-18T03:31:00.9182948+08:00",
   "level": "desktop built-consumer and actual-provider metadata/sort; no Unity UI or Chainloader service execution",
   "consumer": "E:\\code\\OC2\\OtherMOD\\Overcooked-2-HudCustomization\\bin\\Release\\OC2HudCustomization.dll",
-  "consumerSha256": "D572D8F045CF64322A169AC020E66E3B53EB4930C8FC999890E30C661D71FABE",
+  "consumerSha256": "EF5D2A60E91A344C8176E9D1C6DB79818E72DDD5C1B5E742AFE8DAFC3581641D",
   "provider": "E:\\code\\OC2\\OtherMOD\\Overcooked-2-ModSettings\\bin\\Release\\OC2ModSettings.dll",
   "providerSha256": "0A61B5C40E6BC893C36628DF16E8D01D41DBD4DE9B5B5D3E35534813F304B8B1",
   "result": [
-    "PASS 622 actual-provider/compiled-HUD assertions; 9 entries x 12 languages (desktop; no Unity UI)."
+    "PASS 626 actual-provider/compiled-HUD assertions; 9 entries x 12 languages (desktop; no Unity UI)."
   ]
 }

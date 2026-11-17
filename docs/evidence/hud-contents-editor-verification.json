@@ -1,0 +1,100 @@
+{
+  "date": "2026-11-18",
+  "scope": "Compact category dropdown, removal of help and decorative side strips, shared contents geometry with independent plus/ingredient opacity, unavailable category gating",
+  "artifact": {
+    "path": "bin/Release/OC2HudCustomization.dll",
+    "guid": "com.ch3ngyz.plugin.overcooked2.hudcustomization",
+    "version": "0.1.0",
+    "bytes": 158720,
+    "sha256": "EF5D2A60E91A344C8176E9D1C6DB79818E72DDD5C1B5E742AFE8DAFC3581641D",
+    "visibleConfigEntries": 9,
+    "hiddenConfigEntries": 60,
+    "languages": 12,
+    "permanentlyDeployedByThisTask": false,
+    "published": false
+  },
+  "offline": {
+    "logic": { "assertions": 1293, "run": ".validation/logic-20261118-033059-415", "result": "PASS" },
+    "modSettingsMetadata": { "assertions": 626, "run": ".validation/modsettings-20261118-033100-642", "result": "PASS" },
+    "recipeBoundsWithUnityCallsReplaced": { "assertions": 45, "run": ".validation/recipe-bounds-20261118-031902-713", "result": "PASS", "finalArtifact": false, "note": "Before dropdown-only UI change; final artifact additionally passed real Unity recipe regression." },
+    "contracts": { "patchSignatures": 27, "reflectedFields": 23, "directPublicGameMemberReferences": 86, "nonPublicDirectAccesses": 0, "result": "PASS" },
+    "productionAndUnityTestPluginCompilation": "PASS"
+  },
+  "unity": {
+    "editorRun": ".validation/unity-recipes-20261118-033121-516",
+    "assertions": 224,
+    "result": "PASS",
+    "loadedSha256": "EF5D2A60E91A344C8176E9D1C6DB79818E72DDD5C1B5E742AFE8DAFC3581641D",
+    "isFinalArtifact": true,
+    "input": "Real GraphicRaycaster and production pointer/drag handlers driven by scripted Unity events; not physical input",
+    "screenshotPixels": { "width": 1920, "height": 1080 },
+    "screenshotsViewed": [ "editor-category-dropdown.png", "editor-contents-subitems.png" ],
+    "panel": {
+      "boundsUi": { "x": 1430, "y": 18, "width": 470, "height": 700 },
+      "scale": 1,
+      "previousHeightUi": 836,
+      "dropdownListSizeUi": { "width": 414, "height": 372 },
+      "categories": 10,
+      "allItemsOnScreen": true,
+      "unavailableItemsDisabled": true,
+      "hiddenOrZeroOpacityExistingInstancesRemainSelectable": true,
+      "selectionClosesPopupAndUpdatesCaption": true,
+      "outsideClickDismissesWithoutHudDragging": true,
+      "sevenContentsFieldsVisibleTogetherAtThisResolution": true,
+      "decorativeSideStripsRemoved": true,
+      "topHelpRemoved": true
+    },
+    "contents": {
+      "coverage": "Native contents display prefab and real ingredient sprite fixture; no actual cooking business state created",
+      "icons": 5,
+      "columns": 2,
+      "nativeRegionCanvasUnits": [ 86.4, 86.4 ],
+      "nativeCellFraction": [ 0.5, 0.5 ],
+      "customRegionCanvasUnits": [ 155.5, 116.6 ],
+      "individualIconCanvasUnits": [ 77.8, 38.9 ],
+      "scale": 1.2,
+      "widthMultiplier": 1.5,
+      "heightMultiplier": 0.75,
+      "xyPercent": [ 7, -4 ],
+      "measuredOffsetCanvasUnits": [ 134.4, -43.2 ],
+      "plusOpacity": 0.35,
+      "ingredientOpacity": 0.65,
+      "nativeRefreshesWithoutDrift": 4,
+      "reusedIngredientReclassifiedAsPlus": true,
+      "nativeFollowTargetAndAnchorUnchanged": true,
+      "cancelAndAdapterReleaseRestore": true
+    },
+    "recipeRegression": {
+      "run": ".validation/unity-recipes-20261118-033339-719",
+      "assertions": 65,
+      "result": "PASS",
+      "loadedSha256": "EF5D2A60E91A344C8176E9D1C6DB79818E72DDD5C1B5E742AFE8DAFC3581641D",
+      "screenshotPixels": { "width": 1920, "height": 1080 },
+      "coverage": "One/two columns, cookware clearance, 0.5/1/2 scale, phased entry, reconstruction and restore; existing config means no legacy migration branch"
+    },
+    "restorationForEachFinalRun": {
+      "ownedProcessExited": true,
+      "manifestFiles": 23,
+      "filesRestoredToOriginal": 23,
+      "restorationErrors": 0,
+      "originalSavesUnchanged": true,
+      "temporaryTestPluginRemoved": true,
+      "productionHudOrTestPluginErrors": 0,
+      "otherModErrors": "Each final run retained one pre-existing arcade MOD LobbyLevelRandomizer PickLeve diagnostic at Error severity; not emitted by HUD or the test plugin.",
+      "installedDllSha256AfterRestore": "D572D8F045CF64322A169AC020E66E3B53EB4930C8FC999890E30C661D71FABE"
+    }
+  },
+  "intermediateEvidenceRetained": [
+    { "run": ".validation/logic-20261118-031305-889", "result": "FAIL", "reason": "Old config-count assertion still expected nine total entries; updated for four hidden additions." },
+    { "run": ".validation/unity-recipes-20261118-031937-299", "result": "FAIL", "reason": "Test diagnostics read removed Paper asset field; updated diagnostics to retained Header. Failure evidence kept." },
+    { "run": ".validation/unity-recipes-20261118-032118-556", "result": "PASS", "assertions": 184, "note": "Before fixing contents subitem buttons outside scroll viewport." },
+    { "run": ".validation/unity-recipes-20261118-032407-171", "result": "PASS", "assertions": 185, "note": "Fixed contents subitem buttons; before latest category dropdown request." }
+  ],
+  "notVerified": [
+    "Physical mouse or controller input",
+    "All twelve languages' actual glyphs and longest labels at every resolution",
+    "Real cold barbecue station preview branch and full kebab/contents cooking lifecycle; final editor kitchen had no heat station or native heat prefab",
+    "Steam second-peer joins, team versus and survival/Horde modes"
+  ],
+  "runtime": "Install this build and restart with BepInEx 5/HarmonyX; editor entry requires ModSettings >=1.1.1 and a local ordinary kitchen without remote players. Public release and MOD source were not changed."
+}
