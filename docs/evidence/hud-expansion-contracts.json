@@ -1,0 +1,333 @@
+{
+  "checkedAt": "2026-11-17T21:10:42.5756839+08:00",
+  "level": "read-only original Windows assembly metadata and local decompiled source; no implementation or Unity execution",
+  "gameAssembly": "E:\\SteamLibrary\\steamapps\\common\\Overcooked! 2\\Overcooked2_Data\\Managed\\Assembly-CSharp.dll",
+  "decompiledAssembly": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp.dll",
+  "gameSha256": "9BB6A3791331201D32CA89C3509F019A9780309DA7110002F04020E8491E1908",
+  "decompiledSha256": "9BB6A3791331201D32CA89C3509F019A9780309DA7110002F04020E8491E1908",
+  "gameMvid": "114d606a-29d5-472c-8ebe-c2c20fbe3be3",
+  "gameRuntime": "v2.0.50727",
+  "methodCount": 40,
+  "fieldCount": 24,
+  "methods": [
+    {
+      "signature": "System.Void ScoreUIController::Awake()",
+      "access": "protected",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void ScoreUIController::ScoreUpdate(TeamID,TeamMonitor/TeamScoreStats)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void ScoreUIController::OnDestroy()",
+      "access": "private",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void LevelTimerUIController::Awake()",
+      "access": "protected",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void LevelTimerUIController::OnDestroy()",
+      "access": "private",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void LevelTimerUIController::set_Value(System.Int32)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void SurvivalModeLevelTimerUIController::Awake()",
+      "access": "protected",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void SurvivalModeLevelTimerUIController::OnTimeAddedNotification(DataStore/Id,System.Object)",
+      "access": "private",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void SurvivalModeLevelTimerUIController::OnDestroy()",
+      "access": "protected",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void RectTransformExtension::UpdateAspectRatio()",
+      "access": "private",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void RectTransformExtension::LateUpdate()",
+      "access": "private",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void RectTransformExtension::set_scale(UnityEngine.Vector2)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void RectTransformExtension::set_AnchorOffset(UnityEngine.Vector2)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void RectTransformExtension::set_PixelOffset(UnityEngine.Vector2)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "UnityEngine.GameObject GameUtils::InstantiateUIControllerOnScalingHUDCanvas(UnityEngine.GameObject)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void GameModes.ClientCampaignMode::Setup(GameModes.ClientContext,GameModes.SessionConfig,GameModes.ClientSetupData&)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void ClientWorkableItem::StartSynchronising(UnityEngine.Component)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void ClientWorkableItem::UpdateProgressVisuals()",
+      "access": "private",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void ClientCookingHandler::StartSynchronising(UnityEngine.Component)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void ClientCookingHandler::ApplyServerUpdate(Team17.Online.Multiplayer.Messaging.Serialisable)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void ClientMixingHandler::StartSynchronising(UnityEngine.Component)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void ClientHeatedStationGUI::OnHeatValueChanged(System.Single)",
+      "access": "private",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void ClientWashingStation::Awake()",
+      "access": "private",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void ClientWashable::StartSynchronising(UnityEngine.Component)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void HoverIconUIController::SetFollowOffset(UnityEngine.Vector3)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void HoverIconUIController::SetAnchorOffset(UnityEngine.Vector2)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void HoverIconUIController::SetFollowTransform(UnityEngine.Transform)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void HoverIconUIController::SetFollowTransform(UnityEngine.Transform,UnityEngine.Vector3)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "UnityEngine.Vector2 HoverIconUIController::GetOffset()",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void HoverIconUIController::UpdateFollow()",
+      "access": "private",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void CookingUIController::SetState(CookingUIController/State)",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void BaseProgressBarUI::UpdateColors()",
+      "access": "private",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void BaseProgressBarUI::OnRefreshSubObjectProperties(UnityEngine.GameObject)",
+      "access": "protected",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void ProgressBarUI::UpdateFill()",
+      "access": "protected",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void ProgressGaugeUI::UpdateFill()",
+      "access": "protected",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void ButtonHoverIcon::Awake()",
+      "access": "protected",
+      "hasBody": true
+    },
+    {
+      "signature": "HoverIconUIController ButtonHoverIcon::get_HoverIconController()",
+      "access": "public",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void ImagePulser::Update()",
+      "access": "private",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void T17StandaloneInputModule::ProcessMouseEvent()",
+      "access": "protected",
+      "hasBody": true
+    },
+    {
+      "signature": "System.Void UI_Move::set_Offset(UnityEngine.Vector2)",
+      "access": "public",
+      "hasBody": true
+    }
+  ],
+  "fields": [
+    {
+      "signature": "TeamID ScoreUIController::m_team",
+      "access": "private"
+    },
+    {
+      "signature": "UnityEngine.Animator ScoreUIController::m_scoreAnimator",
+      "access": "private"
+    },
+    {
+      "signature": "UnityEngine.Vector2 ScoreUIController::m_floatingTextOffset",
+      "access": "private"
+    },
+    {
+      "signature": "T17Image ScoreUIController::m_barImage",
+      "access": "private"
+    },
+    {
+      "signature": "T17Image ScoreUIController::m_flameImage",
+      "access": "private"
+    },
+    {
+      "signature": "DisplayIntUIController ScoreUIController::m_multiplierUIController",
+      "access": "private"
+    },
+    {
+      "signature": "UnityEngine.Animator LevelTimerUIController::m_animator",
+      "access": "private"
+    },
+    {
+      "signature": "ProgressBarUI LevelTimerUIController::m_ProgressBar",
+      "access": "private"
+    },
+    {
+      "signature": "DisplayTimeUIController SurvivalModeLevelTimerUIController::m_roundTimerController",
+      "access": "private"
+    },
+    {
+      "signature": "DisplayTimeUIController SurvivalModeLevelTimerUIController::m_survivalTimerController",
+      "access": "private"
+    },
+    {
+      "signature": "ProgressUIController ClientWorkableItem::m_guibar",
+      "access": "private"
+    },
+    {
+      "signature": "CookingUIController ClientCookingHandler::m_gui",
+      "access": "private"
+    },
+    {
+      "signature": "CookingUIController ClientMixingHandler::m_progressUI",
+      "access": "private"
+    },
+    {
+      "signature": "HeatValueUIController ClientHeatedStationGUI::m_uiInstance",
+      "access": "private"
+    },
+    {
+      "signature": "ProgressUIController ClientWashingStation::m_progressUI",
+      "access": "private"
+    },
+    {
+      "signature": "ProgressUIController ClientWashable::m_progressBar",
+      "access": "private"
+    },
+    {
+      "signature": "UnityEngine.Vector3 HoverIconUIController::m_followOffset",
+      "access": "private"
+    },
+    {
+      "signature": "ProgressBarUI ProgressUIController::m_progressBar",
+      "access": "private"
+    },
+    {
+      "signature": "ProgressBarUI CookingUIController::m_progressBar",
+      "access": "private"
+    },
+    {
+      "signature": "ImagePulser CookingUIController::m_warningIcon",
+      "access": "private"
+    },
+    {
+      "signature": "UnityEngine.UI.Image CookingUIController::m_tick",
+      "access": "private"
+    },
+    {
+      "signature": "ProgressGaugeUI HeatValueUIController::m_progressBar",
+      "access": "private"
+    },
+    {
+      "signature": "UnityEngine.UI.Image[] BaseProgressBarUI::m_images",
+      "access": "protected"
+    },
+    {
+      "signature": "UnityEngine.UI.Image[] BaseProgressBarUI::m_notches",
+      "access": "protected"
+    }
+  ],
+  "bepinexPersistence": {
+    "assembly": "E:\\SteamLibrary\\steamapps\\common\\Overcooked! 2\\BepInEx\\core\\BepInEx.dll",
+    "version": "5.4.23.5",
+    "sha256": "8255B28902886085C578B9E427D3073C97002DB85176D2090CDEDA90EF14CE70",
+    "publicMethods": [
+      "System.Boolean BepInEx.Configuration.ConfigFile::get_SaveOnConfigSet()",
+      "System.Void BepInEx.Configuration.ConfigFile::set_SaveOnConfigSet(System.Boolean)",
+      "System.Void BepInEx.Configuration.ConfigFile::Save()"
+    ],
+    "automaticSaveCaller": "System.Void BepInEx.Configuration.ConfigFile::OnSettingChanged(System.Object,BepInEx.Configuration.ConfigEntryBase)",
+    "automaticSaveRelevantCalls": [
+      "System.Boolean BepInEx.Configuration.ConfigFile::get_SaveOnConfigSet()",
+      "System.Void BepInEx.Configuration.ConfigFile::Save()"
+    ]
+  },
+  "caveats": [
+    "No prefab hierarchy or mouse hit geometry measured",
+    "No feature code changed or built",
+    "No game or player data changed",
+    "Access levels do not prove an appropriate runtime UI owner"
+  ]
+}
