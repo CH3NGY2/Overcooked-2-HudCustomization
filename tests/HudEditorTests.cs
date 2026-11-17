@@ -42,6 +42,21 @@ internal static partial class BehaviorTests
         HudGeometry restored = new HudEditorConfig(reload).Read()[(int)HudTargetKind.Chopping];
         Check(Near(restored.X, .12f) && !restored.Allowed, "geometry and pick whitelist survive real ConfigFile reload");
         int before = changes; editor.Save(copy); Check(changes == before, "unchanged save does not fire entry changes");
+        HudSettings settings = new HudSettings(config); HudOptions saved = settings.Snapshot();
+        HudOptions layout = new HudOptions(saved.Enabled, 1.5f, 3, 17f, .8f, 4, .75f, .35f, .6f);
+        copy[0].X = .22f;
+        editor.Save(copy, settings, layout);
+        Check(settings.Snapshot().Same(layout) && config.SaveOnConfigSet && Near(editor.Read()[0].X, .22f), "geometry and original layout commit through same ConfigFile transaction");
+        ConfigFile combined = new ConfigFile(config.ConfigFilePath, false); combined.SaveOnConfigSet = false;
+        Check(new HudSettings(combined).Snapshot().Same(layout) && Near(new HudEditorConfig(combined).Read()[0].X, .22f), "combined saved geometry and layout survive actual reload");
+        string file = config.ConfigFilePath; string stable = File.ReadAllText(file);
+        File.Delete(file); Directory.CreateDirectory(file);
+        HudOptions rejected = new HudOptions(true, .6f, 7, 90, 1.8f, 9, .1f, .2f, .3f);
+        HudGeometry[] rejectedGeometry = HudGeometry.CopyAll(copy); rejectedGeometry[0].X = -.6f;
+        bool failed = false;
+        try { editor.Save(rejectedGeometry, settings, rejected); } catch (IOException) { failed = true; } catch (UnauthorizedAccessException) { failed = true; }
+        Check(failed && config.SaveOnConfigSet && settings.Snapshot().Same(layout) && Near(editor.Read()[0].X, .22f), "failed shared save restores original settings and hidden geometry in memory");
+        Directory.Delete(file); File.WriteAllText(file, stable);
         foreach (FieldInfo field in typeof(EditorText).GetFields(BindingFlags.Static | BindingFlags.NonPublic))
         {
             SettingsMessage message = field.GetValue(null) as SettingsMessage;

@@ -31,7 +31,8 @@ try {
         @('RectTransformExtension', 'UpdateAspectRatio'), @('UI_Move', 'UpdateGraphics'),
         @('ScoreUIController', 'ScoreUpdate', 'TeamID', 'TeamMonitor/TeamScoreStats'),
         @('GameUtils', 'InstantiateUIControllerOnScalingHUDCanvas', 'UnityEngine.GameObject'),
-        @('PlayerControls', 'Awake'), @('T17EventSystem', 'Awake'), @('PauseMenuManager', 'UpdateWhileClosed')
+        @('PlayerControls', 'Awake'), @('T17EventSystem', 'Awake'), @('PauseMenuManager', 'UpdateWhileClosed'),
+        @('FrontendMenuBehaviour', 'Show', 'GamepadUser', 'BaseMenuBehaviour', 'UnityEngine.GameObject', 'System.Boolean')
     )
     $targets = foreach ($spec in $targetSpecs) {
         $type = $game.MainModule.Types | Where-Object FullName -eq $spec[0]

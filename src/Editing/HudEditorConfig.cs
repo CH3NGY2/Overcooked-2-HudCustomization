@@ -25,11 +25,13 @@ namespace OC2HudCustomization
             for (int i = 0; i < result.Length; i++) result[i] = _entries[i].Read();
             return result;
         }
-        internal void Save(HudGeometry[] values)
+        internal void Save(HudGeometry[] values) { Save(values, null, null); }
+        internal void Save(HudGeometry[] values, HudSettings settings, HudOptions options)
         {
             if (values.Length != _entries.Length) throw new ArgumentException("Incomplete HUD configuration");
             HudGeometry[] previous = Read(); bool automatic = _config.SaveOnConfigSet;
-            bool changed = false;
+            HudOptions previousOptions = settings == null ? null : settings.Snapshot();
+            bool changed = options != null && !options.Same(previousOptions);
             for (int i = 0; i < values.Length; i++)
             {
                 HudGeometry value = values[i].Copy(); value.Validate();
@@ -40,11 +42,13 @@ namespace OC2HudCustomization
             {
                 _config.SaveOnConfigSet = false;
                 for (int i = 0; i < values.Length; i++) _entries[i].Write(values[i]);
+                if (settings != null && options != null) settings.Apply(options);
                 _config.Save();
             }
             catch
             {
                 for (int i = 0; i < previous.Length; i++) _entries[i].Write(previous[i]);
+                if (settings != null && previousOptions != null) settings.Apply(previousOptions);
                 throw;
             }
             finally { _config.SaveOnConfigSet = automatic; }

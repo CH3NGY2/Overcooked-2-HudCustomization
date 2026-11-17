@@ -51,19 +51,11 @@ public sealed partial class UnityRecipeTests
     }
     private IEnumerator GuiCategory(object editor, int kind)
     {
-        Rect panel = (Rect)AccessTools.Property(editor.GetType(), "Panel").GetValue(editor, null);
-        float scale = (float)AccessTools.Property(editor.GetType(), "UiScale").GetValue(editor, null);
-        Vector2 point = new Vector2(panel.x + 150f, panel.y + 131f + kind * 25f) * scale;
-        yield return GuiInput(EventType.MouseDown, point); yield return GuiInput(EventType.MouseUp, point);
+        if ((int)ReadField(editor, "_editingKind") != kind) yield return NativeClick(editor, "Category_" + kind);
     }
     private IEnumerator GuiPreview(object editor, int kind)
     {
-        Rect panel = (Rect)AccessTools.Property(editor.GetType(), "Panel").GetValue(editor, null);
-        float scale = (float)AccessTools.Property(editor.GetType(), "UiScale").GetValue(editor, null);
-        File.AppendAllText(Path.Combine(output, "editor-input.tsv"), "preview panel=" + panel + " scale=" + scale + "\n");
-        Vector2 point = new Vector2(panel.xMax - 78f, panel.y + 131f + kind * 25f) * scale;
-        yield return GuiInput(EventType.MouseDown, point); yield return GuiInput(EventType.MouseUp, point);
-        yield return null;
+        yield return NativeClick(editor, "Category_" + kind);
     }
     private static Rect TargetBounds(object target)
     {
@@ -89,6 +81,10 @@ public sealed partial class UnityRecipeTests
         foreach (KeyValuePair<BepInEx.Configuration.ConfigDefinition, BepInEx.Configuration.ConfigEntryBase> pair in hud.Config)
             if (pair.Key.Section.StartsWith("HudEditor.", StringComparison.Ordinal)) pair.Value.BoxedValue = pair.Value.DefaultValue;
         yield return new WaitForSecondsRealtime(1.2f);
+        object assets = ReadField(editor, "_assets");
+        File.AppendAllText(Path.Combine(output, "editor-geometry.tsv"), "native-assets\tready="
+            + AccessTools.Property(assets.GetType(), "Ready").GetValue(assets, null) + "\tpaper=" + ReadField(assets, "Paper")
+            + "\tbodyFont=" + ReadField(assets, "BodyFont") + "\theaderFont=" + ReadField(assets, "HeaderFont") + "\n");
         Check((bool)Call(editor, "CanEnter"), "local kitchen editor action enabled");
         object service = Chainloader.PluginInfos["com.ch3ngyz.plugin.overcooked2.modsettings"].Instance;
         Call(service, "OpenSettings"); yield return new WaitForSecondsRealtime(.8f);
@@ -120,7 +116,8 @@ public sealed partial class UnityRecipeTests
         Check(TimeManager.IsPaused(TimeManager.PauseLayer.Main) && TimeManager.IsPaused(TimeManager.PauseLayer.UI)
             && TimeManager.IsPaused(TimeManager.PauseLayer.Camera), "native main/UI/camera layers frozen");
         foreach (PlayerControls player in UnityEngine.Object.FindObjectsOfType<PlayerControls>()) Check(player.IsSuppressed(), "native player input suppressed while editing");
-        foreach (T17EventSystem system in UnityEngine.Object.FindObjectsOfType<T17EventSystem>()) Check(system.IsDisabled(), "native event-system input suppressed while editor owns IMGUI");
+        foreach (T17EventSystem system in UnityEngine.Object.FindObjectsOfType<T17EventSystem>()) Check(system.IsDisabled(), "native event-system input suppressed while editor owns native Canvas");
+        yield return NativePanelScenario(editor, hud);
         int timerValue = UnityEngine.Object.FindObjectOfType<LevelTimerUIController>().Value;
         yield return new WaitForSecondsRealtime(1.2f);
         Check(UnityEngine.Object.FindObjectOfType<LevelTimerUIController>().Value == timerValue, "round timer frozen across real elapsed time");
@@ -138,6 +135,7 @@ public sealed partial class UnityRecipeTests
         harmony.Patch(AccessTools.Method(hud.GetType(), "OnGUI"), new HarmonyMethod(typeof(UnityRecipeTests), "InjectEditorEvent"), new HarmonyMethod(typeof(UnityRecipeTests), "RestoreEditorEvent"));
         harmony.Patch(AccessTools.PropertySetter(typeof(GUI), "matrix"), null, new HarmonyMethod(typeof(UnityRecipeTests), "EditorMatrixChanged"));
         Vector2 delta = new Vector2(Screen.width * .08f, -Screen.height * .12f);
+        yield return GuiCategory(editor, 0);
         yield return GuiInput(EventType.MouseDown, before.center);
         Check(ReferenceEquals(ReadField(editor, "_selected"), score), "production overlay selects real scoreboard by displayed bounds");
         yield return GuiInput(EventType.MouseDrag, before.center + delta);
@@ -164,6 +162,7 @@ public sealed partial class UnityRecipeTests
         Check(Mathf.Abs(scaled.width / stretched.width - scaled.height / stretched.height) < .03f, "real corner resize preserves displayed aspect ratio");
         ScreenCapture.CaptureScreenshot(Path.Combine(output, "editor-selected.png")); yield return new WaitForEndOfFrame(); yield return null;
         Vector2 timerDelta = new Vector2(-Screen.width * .07f, -Screen.height * .15f);
+        yield return GuiCategory(editor, 1);
         yield return GuiInput(EventType.MouseDown, timerBefore.center);
         Check(ReferenceEquals(ReadField(editor, "_selected"), timer), "production overlay selects real timer");
         yield return GuiInput(EventType.MouseDrag, timerBefore.center + timerDelta);
@@ -208,6 +207,7 @@ public sealed partial class UnityRecipeTests
         Check(!a.activeSelf && !b.activeSelf && Mathf.Abs(previewBar.Value - .4f) < .001f,
             "unchecking preview restores hidden root and original displayed progress");
         a.SetActive(true); b.SetActive(true); yield return null; yield return null;
+        yield return GuiCategory(editor, (int)chopping);
         Rect chopBefore = TargetBounds(chop);
         yield return GuiInput(EventType.MouseDown, chopBefore.center);
         Check(ReferenceEquals(ReadField(editor, "_selected"), chop), "shader-offset-aware hit test selects chopping bar at actual displayed location");
@@ -237,6 +237,7 @@ public sealed partial class UnityRecipeTests
         Check(a.GetComponent<CanvasGroup>().alpha == 0f && (int)ReadField(editor, "_editingKind") == (int)chopping,
             "fully transparent category remains editable from the category selector");
         AccessTools.Field(choppingValue.GetType(), "Opacity").SetValue(choppingValue, .45f);
+        yield return GuiPreview(editor, (int)chopping);
         a.SetActive(false); yield return GuiPreview(editor, (int)chopping);
         Check(a.activeSelf, "preview active before editor save");
         Call(editor, "End", true);

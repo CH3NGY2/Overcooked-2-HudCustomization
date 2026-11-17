@@ -85,7 +85,7 @@ namespace OC2HudCustomization
                 _language.Poll();
             }
             if (Runtime != null && Interlocked.Exchange(ref _settingsDirty, 0) != 0)
-                Runtime.SetOptions(_settings.Snapshot());
+                Runtime.SetOptions(Editor != null && Editor.Active ? Editor.DraftOptions : _settings.Snapshot());
         }
 
         private void LateUpdate() { if (Runtime != null) Runtime.Tick(); if (Editor != null) Editor.Tick(); }

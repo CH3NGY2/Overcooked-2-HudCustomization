@@ -43,6 +43,14 @@ namespace OC2HudCustomization
                 Finite(EmptySlotOpacity.Value, 100f) / 100f, Finite(IngredientOpacity.Value, 100f) / 100f);
         }
 
+        internal void Apply(HudOptions value)
+        {
+            RecipeScale.Value = value.RecipeScale; RecipesPerRow.Value = value.RecipesPerRow;
+            RecipeRowSpacing.Value = value.RecipeRowSpacing; ContentsScale.Value = value.ContentsScale;
+            ContentsPerRow.Value = value.ContentsPerRow; RecipeOpacity.Value = value.RecipeOpacity * 100f;
+            EmptySlotOpacity.Value = value.EmptySlotOpacity * 100f; IngredientOpacity.Value = value.IngredientOpacity * 100f;
+        }
+
         // Defense after BepInEx range validation; never send non-finite values into Unity.
         private static float Finite(float value, float fallback)
         { return float.IsNaN(value) || float.IsInfinity(value) ? fallback : value; }
@@ -54,6 +62,15 @@ namespace OC2HudCustomization
         internal readonly float RecipeScale, RecipeRowSpacing, ContentsScale;
         internal readonly int RecipesPerRow, ContentsPerRow;
         internal readonly float RecipeOpacity, EmptySlotOpacity, IngredientOpacity;
+
+        internal bool Same(HudOptions other)
+        {
+            return other != null && Enabled == other.Enabled && RecipeScale == other.RecipeScale
+                && RecipesPerRow == other.RecipesPerRow && RecipeRowSpacing == other.RecipeRowSpacing
+                && ContentsScale == other.ContentsScale && ContentsPerRow == other.ContentsPerRow
+                && RecipeOpacity == other.RecipeOpacity && EmptySlotOpacity == other.EmptySlotOpacity
+                && IngredientOpacity == other.IngredientOpacity;
+        }
 
         internal HudOptions(bool enabled, float recipeScale, int recipesPerRow, float recipeRowSpacing,
             float contentsScale, int contentsPerRow, float recipeOpacity, float emptySlotOpacity, float ingredientOpacity)

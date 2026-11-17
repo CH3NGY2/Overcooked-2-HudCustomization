@@ -261,7 +261,9 @@ public sealed partial class UnityRecipeTests
                         + "\t" + layer + "\t" + other.shortNameHash + "\t" + other.normalizedTime + "\t" + other.length
                         + "\t" + animator.IsInTransition(layer) + Environment.NewLine);
                 }
-            if (offset.sqrMagnitude > .0001f)
+            // The native clip may wrap its shader offset on the frame normalizedTime
+            // reaches 1. That frame is completion, not a second horizontal entrance.
+            if (!completed && offset.sqrMagnitude > .0001f)
             {
                 if (!horizontal) ScreenCapture.CaptureScreenshot(Path.Combine(output, label + "-horizontal.png"));
                 horizontal = true;

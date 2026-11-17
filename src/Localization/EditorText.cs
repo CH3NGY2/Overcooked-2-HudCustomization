@@ -2,6 +2,25 @@ namespace OC2HudCustomization
 {
     internal static class EditorText
     {
+        internal static readonly SettingsMessage UnifiedHelp = new SettingsMessage(
+            "Select a category to highlight and preview it. Drag the HUD or edit below. Drag this header to move the panel. ` saves and exits.",
+            "Choisissez une catégorie pour l’aperçu. Déplacez le HUD ou réglez ci-dessous. Déplacez le titre pour déplacer le panneau. ` enregistre.",
+            "Seleziona una categoria per l’anteprima. Trascina HUD o titolo del pannello. Modifica sotto; ` salva ed esce.",
+            "Kategorie für Vorschau wählen. HUD oder Titelleiste ziehen. Werte unten bearbeiten; ` speichert und beendet.",
+            "Elige una categoría para previsualizar. Arrastra el HUD o el título del panel. Ajusta abajo; ` guarda y sale.",
+            "Выберите категорию для просмотра. Перетаскивайте HUD или заголовок панели. Настройки ниже; ` — сохранить и выйти.",
+            "Escolha uma categoria para prévia. Arraste o HUD ou o título do painel. Ajuste abaixo; ` salva e sai.",
+            "Wybierz kategorię do podglądu. Przeciągnij HUD lub nagłówek panelu. Ustawienia poniżej; ` zapisuje i zamyka.",
+            "点击类别即高亮并预览，再拖动 HUD 或调整下方参数。拖动标题栏可移动面板。按 ` 保存退出。",
+            "種類を選ぶと強調・プレビュー。本体やパネル見出しをドラッグ。下で調整、` で保存して終了。",
+            "종류를 선택하면 강조·미리보기. HUD 또는 패널 제목을 드래그하세요. 아래에서 조정, ` 저장 후 종료.",
+            "點擊類別即高亮並預覽，再拖動 HUD 或調整下方參數。拖動標題列可移動面板。按 ` 儲存退出。");
+        internal static readonly SettingsMessage SelectCategoryText = new SettingsMessage("Select a category", "Choisir une catégorie", "Scegli categoria", "Kategorie wählen", "Elegir categoría", "Выберите категорию", "Escolher categoria", "Wybierz kategorię", "选择要编辑的类别", "種類を選択", "종류 선택", "選擇要編輯的類別");
+        internal static readonly SettingsMessage CategoryActive = new SettingsMessage("Highlighted · preview enabled · click again to finish", "Sélection · aperçu actif · recliquer pour terminer", "Evidenziato · anteprima attiva · riclicca per finire", "Markiert · Vorschau aktiv · erneut klicken zum Beenden", "Resaltado · vista previa activa · pulsa de nuevo para terminar", "Выделено · просмотр включён · нажмите снова для завершения", "Destacado · prévia ativa · clique de novo para terminar", "Wyróżniono · podgląd aktywny · kliknij ponownie, aby zakończyć", "已高亮 · 预览已开启 · 再点此类别结束预览", "強調・プレビュー中。もう一度選ぶと終了", "강조·미리보기 켜짐 · 다시 클릭하면 종료", "已高亮 · 預覽已開啟 · 再點此類別結束預覽");
+        internal static readonly SettingsMessage NoInstance = new SettingsMessage("No display created in this kitchen; settings still apply globally.", "Aucun affichage dans cette cuisine ; réglages globaux actifs.", "Nessuna istanza in cucina; impostazioni globali attive.", "Keine Anzeige in dieser Küche; Einstellungen gelten global.", "Sin elemento en esta cocina; los ajustes se aplican globalmente.", "В этой кухне элемент не создан; настройки действуют глобально.", "Nenhuma instância nesta cozinha; ajustes globais ativos.", "Brak elementu w kuchni; ustawienia działają globalnie.", "本关尚未创建此类界面，仍可修改参数并全局保存。", "この厨房では未生成です。設定の変更・保存は可能です。", "이 주방에 표시 항목이 없지만 전역 설정은 가능합니다.", "本關尚未建立此類介面，仍可修改參數並全域儲存。");
+        internal static readonly SettingsMessage LiveLayout = new SettingsMessage("Live preview · 0 per row keeps native layout", "Aperçu direct · 0 par ligne conserve le natif", "Anteprima · 0 per riga mantiene layout nativo", "Live-Vorschau · 0 pro Reihe behält Original", "Vista previa · 0 por fila usa disposición nativa", "Просмотр · 0 в строке сохраняет исходную раскладку", "Prévia · 0 por linha mantém o layout nativo", "Podgląd · 0 w wierszu zachowuje układ gry", "实时预览 · 每行数量设为 0 时使用原生布局", "即時プレビュー · 一行 0 は元の配置", "실시간 미리보기 · 행당 0은 기본 배치", "即時預覽 · 每行數量設為 0 時使用原生排版");
+        internal static readonly SettingsMessage Save = new SettingsMessage("Save & exit (`)", "Enregistrer (`)", "Salva ed esci (`)", "Speichern & Ende (`)", "Guardar y salir (`)", "Сохранить и выйти (`)", "Salvar e sair (`)", "Zapisz i zamknij (`)", "保存并退出 (`)", "保存して終了 (`)", "저장 후 종료 (`)", "儲存並退出 (`)");
+        internal static readonly SettingsMessage Cancel = new SettingsMessage("Cancel changes", "Annuler", "Annulla", "Verwerfen", "Cancelar", "Отмена", "Cancelar", "Anuluj zmiany", "取消修改", "変更を取消", "변경 취소", "取消修改");
         // English, French, Italian, German, Spanish, Russian, Brazilian, Polish, Chinese, Japanese, Korean, Traditional Chinese.
         internal static readonly SettingsMessage Enter = new SettingsMessage("Enter HUD editor", "Modifier le HUD", "Modifica HUD", "HUD bearbeiten", "Editar HUD", "Редактор интерфейса", "Editar HUD", "Edytuj HUD", "进入 HUD 编辑模式", "HUD 編集モード", "HUD 편집 모드", "進入 HUD 編輯模式");
         internal static readonly SettingsMessage EntryDescription = new SettingsMessage(
