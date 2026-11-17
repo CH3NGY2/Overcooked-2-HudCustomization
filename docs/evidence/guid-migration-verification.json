@@ -1,0 +1,100 @@
+{
+  "checkedAt": "2026-11-17T19:26:11.415933+08:00",
+  "scope": "Confirmed plugin GUID, native ConfigFile migration, actual Unity regression and separate final deployment",
+  "plugin": {
+    "previousGuid": "com.oc2.hudcustomization",
+    "guid": "com.ch3ngyz.plugin.overcooked2.hudcustomization",
+    "name": "OC2 HUD 自定义 / OC2 HUD Customization",
+    "version": "0.1.0",
+    "pluginBytes": 75776,
+    "source": "E:\\code\\OC2\\OtherMOD\\Overcooked-2-HudCustomization\\bin\\Release\\OC2HudCustomization.dll",
+    "sourceSha256": "ECC1D3CEAC22000C0BEE2F1A544DAE7A07A8957318E598FBE24A14F118AB8FF5",
+    "actualUnityLoadedSha256": "ECC1D3CEAC22000C0BEE2F1A544DAE7A07A8957318E598FBE24A14F118AB8FF5",
+    "installedPath": "E:\\SteamLibrary\\steamapps\\common\\Overcooked! 2\\BepInEx\\plugins\\OC2HudCustomization.dll",
+    "installedSha256": "ECC1D3CEAC22000C0BEE2F1A544DAE7A07A8957318E598FBE24A14F118AB8FF5"
+  },
+  "migration": {
+    "legacyConfig": "E:\\SteamLibrary\\steamapps\\common\\Overcooked! 2\\BepInEx\\config\\com.oc2.hudcustomization.cfg",
+    "newConfig": "E:\\SteamLibrary\\steamapps\\common\\Overcooked! 2\\BepInEx\\config\\com.ch3ngyz.plugin.overcooked2.hudcustomization.cfg",
+    "legacyConfigPreserved": true,
+    "existingNewConfigWins": true,
+    "importBeforeFirstBind": true,
+    "unknownKeysAndOriginalTextPreserved": true,
+    "temporaryCopyThenNonOverwritingMove": true,
+    "legacyConfigSha256AtDeployment": "C74234589BC5CA4914FC319D9A806B9A2118E24DA577303E1670817E623EB85B",
+    "newConfigSha256AtDeployment": "C74234589BC5CA4914FC319D9A806B9A2118E24DA577303E1670817E623EB85B",
+    "currentNewConfigSha256": "C74234589BC5CA4914FC319D9A806B9A2118E24DA577303E1670817E623EB85B",
+    "migratedSettingsFromActualStartup": {
+      "General.Enabled": "true",
+      "Recipes.RecipeScale": "1",
+      "Recipes.RecipesPerRow": "0",
+      "Recipes.RecipeRowSpacing": "8",
+      "Contents.ContentsScale": "1",
+      "Contents.ContentsPerRow": "0",
+      "Opacity.RecipeOpacity": "100",
+      "Opacity.EmptySlotOpacity": "100",
+      "Opacity.IngredientOpacity": "100"
+    }
+  },
+  "desktop": {
+    "command": "scripts/Test.ps1",
+    "assertions": 841,
+    "run": ".validation/logic-20261117-191545-824",
+    "migrationAssertionsAdded": 15,
+    "modSettingsCommand": "scripts/Test-ModSettings.ps1",
+    "modSettingsAssertions": 554,
+    "modSettingsRun": ".validation/modsettings-20261117-191547-009"
+  },
+  "contracts": {
+    "command": "scripts/Verify-Contracts.ps1",
+    "patchSignatures": 10,
+    "reflectedFields": 12,
+    "directPublicReferences": 25,
+    "nonPublicDirectAccess": 0
+  },
+  "unity": {
+    "command": "scripts/Test-UnityRecipes.ps1",
+    "run": ".validation/unity-recipes-20261117-191735-939",
+    "assertions": 73,
+    "screen": [
+      3840,
+      2160
+    ],
+    "scenarioError": null,
+    "loadedRecord": ".validation/unity-recipes-20261117-191735-939/loaded.txt",
+    "migrationRecord": ".validation/unity-recipes-20261117-191735-939/guid-migration.tsv",
+    "assertionsRecord": ".validation/unity-recipes-20261117-191735-939/assertions.txt",
+    "scope": "Native Chainloader loads new identity, legacy identity absent, ConfigFile path matches new GUID, all nine legacy values retained; existing recipe presentation and entrance regression"
+  },
+  "restore": {
+    "verification": ".validation/unity-recipes-20261117-191735-939/verification.json",
+    "scenarioError": null,
+    "restorationErrors": [],
+    "filesCheckedAgainstOriginal": 22,
+    "allFinalHashesMatchOriginal": true,
+    "testPluginRemoved": true,
+    "newConfigCreatedByTestRemovedBeforeSeparateDeployment": true,
+    "temporalBoundary": "Restoration checked at owned runner exit. Final production DLL and copied user configuration were installed separately afterwards. Subsequent player edits are not rolled back."
+  },
+  "deployment": {
+    "record": ".validation/deploy-guid-20261117-192011-268/deployment.json",
+    "backup": ".validation/deploy-guid-20261117-192011-268/backup",
+    "matchingGuidCountAtDeployment": 1,
+    "pluginDllsScannedAtDeployment": 32,
+    "legacyConfigCopiedAfterRunnerRestore": true,
+    "remoteChanges": false
+  },
+  "git": {
+    "repositoryExists": true,
+    "branch": "main",
+    "hasCommits": false,
+    "taskCommitCreated": false,
+    "reason": "All pre-existing implementation files were untracked in a repository without a baseline; a GUID-only commit cannot isolate the prior implementation."
+  },
+  "notVerified": [
+    "Actual ModSettings list glyphs, width and live visual refresh",
+    "Legacy ModSettings favourites tied to old GUID",
+    "All mixed recipe heights and order lifecycles",
+    "Second Steam peer and multiplayer"
+  ]
+}

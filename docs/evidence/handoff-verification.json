@@ -1,0 +1,65 @@
+{
+  "checkedAt": "2026-11-17T13:20:23.768473+08:00",
+  "sourceRoot": "E:\\code\\OC2\\Overcooked-2-HostUtilities-Code",
+  "targetRoot": "E:\\code\\OC2\\OtherMOD\\Overcooked-2-HudCustomization",
+  "originResearchCommit": "597095b",
+  "scope": "资料迁移与独立MOD目录准备；未实现、构建、部署或操作游戏。",
+  "originalReportSha256": "12DDFCCAD632FB57209459B34DC086BE4F32579A512348C095137E44CFC7968F",
+  "movedReportSha256AfterPathUpdates": "5925B2B9F31EE3C1E003F25BE91AD48294CC44C179650C3AC640ED4BF584DF4D",
+  "movedMetadataSha256": "CA8E77D29277F7A19CB895DDAAAEECCFCDB94ADF4A2A71F54DA31E4B9DA9F37D",
+  "moveDigestComparisons": {
+    "reportMatchedBeforePathUpdates": true,
+    "metadataMatched": true
+  },
+  "sourceFilesAbsent": true,
+  "sourceReferenceCount": 73,
+  "referencedFileCount": 19,
+  "metadataTypeCount": 7,
+  "metadataMethodCount": 20,
+  "assemblies": [
+    {
+      "path": "E:\\SteamLibrary\\steamapps\\common\\Overcooked! 2\\Overcooked2_Data\\Managed\\Assembly-CSharp.dll",
+      "sha256": "9BB6A3791331201D32CA89C3509F019A9780309DA7110002F04020E8491E1908",
+      "matchesResearch": true
+    },
+    {
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp.dll",
+      "sha256": "9BB6A3791331201D32CA89C3509F019A9780309DA7110002F04020E8491E1908",
+      "matchesResearch": true
+    }
+  ],
+  "localLinks": [
+    {
+      "document": "GOAL.md",
+      "target": "docs/GameplayHudCustomizationResearch.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "GOAL.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/GameplayHudCustomizationResearch.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/evidence/metadata-verification.json",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/evidence/source-references.json",
+      "exists": true
+    },
+    {
+      "document": "docs\\GameplayHudCustomizationResearch.md",
+      "target": "evidence/metadata-verification.json",
+      "exists": true
+    }
+  ],
+  "expectedFileCount": 8,
+  "errors": []
+}

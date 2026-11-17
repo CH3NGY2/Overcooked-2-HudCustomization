@@ -1,0 +1,32 @@
+{
+  "version": "0.1.0",
+  "tag": "v0.1.0",
+  "repository": "CH3NGY2/Overcooked-2-HudCustomization",
+  "guid": "com.ch3ngyz.plugin.overcooked2.hudcustomization",
+  "name": "OC2 HUD 自定义 / OC2 HUD Customization",
+  "runtime": ".NET Framework 3.5 / v2.0.50727",
+  "dll": "OC2HudCustomization.dll",
+  "dllBytes": 75776,
+  "dllSha256": "ECC1D3CEAC22000C0BEE2F1A544DAE7A07A8957318E598FBE24A14F118AB8FF5",
+  "asset": "OC2HudCustomization-v0.1.0.zip",
+  "assetBytes": 30442,
+  "assetSha256": "505D4B75BFC6E29C9C43D532F994F68566D135B7053403F923625111ED71EBCA",
+  "entries": [
+    "OC2HudCustomization.dll"
+  ],
+  "actualUnityRun": ".validation/unity-recipes-20261117-191735-939",
+  "actualUnityAssertions": 73,
+  "currentDesktopRuns": {
+    "logicConfigAssertions": 841,
+    "boundaryAssertions": 45,
+    "entranceBoundaryAssertions": 1,
+    "modSettingsAssertions": 554,
+    "logicRun": ".validation/logic-20261117-193957-545",
+    "boundsRun": ".validation/recipe-bounds-20261117-193959-185",
+    "entranceRun": ".validation/recipe-bounds-20261117-193959-908",
+    "modSettingsRun": ".validation/modsettings-20261117-193958-576",
+    "note": "Release-preparation rebuild is byte-identical to the actual Unity-tested artifact. All listed desktop runs used the current DLL; desktop ECall replacements are not rendered Unity evidence."
+  },
+  "releaseNotes": "docs/releases/v0.1.0.md",
+  "status": "Prepared and verified locally; remote publication and anonymous-download verification are recorded after execution in ignored local evidence."
+}

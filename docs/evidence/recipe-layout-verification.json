@@ -1,0 +1,546 @@
+{
+  "checkedAt": "2026-11-17T19:26:11.415933+08:00",
+  "change": "Trim only the top card upward blank paper; measure rendered Graphic bounds; first-row horizontal entrance followed by quick landing then native branch reveal.",
+  "levels": [
+    "installed game metadata and IL",
+    "Release build",
+    "desktop production rules and Unity boundary replacement",
+    "actual Unity native recipe UI fixture in real kitchen"
+  ],
+  "gameSha256": "9BB6A3791331201D32CA89C3509F019A9780309DA7110002F04020E8491E1908",
+  "pluginGuid": "com.ch3ngyz.plugin.overcooked2.hudcustomization",
+  "pluginVersion": "0.1.0",
+  "pluginBytes": 75776,
+  "pluginSha256": "ECC1D3CEAC22000C0BEE2F1A544DAE7A07A8957318E598FBE24A14F118AB8FF5",
+  "actualLoadedSha256": "ECC1D3CEAC22000C0BEE2F1A544DAE7A07A8957318E598FBE24A14F118AB8FF5",
+  "installedPath": "E:\\SteamLibrary\\steamapps\\common\\Overcooked! 2\\BepInEx\\plugins\\OC2HudCustomization.dll",
+  "installedSha256": "ECC1D3CEAC22000C0BEE2F1A544DAE7A07A8957318E598FBE24A14F118AB8FF5",
+  "desktop": {
+    "logicConfigAssertions": 841,
+    "boundaryAssertions": 45,
+    "entranceBoundaryAssertions": 1,
+    "modSettingsAssertions": 554,
+    "logicRun": ".validation/logic-20261117-193957-545",
+    "boundsRun": ".validation/recipe-bounds-20261117-193959-185",
+    "entranceRun": ".validation/recipe-bounds-20261117-193959-908",
+    "modSettingsRun": ".validation/modsettings-20261117-193958-576",
+    "note": "Release-preparation rebuild is byte-identical to the actual Unity-tested artifact. All listed desktop runs used the current DLL; desktop ECall replacements are not rendered Unity evidence."
+  },
+  "contracts": {
+    "patchSignatures": 10,
+    "reflectedFields": 12,
+    "directPublicReferences": 25,
+    "privateDirectAccesses": 0
+  },
+  "unity": {
+    "run": ".validation/unity-recipes-20261117-191735-939",
+    "command": "scripts/Test-UnityRecipes.ps1",
+    "assertions": 73,
+    "screen": [
+      3840,
+      2160
+    ],
+    "stableRenderedFrames": 20,
+    "fixture": "5 then 6 native ChickenBurger cards through actual AddElement/RefreshSubElements/LayoutWidgets in a display-only flow alongside running kitchen flow",
+    "columns": [
+      1,
+      2
+    ],
+    "scales": [
+      0.5,
+      1,
+      2
+    ],
+    "rowSpacing": 20.77099,
+    "timing": {
+      "horizontalRemainingThreshold": 0.2,
+      "landingNormalizedSpan": 0.14,
+      "landingNormalizedDeadline": 0.78,
+      "branchRevealNormalized": [
+        0.78,
+        0.85
+      ],
+      "nativeClipSeconds": 1.5,
+      "nominalLandingSeconds": 0.21,
+      "note": "Native Animator progress drives the motion. Measured wall time includes screenshot and test logging overhead."
+    },
+    "choreography": {
+      "entrance": {
+        "sampleSeconds": {
+          "descent": 0.8098202,
+          "landing": 1.004349,
+          "reveal": 1.302992,
+          "duration": 0.1945286,
+          "target": 291.458
+        },
+        "nativeCompletionErrorCanvasUnits": 0.0
+      },
+      "single-entrance": {
+        "sampleSeconds": {
+          "descent": 0.7773781,
+          "landing": 0.9790421,
+          "reveal": 1.270123,
+          "duration": 0.201664,
+          "target": -88.85495
+        },
+        "nativeCompletionErrorCanvasUnits": 3.051758e-05
+      }
+    },
+    "scenarios": {
+      "scale-05-initial": {
+        "cards": [
+          {
+            "card": 0,
+            "xMin": -954.5,
+            "yMin": 444.0,
+            "xMax": -858.525,
+            "yMax": 550.0
+          },
+          {
+            "card": 1,
+            "xMin": -853.525,
+            "yMin": 444.0,
+            "xMax": -757.55,
+            "yMax": 550.0
+          },
+          {
+            "card": 2,
+            "xMin": -954.5,
+            "yMin": 317.229,
+            "xMax": -858.525,
+            "yMax": 423.229
+          },
+          {
+            "card": 3,
+            "xMin": -853.525,
+            "yMin": 317.229,
+            "xMax": -757.55,
+            "yMax": 423.229
+          }
+        ],
+        "firstCardHeight": 106.0,
+        "clearances": [
+          20.771000000000015
+        ]
+      },
+      "scale-05": {
+        "cards": [
+          {
+            "card": 0,
+            "xMin": -954.5,
+            "yMin": 444.0,
+            "xMax": -858.525,
+            "yMax": 550.0
+          },
+          {
+            "card": 1,
+            "xMin": -853.525,
+            "yMin": 444.0,
+            "xMax": -757.55,
+            "yMax": 550.0
+          },
+          {
+            "card": 2,
+            "xMin": -954.5,
+            "yMin": 317.229,
+            "xMax": -858.525,
+            "yMax": 423.229
+          },
+          {
+            "card": 3,
+            "xMin": -853.525,
+            "yMin": 317.229,
+            "xMax": -757.55,
+            "yMax": 423.229
+          },
+          {
+            "card": 4,
+            "xMin": -954.5,
+            "yMin": 190.458,
+            "xMax": -858.525,
+            "yMax": 296.458
+          }
+        ],
+        "firstCardHeight": 106.0,
+        "clearances": [
+          20.771000000000015,
+          20.770999999999958
+        ]
+      },
+      "rebuilt-scale-05": {
+        "cards": [
+          {
+            "card": 0,
+            "xMin": -954.5,
+            "yMin": 444.0,
+            "xMax": -858.525,
+            "yMax": 550.0
+          },
+          {
+            "card": 1,
+            "xMin": -853.525,
+            "yMin": 444.0,
+            "xMax": -757.55,
+            "yMax": 550.0
+          },
+          {
+            "card": 2,
+            "xMin": -954.5,
+            "yMin": 317.229,
+            "xMax": -858.525,
+            "yMax": 423.229
+          },
+          {
+            "card": 3,
+            "xMin": -853.525,
+            "yMin": 317.229,
+            "xMax": -757.55,
+            "yMax": 423.229
+          },
+          {
+            "card": 4,
+            "xMin": -954.5,
+            "yMin": 190.458,
+            "xMax": -858.525,
+            "yMax": 296.458
+          }
+        ],
+        "firstCardHeight": 106.0,
+        "clearances": [
+          20.771000000000015,
+          20.770999999999958
+        ]
+      },
+      "scale-1": {
+        "cards": [
+          {
+            "card": 0,
+            "xMin": -954.5,
+            "yMin": 348.0,
+            "xMax": -810.55,
+            "yMax": 545.0
+          },
+          {
+            "card": 1,
+            "xMin": -805.55,
+            "yMin": 348.0,
+            "xMax": -661.6001,
+            "yMax": 545.0
+          },
+          {
+            "card": 2,
+            "xMin": -954.5,
+            "yMin": 130.229,
+            "xMax": -810.55,
+            "yMax": 327.229
+          },
+          {
+            "card": 3,
+            "xMin": -805.55,
+            "yMin": 130.229,
+            "xMax": -661.6001,
+            "yMax": 327.229
+          },
+          {
+            "card": 4,
+            "xMin": -954.5,
+            "yMin": -87.54199,
+            "xMax": -810.55,
+            "yMax": 109.458
+          }
+        ],
+        "firstCardHeight": 197.0,
+        "clearances": [
+          20.771000000000015,
+          20.771000000000015
+        ]
+      },
+      "scale-2": {
+        "cards": [
+          {
+            "card": 0,
+            "xMin": -954.5,
+            "yMin": 156.0,
+            "xMax": -714.6,
+            "yMax": 545.0
+          },
+          {
+            "card": 1,
+            "xMin": -709.6,
+            "yMin": 156.0,
+            "xMax": -469.7,
+            "yMax": 545.0
+          },
+          {
+            "card": 2,
+            "xMin": -954.5,
+            "yMin": -253.771,
+            "xMax": -714.6,
+            "yMax": 135.229
+          },
+          {
+            "card": 3,
+            "xMin": -709.6,
+            "yMin": -253.771,
+            "xMax": -469.7,
+            "yMax": 135.229
+          },
+          {
+            "card": 4,
+            "xMin": -954.5001,
+            "yMin": -663.542,
+            "xMax": -714.6,
+            "yMax": -274.542
+          }
+        ],
+        "firstCardHeight": 389.0,
+        "clearances": [
+          20.770999999999987,
+          20.770999999999987
+        ]
+      },
+      "single-column": {
+        "cards": [
+          {
+            "card": 0,
+            "xMin": -954.5,
+            "yMin": 444.0,
+            "xMax": -858.525,
+            "yMax": 550.0
+          },
+          {
+            "card": 1,
+            "xMin": -954.5,
+            "yMin": 317.229,
+            "xMax": -858.525,
+            "yMax": 423.229
+          },
+          {
+            "card": 2,
+            "xMin": -954.5,
+            "yMin": 190.458,
+            "xMax": -858.525,
+            "yMax": 296.458
+          },
+          {
+            "card": 3,
+            "xMin": -954.5,
+            "yMin": 63.68701,
+            "xMax": -858.525,
+            "yMax": 169.687
+          },
+          {
+            "card": 4,
+            "xMin": -954.5,
+            "yMin": -63.08398,
+            "xMax": -858.525,
+            "yMax": 42.91602
+          }
+        ],
+        "firstCardHeight": 106.0,
+        "clearances": [
+          20.771000000000015,
+          20.770999999999958,
+          20.770999999999987,
+          20.770989999999998
+        ]
+      },
+      "single-column-added": {
+        "cards": [
+          {
+            "card": 0,
+            "xMin": -954.5,
+            "yMin": 444.0,
+            "xMax": -858.525,
+            "yMax": 550.0
+          },
+          {
+            "card": 1,
+            "xMin": -954.5,
+            "yMin": 317.229,
+            "xMax": -858.525,
+            "yMax": 423.229
+          },
+          {
+            "card": 2,
+            "xMin": -954.5,
+            "yMin": 190.458,
+            "xMax": -858.525,
+            "yMax": 296.458
+          },
+          {
+            "card": 3,
+            "xMin": -954.5,
+            "yMin": 63.68701,
+            "xMax": -858.525,
+            "yMax": 169.687
+          },
+          {
+            "card": 4,
+            "xMin": -954.5,
+            "yMin": -63.08398,
+            "xMax": -858.525,
+            "yMax": 42.91602
+          },
+          {
+            "card": 5,
+            "xMin": -954.5,
+            "yMin": -189.855,
+            "xMax": -858.525,
+            "yMax": -83.85498
+          }
+        ],
+        "firstCardHeight": 106.0,
+        "clearances": [
+          20.771000000000015,
+          20.770999999999958,
+          20.770999999999987,
+          20.770989999999998,
+          20.771
+        ]
+      },
+      "column-change": {
+        "cards": [
+          {
+            "card": 0,
+            "xMin": -954.5,
+            "yMin": 444.0,
+            "xMax": -858.525,
+            "yMax": 550.0
+          },
+          {
+            "card": 1,
+            "xMin": -853.525,
+            "yMin": 444.0,
+            "xMax": -757.55,
+            "yMax": 550.0
+          },
+          {
+            "card": 2,
+            "xMin": -954.5,
+            "yMin": 317.229,
+            "xMax": -858.525,
+            "yMax": 423.229
+          },
+          {
+            "card": 3,
+            "xMin": -853.525,
+            "yMin": 317.229,
+            "xMax": -757.55,
+            "yMax": 423.229
+          },
+          {
+            "card": 4,
+            "xMin": -954.5,
+            "yMin": 190.458,
+            "xMax": -858.525,
+            "yMax": 296.458
+          },
+          {
+            "card": 5,
+            "xMin": -853.525,
+            "yMin": 190.458,
+            "xMax": -757.55,
+            "yMax": 296.458
+          }
+        ],
+        "firstCardHeight": 106.0,
+        "clearances": [
+          20.771000000000015,
+          20.770999999999958
+        ]
+      }
+    },
+    "images": [
+      {
+        "file": ".validation/unity-recipes-20261117-191735-939/entrance-first-row.png",
+        "width": 3840,
+        "height": 2160,
+        "sha256": "38271FA6FF098574368D3AA80B7C6BCCCA496DFCE1C014B8E6209E3A759B7FD5"
+      },
+      {
+        "file": ".validation/unity-recipes-20261117-191735-939/entrance-descending.png",
+        "width": 3840,
+        "height": 2160,
+        "sha256": "DFD8439B55B74D90D112EBE3C37C77D3588C315489445DEE19B82DC65304ADC8"
+      },
+      {
+        "file": ".validation/unity-recipes-20261117-191735-939/entrance-settled.png",
+        "width": 3840,
+        "height": 2160,
+        "sha256": "8FFD6ABEF2742D52D45CF45B89ACE01E8041F001995C6B4A3AB9623A19C3574A"
+      },
+      {
+        "file": ".validation/unity-recipes-20261117-191735-939/single-column.png",
+        "width": 3840,
+        "height": 2160,
+        "sha256": "18CD6784E3D56DB2B808DACDA1CE733F07841305F97444322D792B21EAD06B7D"
+      },
+      {
+        "file": ".validation/unity-recipes-20261117-191735-939/rebuilt-scale-05.png",
+        "width": 3840,
+        "height": 2160,
+        "sha256": "FA4B03E42AB8F226B04892DF3EE7C77B7FFD741DAA5170D329943CD403B36FA8"
+      },
+      {
+        "file": ".validation/unity-recipes-20261117-191735-939/scale-1.png",
+        "width": 3840,
+        "height": 2160,
+        "sha256": "C161DADAA05D24BA329DDDB431900C4B2AFABB01474F832044F7562D907940AD"
+      },
+      {
+        "file": ".validation/unity-recipes-20261117-191735-939/scale-2.png",
+        "width": 3840,
+        "height": 2160,
+        "sha256": "05B35CE4B6984556507245E8F65B3616A970DB0F03A295220B4B6C845ACC2EF3"
+      }
+    ],
+    "activeProgressBarsPerCard": 1,
+    "hudWarningsOrErrors": 0,
+    "inactiveFixtureCoroutineErrors": 0,
+    "environmentFindings": [
+      "Other installed-mod, optional-member, native resource and shutdown warnings remain outside this HUD change; the complete game log is not described as clean."
+    ],
+    "identityMigrationEvidence": "docs/evidence/guid-migration-verification.json"
+  },
+  "restore": {
+    "runnerVerification": ".validation/unity-recipes-20261117-191735-939/verification.json",
+    "runnerRestoredPreviousProductionBeforeSeparateDeployment": true,
+    "configurationFiles": 18,
+    "allOriginalConfigHashesRestoredAtRunnerExit": true,
+    "sharedLogRestoredAtRunnerExit": true,
+    "originalSaves": [
+      {
+        "path": "<LocalLow>/Team17/Overcooked2/<SteamID>/Meta_SaveFile.save",
+        "verifiedSha256AtRunnerExit": "66FFD8563CF06158C03DFFD92DCA2E031C3956B4F21698F9A67099B0F5C1FA12"
+      }
+    ],
+    "testDllRemoved": true,
+    "conflicts": 0,
+    "hudCfgSha256AtDeployment": "C74234589BC5CA4914FC319D9A806B9A2118E24DA577303E1670817E623EB85B",
+    "temporalBoundary": "Restoration checked at owned runner exit. Final production DLL and copied user configuration were installed separately afterwards. Subsequent player edits are not rolled back."
+  },
+  "deployment": {
+    "record": ".validation/deploy-guid-20261117-192011-268/deployment.json",
+    "backup": ".validation/deploy-guid-20261117-192011-268/backup",
+    "matchingGuidCount": 1,
+    "dllsScanned": 32,
+    "remoteChanges": false
+  },
+  "history": {
+    "previousAggregate": ".validation/deploy-guid-20261117-192011-268/previous-recipe-layout-verification.json",
+    "previousVerifiedLayoutRun": ".validation/unity-recipes-20261117-183226-359",
+    "earlierPassingRun": ".validation/unity-recipes-20261117-182903-315",
+    "supersededChoreographyRun": ".validation/unity-recipes-20261117-181034-539",
+    "headAnchorFailureRun": ".validation/unity-recipes-20261117-182552-400",
+    "note": "Failed and intermediate runs remain unchanged. A broad paper-name assertion selected a normal ingredient branch; it now scopes to TopRecipeWidgetTile. A subsequent five-unit head/full-card anchor mismatch was fixed in production."
+  },
+  "notVerified": [
+    "all recipe depths and mixed-height combinations in actual kitchens",
+    "full live order success/failure/expiry/pause lifecycle",
+    "Horde",
+    "actual device input or second Steam peer",
+    "remaining contents/opacity and ModSettings visual acceptance"
+  ],
+  "publicationPrivacy": "Public summary redacts the player save-account directory. Original attestation remains in the ignored local run."
+}

@@ -1,0 +1,127 @@
+{
+  "checkedAt": "2026-11-17T13:09:17.5065799+08:00",
+  "gameAssembly": "E:\\SteamLibrary\\steamapps\\common\\Overcooked! 2\\Overcooked2_Data\\Managed\\Assembly-CSharp.dll",
+  "referenceAssembly": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp.dll",
+  "gameSha256": "9BB6A3791331201D32CA89C3509F019A9780309DA7110002F04020E8491E1908",
+  "referenceSha256": "9BB6A3791331201D32CA89C3509F019A9780309DA7110002F04020E8491E1908",
+  "hashesMatch": true,
+  "assemblyVersion": "0.0.0.0",
+  "mvid": "114d606a-29d5-472c-8ebe-c2c20fbe3be3",
+  "types": [
+    {
+      "name": "RectTransformExtension",
+      "methods": [
+        {
+          "name": "get_scale",
+          "access": "public"
+        },
+        {
+          "name": "set_scale",
+          "access": "public"
+        },
+        {
+          "name": "LateUpdate",
+          "access": "private"
+        },
+        {
+          "name": "UpdateAspectRatio",
+          "access": "private"
+        }
+      ]
+    },
+    {
+      "name": "UnityEngine.UI.AnchorGridLayoutGroup",
+      "methods": [
+        {
+          "name": "set_cellSize",
+          "access": "public"
+        },
+        {
+          "name": "set_constraint",
+          "access": "public"
+        },
+        {
+          "name": "set_constraintCount",
+          "access": "public"
+        }
+      ]
+    },
+    {
+      "name": "UISubElementContainer",
+      "methods": [
+        {
+          "name": "RefreshSubElements",
+          "access": "public"
+        },
+        {
+          "name": "OnRefreshSubObjectProperties",
+          "access": "protected"
+        },
+        {
+          "name": "EnsureImagesExist",
+          "access": "protected"
+        }
+      ]
+    },
+    {
+      "name": "ClientIngredientContentGUI",
+      "methods": [
+        {
+          "name": "OnOrderChanged",
+          "access": "private"
+        }
+      ]
+    },
+    {
+      "name": "IngredientContentsUIContainer",
+      "methods": [
+        {
+          "name": "EnsureImagesExist",
+          "access": "protected"
+        },
+        {
+          "name": "OnRefreshSubObjectProperties",
+          "access": "protected"
+        },
+        {
+          "name": "RefreshIcons",
+          "access": "private"
+        }
+      ]
+    },
+    {
+      "name": "RecipeFlowGUI",
+      "methods": [
+        {
+          "name": "Update",
+          "access": "private"
+        },
+        {
+          "name": "LayoutWidgets",
+          "access": "private"
+        },
+        {
+          "name": "FindAllWidgetsOrdered",
+          "access": "private"
+        }
+      ]
+    },
+    {
+      "name": "RecipeWidgetUIController",
+      "methods": [
+        {
+          "name": "GetBounds",
+          "access": "public"
+        },
+        {
+          "name": "Update",
+          "access": "public"
+        },
+        {
+          "name": "OnRefreshSubObjectProperties",
+          "access": "protected"
+        }
+      ]
+    }
+  ]
+}

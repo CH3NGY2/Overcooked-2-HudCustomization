@@ -1,0 +1,23 @@
+# 本机工具目录（保留 GitHub 工作流目录）
+.*
+!.gitignore
+!.github/
+!.github/**
+
+# 构建、调试与游戏依赖
+**/bin/
+**/obj/
+BuildOutput/
+artifacts/
+libs/
+*.dll
+*.pdb
+*.exe
+*.zip
+*.user
+*.suo
+*.log
+*.cfg
+
+AGENTS.md
+GOAL.md

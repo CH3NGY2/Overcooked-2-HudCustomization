@@ -1,0 +1,144 @@
+{
+  "checkedAt": "2026-11-17T19:40:00.7260505+08:00",
+  "level": "static-metadata-and-compiled-IL; no Unity UI execution",
+  "gameAssembly": "E:\\SteamLibrary\\steamapps\\common\\Overcooked! 2\\Overcooked2_Data\\Managed\\Assembly-CSharp.dll",
+  "gameSha256": "9BB6A3791331201D32CA89C3509F019A9780309DA7110002F04020E8491E1908",
+  "gameMvid": "114d606a-29d5-472c-8ebe-c2c20fbe3be3",
+  "gameRuntime": "v2.0.50727",
+  "pluginPath": "E:\\code\\OC2\\OtherMOD\\Overcooked-2-HudCustomization\\bin\\Release\\OC2HudCustomization.dll",
+  "pluginSha256": "ECC1D3CEAC22000C0BEE2F1A544DAE7A07A8957318E598FBE24A14F118AB8FF5",
+  "pluginGuid": "com.ch3ngyz.plugin.overcooked2.hudcustomization",
+  "pluginVersion": "0.1.0",
+  "assemblyVersion": "0.1.0.0",
+  "targetRuntime": "v2.0.50727",
+  "targets": [
+    {
+      "Signature": "RecipeFlowGUI/ElementToken RecipeFlowGUI::AddElement(OrderDefinitionNode,System.Single,VoidGeneric`1<RecipeFlowGUI/ElementToken>)",
+      "Access": "public"
+    },
+    {
+      "Signature": "System.Void RecipeFlowGUI::LayoutWidgets()",
+      "Access": "private"
+    },
+    {
+      "Signature": "System.Void RecipeFlowGUI::OnDestroy()",
+      "Access": "private"
+    },
+    {
+      "Signature": "System.Void RecipeWidgetUIController::OnRefreshSubObjectProperties(UnityEngine.GameObject)",
+      "Access": "protected"
+    },
+    {
+      "Signature": "System.Void RecipeWidgetUIController::OnDestroy()",
+      "Access": "protected"
+    },
+    {
+      "Signature": "System.Void ClientIngredientContentGUI::OnOrderChanged(AssembledDefinitionNode)",
+      "Access": "private"
+    },
+    {
+      "Signature": "System.Void ClientIngredientContentGUI::OnDisable()",
+      "Access": "protected"
+    },
+    {
+      "Signature": "System.Void ClientIngredientContentGUI::OnDestroy()",
+      "Access": "protected"
+    },
+    {
+      "Signature": "System.Void IngredientContentsUIContainer::RefreshIcons(UnityEngine.GameObject)",
+      "Access": "private"
+    },
+    {
+      "Signature": "System.Void UISubElementContainer::RefreshSubElements()",
+      "Access": "public"
+    }
+  ],
+  "fields": [
+    {
+      "Signature": "System.Collections.Generic.List`1<RecipeFlowGUI/RecipeWidgetData> RecipeFlowGUI::m_widgets",
+      "Access": "private"
+    },
+    {
+      "Signature": "System.Collections.Generic.List`1<RecipeFlowGUI/RecipeWidgetData> RecipeFlowGUI::m_dyingWidgets",
+      "Access": "private"
+    },
+    {
+      "Signature": "System.Collections.Generic.List`1<RecipeFlowGUI/RecipeWidgetData> RecipeFlowGUI::m_ordererWidgets",
+      "Access": "private"
+    },
+    {
+      "Signature": "System.Single RecipeFlowGUI::m_distanceBetweenOrders",
+      "Access": "private"
+    },
+    {
+      "Signature": "System.Single RecipeFlowGUI::m_distanceFromEndOfScreen",
+      "Access": "private"
+    },
+    {
+      "Signature": "System.Collections.Generic.List`1<RecipeWidgetTile> RecipeWidgetUIController::m_recipeTiles",
+      "Access": "private"
+    },
+    {
+      "Signature": "IngredientContentsUIContainer ClientIngredientContentGUI::m_uiInstance",
+      "Access": "private"
+    },
+    {
+      "Signature": "UnityEngine.GameObject UISubElementContainer::m_container",
+      "Access": "protected"
+    },
+    {
+      "Signature": "UnityEngine.UI.Image RecipeWidgetTile::m_backgroundTop",
+      "Access": "protected"
+    },
+    {
+      "Signature": "System.Collections.Generic.List`1<UnityEngine.UI.Image> IngredientContentsUIContainer::m_icons",
+      "Access": "private"
+    },
+    {
+      "Signature": "System.Int32 IngredientContentsUIContainer::m_iconsInUse",
+      "Access": "private"
+    },
+    {
+      "Signature": "UnityEngine.Sprite IngredientContentsUIContainer::m_emptySprite",
+      "Access": "private"
+    }
+  ],
+  "directGameMemberReferences": 25,
+  "nonPublicDirectAccess": [],
+  "dependencies": [
+    "mscorlib",
+    "System.Core",
+    "BepInEx",
+    "Assembly-CSharp",
+    "UnityEngine.CoreModule",
+    "UnityEngine.UI",
+    "0Harmony",
+    "UnityEngine.UIModule",
+    "UnityEngine.AnimationModule"
+  ],
+  "languageContract": [
+    {
+      "Signature": "System.Boolean SteamPlayerManager::get_Initialized()",
+      "PublicStatic": true
+    },
+    {
+      "Signature": "SupportedLanguages Localization::GetLanguage()",
+      "PublicStatic": true
+    }
+  ],
+  "gameLanguageCalls": [
+    "System.Boolean UnityEngine.Application::get_isPlaying()",
+    "System.Boolean SteamPlayerManager::get_Initialized()",
+    "System.String Steamworks.SteamApps::GetCurrentGameLanguage()",
+    "System.Int32 System.Object::GetHashCode()",
+    "UnityEngine.SystemLanguage UnityEngine.Application::get_systemLanguage()"
+  ],
+  "modSettingsSoftDependency": "com.ch3ngyz.plugin.overcooked2.modsettings",
+  "modSettingsRefreshCalls": [
+    "System.Boolean OC2ModSettings.SDK.ModSettingsClient::Connect()",
+    "System.Void OC2ModSettings.SDK.ModSettingsClient::Refresh()"
+  ],
+  "runtimeFiles": [
+    "OC2HudCustomization.dll"
+  ]
+}

@@ -1,0 +1,256 @@
+{
+  "capturedAt": "2026-11-17T13:20:23.719722+08:00",
+  "purpose": "原版与第三方反编译源码索引，文件保留原位；不作为本MOD源码编译或打包。",
+  "roots": {
+    "GAME": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp",
+    "RecipeViewer": "E:\\code\\OC2\\DLL\\Decompiled\\Overcooked2RecipeViewer"
+  },
+  "sourceReferenceCount": 73,
+  "fileCount": 19,
+  "files": [
+    {
+      "root": "GAME",
+      "relativePath": "ClientIngredientContentGUI.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\ClientIngredientContentGUI.cs",
+      "sha256": "6A55AEF0EBCB5901F62F4F84AA56B778624300B60AC6792E5CEFB0B072AA5581",
+      "lineCount": 117,
+      "citations": [
+        "24-61,65-103",
+        "24-61",
+        "24-103",
+        "65-103",
+        "95-103",
+        "9-61"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "ClientKitchenFlowControllerBase.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\ClientKitchenFlowControllerBase.cs",
+      "sha256": "1E3B049B8E001C7CE6E68808194E8095E3F39A366C2FDB948BD67CCF7C7B7725",
+      "lineCount": 245,
+      "citations": [
+        "27-64",
+        "27-64"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "ClientOrderControllerBase.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\ClientOrderControllerBase.cs",
+      "sha256": "50F658F1398760165351002EC42A6813C633DD5BDBCF6C48FD060FA5D07EA86E",
+      "lineCount": 133,
+      "citations": [
+        "45-54",
+        "57-86",
+        "45-54"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "GameModes/Horde/HordeOrderUIController.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\GameModes\\Horde\\HordeOrderUIController.cs",
+      "sha256": "118DFB8BC4B051A7145CCC11581A8A1BE3C6652DC57E9F5CD47D907F2D0E3A42",
+      "lineCount": 375,
+      "citations": [
+        "14-22,32-78",
+        "32-74"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "GameUtils.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\GameUtils.cs",
+      "sha256": "6AC3B6ED3FBA926EFA30F90AE88E19F0EF10C0F46681042E845A2C5A8DEEBA50",
+      "lineCount": 987,
+      "citations": [
+        "354-359"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "HoverIconUIController.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\HoverIconUIController.cs",
+      "sha256": "4D00C2D16C2098611C7DD80BFF21959A95B1A75E631C1BA243554BB9EE9DDC5E",
+      "lineCount": 141,
+      "citations": [
+        "76-117"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "IngredientContentsUIContainer.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\IngredientContentsUIContainer.cs",
+      "sha256": "8C9A7D59A1C4BEFD894CAA7324CDB3C0E6C90C7F589ADBF85B2CCD1D09E46278",
+      "lineCount": 214,
+      "citations": [
+        "67-79,99-174",
+        "11-53,67-79",
+        "99-174",
+        "99-141,145-174",
+        "99-174",
+        "67-79",
+        "11-17,57-79,87-95,177-182",
+        "99-174,196-210",
+        "136-174",
+        "145-162",
+        "87-174",
+        "11-17,87-95,145-162",
+        "67-99",
+        "196-210"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "MultiplayerController.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\MultiplayerController.cs",
+      "sha256": "269C94563E6AC760F0681E4694691A126305A32948C93F118E4BFD93887229A5",
+      "lineCount": 818,
+      "citations": [
+        "392-404"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "RecipeAppearAnimation.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\RecipeAppearAnimation.cs",
+      "sha256": "2320D05AA2138F23151D9FDEDF37E73E301D63AE070B37B8BAA2A7E9265E936A",
+      "lineCount": 37,
+      "citations": [
+        "25-30"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "RecipeFlowGUI.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\RecipeFlowGUI.cs",
+      "sha256": "FC37C264F9F55DCAD070DB981DC26DC7C27162D17656AB76A944424449184A27",
+      "lineCount": 315,
+      "citations": [
+        "9-18,186-230",
+        "9-18,115-130,170-183",
+        "9-18",
+        "170-230",
+        "9-18",
+        "170-230",
+        "115-130,170-181",
+        "186-230",
+        "232-246",
+        "9-18",
+        "170-201",
+        "143-147,186-205",
+        "232-264"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "RecipeSuccessAnimation.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\RecipeSuccessAnimation.cs",
+      "sha256": "A523EA5B2E9DECE00C0E6776EED273AD69686C7B4A0AA4A1083C957C7F396B8F",
+      "lineCount": 47,
+      "citations": [
+        "25-30"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "RecipeWidgetTile.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\RecipeWidgetTile.cs",
+      "sha256": "6D611B77AAFCB019D29537F397192531295080C2561FD5E8B8846C0DB9130EEC",
+      "lineCount": 216,
+      "citations": [
+        "48-107"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "RecipeWidgetUIController.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\RecipeWidgetUIController.cs",
+      "sha256": "59596C364E7A67B0A0D7A22A2A2093760B169DBC327F7E3F3EFFAD9B58C97424",
+      "lineCount": 447,
+      "citations": [
+        "87-103",
+        "87-103,349-352",
+        "107-173",
+        "59-74,107-173",
+        "177-208",
+        "107-110,177-208",
+        "77-83",
+        "177-208",
+        "99-173",
+        "87-103",
+        "59-74,87-96,177-208",
+        "349-352"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "RectTransformExtension.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\RectTransformExtension.cs",
+      "sha256": "B106D096CFA81A64C2E8B217513720E1B6D5420ABA4145CC03F72C80203EC4EB",
+      "lineCount": 230,
+      "citations": [
+        "99-109,128-177",
+        "134-177",
+        "134-150",
+        "25-39,96-109,128-177"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "UISubElementContainer.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\UISubElementContainer.cs",
+      "sha256": "496265E7BD6963E0AED648B5705DAD40E206885C153821C73C89159388DADDD8",
+      "lineCount": 108,
+      "citations": [
+        "29-37",
+        "29-69"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "UIUtils.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\UIUtils.cs",
+      "sha256": "09AE8DDAD7FFF867A4745FA7D11EC78E29FB8F5D772BA40FD1D3C0EF800120FD",
+      "lineCount": 16,
+      "citations": [
+        "8-15"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "UI_Move.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\UI_Move.cs",
+      "sha256": "7C32BA0308D50010A1442FFAB41D5BE8673233EE5DDC7A2F43EE6CBE4FBC1D19",
+      "lineCount": 87,
+      "citations": [
+        "41-67",
+        "41-67"
+      ]
+    },
+    {
+      "root": "GAME",
+      "relativePath": "UnityEngine/UI/AnchorGridLayoutGroup.cs",
+      "path": "E:\\code\\OC2\\Assembly-CSharp\\Windows\\Assembly-CSharp\\UnityEngine\\UI\\AnchorGridLayoutGroup.cs",
+      "sha256": "E2C1755B490F49800112FCF92B619EAD81E70C3E4EE8DEC07951B4764C1AB073",
+      "lineCount": 317,
+      "citations": [
+        "175-208",
+        "160-252",
+        "256-282",
+        "44-102"
+      ]
+    },
+    {
+      "root": "RecipeViewer",
+      "relativePath": "RecipeBoard.cs",
+      "path": "E:\\code\\OC2\\DLL\\Decompiled\\Overcooked2RecipeViewer\\RecipeBoard.cs",
+      "sha256": "9A4A4705B1A6F2F390BD591956B06C89CBB027BE0E8EEB7D86E69A0B0BB796F8",
+      "lineCount": 2196,
+      "citations": [
+        "304-326",
+        "304-326"
+      ]
+    }
+  ]
+}
