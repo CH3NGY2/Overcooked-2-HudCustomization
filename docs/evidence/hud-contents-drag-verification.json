@@ -1,0 +1,110 @@
+{
+  "date": "2026-11-18",
+  "scope": "Shared native contents dragging and resizing; simultaneous ingredient/plus opacity sliders; remove subitem tabs and shared-layout explanation",
+  "sourceCommit": "b33aaa1",
+  "artifact": {
+    "path": "bin/Release/OC2HudCustomization.dll",
+    "guid": "com.ch3ngyz.plugin.overcooked2.hudcustomization",
+    "version": "0.1.0",
+    "bytes": 160256,
+    "sha256": "364846B4CE1027B32C8711AC34388263DA045BAD8F0BF0DF3ABB81D28F703169",
+    "visibleConfigEntries": 9,
+    "hiddenConfigEntries": 60,
+    "languages": 12,
+    "permanentlyDeployedByThisTask": false,
+    "published": false
+  },
+  "offline": {
+    "logic": { "assertions": 1283, "run": ".validation/logic-20261118-041854-446", "result": "PASS" },
+    "modSettingsMetadata": { "assertions": 626, "run": ".validation/modsettings-20261118-041855-941", "result": "PASS" },
+    "contracts": { "patchSignatures": 27, "reflectedFields": 23, "directPublicGameMemberReferences": 86, "nonPublicDirectAccesses": 0, "result": "PASS" },
+    "productionAndUnityTestPluginCompilation": "PASS; C# 3, .NET 3.5, WarningsAsErrors",
+    "logicCountChange": "1293 - 3 removed messages x 12 languages + 2 added messages x 12 languages + 2 scale-clamp assertions = 1283"
+  },
+  "unity": {
+    "editorRun": ".validation/unity-recipes-20261118-042533-064",
+    "assertions": 348,
+    "result": "PASS",
+    "loadedSha256": "364846B4CE1027B32C8711AC34388263DA045BAD8F0BF0DF3ABB81D28F703169",
+    "isFinalArtifact": true,
+    "input": "Real GraphicRaycaster and production OnGUI pointer/drag handlers driven by scripted Unity events; not physical input",
+    "screenshotPixels": { "width": 1920, "height": 1080 },
+    "screenshotsViewed": [ "editor-contents-opacity.png", "editor-contents-dragged.png" ],
+    "panel": {
+      "boundsUi": { "x": 1430, "y": 18, "width": 470, "height": 700 },
+      "scale": 1,
+      "contentsFields": 8,
+      "bothOpacityFieldsVisibleInsideViewport": true,
+      "allContentsFieldsVisibleTogetherAtThisResolution": true,
+      "subitemTabsRemoved": true,
+      "sharedLayoutExplanationRemoved": true,
+      "numberFieldOrder": [ "X", "Y", "Scale", "Width", "Height", "PerRow", "IngredientOpacity", "EmptySlotOpacity" ]
+    },
+    "contents": {
+      "coverage": "Two native contents display prefab fixtures and real ingredient sprites; no actual cooking business state created",
+      "iconsPerGroup": 5,
+      "columns": 2,
+      "nativeRegionCanvasUnits": [ 86.4, 86.4 ],
+      "customRegionCanvasUnits": [ 155.52, 116.64 ],
+      "individualIconCanvasUnitsRounded": [ 77.8, 38.9 ],
+      "xyPercent": [ 7, -4 ],
+      "measuredOffsetCanvasUnits": [ 134.4, -43.2 ],
+      "plusOpacity": 0.35,
+      "ingredientOpacity": 0.65,
+      "nativeRefreshesWithoutDrift": 4,
+      "dragScreenPixels": [ 60, -35 ],
+      "firstGroupBefore": [ 575.04, 481.68, 155.52, 116.64 ],
+      "firstGroupAfter": [ 635.04, 446.68, 155.52, 116.64 ],
+      "otherGroupBefore": [ 882.24, 481.68, 155.52, 116.64 ],
+      "otherGroupAfter": [ 942.24, 446.68, 155.52, 116.64 ],
+      "rightEdgeResize": [ 635.04, 446.68, 185.52, 116.64 ],
+      "cornerScale": [ 635.04, 446.68, 204.07, 128.30 ],
+      "oppositeEdgeAndCornerPinned": true,
+      "zeroOpacityRemainsPickable": true,
+      "newInstanceInheritsAfterInitialZeroParentScale": true,
+      "releasedInstanceIsNotPickable": true,
+      "nativeFollowAnchorAndCapacityPreserved": true,
+      "saveReopenResetCancelPassed": true,
+      "saveValuesCheckedAgainstOriginalConfigEntrySnapshot": true
+    },
+    "recipeRegression": {
+      "run": ".validation/unity-recipes-20261118-042637-819",
+      "assertions": 65,
+      "result": "PASS",
+      "loadedSha256": "364846B4CE1027B32C8711AC34388263DA045BAD8F0BF0DF3ABB81D28F703169",
+      "screenshotPixels": { "width": 1920, "height": 1080 },
+      "screenshotsViewed": [ "scale-05.png" ],
+      "coverage": "One/two columns, cookware clearance, 0.5/1/2 scale, phased entry, reconstruction and restore; existing config means no legacy migration branch"
+    },
+    "restorationForEachFinalRun": {
+      "ownedProcessExited": true,
+      "manifestFiles": 24,
+      "filesRestoredToOriginal": 24,
+      "restorationErrors": 0,
+      "originalSavesUnchanged": true,
+      "temporaryTestPluginRemoved": true,
+      "productionHudOrTestPluginErrors": 0,
+      "otherModErrors": "Each final run retains one arcade MOD LobbyLevelRandomizer PickLeve diagnostic at Error severity; not emitted by HUD or the test plugin.",
+      "installedDllSha256AfterRestore": "EF5D2A60E91A344C8176E9D1C6DB79818E72DDD5C1B5E742AFE8DAFC3581641D"
+    }
+  },
+  "intermediateEvidenceRetained": [
+    { "run": ".validation/unity-recipes-20261118-040224-456", "result": "FAIL after 127 assertions", "reason": "Second native contents instance lacked inherited initial offset; failure cleanup also exposed a destroyed-popup close NullReference. Both production issues fixed." },
+    { "run": ".validation/unity-recipes-20261118-040543-162", "result": "FAIL after 123 assertions", "reason": "Waiting five settled frames alone did not fix missing initial offset." },
+    { "run": ".validation/unity-recipes-20261118-040836-943", "result": "FAIL after 123 assertions", "reason": "Geometry diagnostics localized absent inherited X/Y offset on the second group." },
+    { "run": ".validation/unity-recipes-20261118-041108-056", "result": "FAIL after 123 assertions", "reason": "Canvas-size tracking alone did not fix zero parent scale at prefab initialization." },
+    { "run": ".validation/unity-recipes-20261118-041351-325", "result": "FAIL after 123 assertions", "reason": "Temporary Apply trace confirmed first offset conversion while parent scale was zero, with no later geometry invalidation. Parent-scale dirty tracking added; temporary trace removed." },
+    { "run": ".validation/unity-recipes-20261118-041538-031", "result": "PASS", "assertions": 247, "note": "Initial dragging validation after production fix, before expanded save/reopen/release assertions; intermediate 1920x1200 capture." },
+    { "run": ".validation/unity-recipes-20261118-041858-083", "result": "FAIL after 149 assertions", "reason": "New save test incorrectly expected Appearance section and fractional alpha; corrected to historical Opacity section and percentage values." },
+    { "run": ".validation/unity-recipes-20261118-042048-165", "result": "FAIL after 154 assertions", "reason": "Save test incorrectly required byte equality after normal ConfigFile serialization and outer fixture memory resets." },
+    { "run": ".validation/unity-recipes-20261118-042344-820", "result": "FAIL after 154 assertions", "reason": "Before/after diagnostics confirmed comments and outer fixture reset values, rather than lost production values. Test now checks every original entry value and restores its isolated cfg snapshot; production persistence unchanged." }
+  ],
+  "allListedIntermediateRunsRestored": true,
+  "notVerified": [
+    "Physical mouse or controller input",
+    "All twelve languages' actual glyphs and longest labels at every resolution",
+    "Real cold barbecue station preview branch and full kebab/contents cooking lifecycle",
+    "Steam second-peer joins, team versus and survival/Horde modes"
+  ],
+  "runtime": "Install this build and restart with BepInEx 5/HarmonyX; editor entry requires ModSettings >=1.1.1 and a local ordinary kitchen without remote players. Public release and MOD source were not changed."
+}
