@@ -74,6 +74,16 @@ internal static class ModSettingsConsumerTests
         Check((string)Field(original, "Name") == "Enable HUD customization", "previous provider snapshots remain immutable");
         Check(changes == 0 && config.Count == 9 && Equals(config["Recipes", "RecipeScale"].BoxedValue, 1.5f)
             && File.ReadAllText(config.ConfigFilePath) == disk, "built consumer translations preserve real cfg and values");
+        Activator.CreateInstance(consumer.GetType("OC2HudCustomization.HudEditorConfig", true), Members, null, new object[] { config }, null);
+        int hidden = 0;
+        foreach (KeyValuePair<ConfigDefinition, ConfigEntryBase> pair in config)
+        {
+            object metadata = read.Invoke(null, new object[] { pair.Value, null });
+            bool shouldHide = pair.Key.Section.StartsWith("HudEditor.", StringComparison.Ordinal);
+            Check((bool)Field(metadata, "Hidden") == shouldHide, "actual provider hides exactly editor configuration " + pair.Key);
+            if (shouldHide) hidden++;
+        }
+        Check(hidden == 56 && config.Count == 65, "56 hidden entries added without hiding nine existing controls");
         Console.WriteLine("PASS " + checks + " actual-provider/compiled-HUD assertions; 9 entries x 12 languages (desktop; no Unity UI).");
     }
 

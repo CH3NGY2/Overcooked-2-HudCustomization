@@ -33,7 +33,7 @@ internal static partial class BehaviorTests
             typeof(Paths).GetProperty("BepInExConfigPath").GetSetMethod(true).Invoke(null, new object[] { Path.Combine(args[0], "BepInEx.cfg") });
             typeof(Paths).GetProperty("ConfigPath").GetSetMethod(true).Invoke(null, new object[] { args[0] });
             Layout(); Ownership(); Motion(); Config(args[0]);
-            Localization(args[0]); LanguageRefresh(); ConfigMigrationChecks(args[0]);
+            Localization(args[0]); LanguageRefresh(); ConfigMigrationChecks(args[0]); EditorRules(args[0]);
             Console.WriteLine("PASS " + _checks + " production-rule/config assertions (desktop; no Unity UI).");
             return 0;
         }

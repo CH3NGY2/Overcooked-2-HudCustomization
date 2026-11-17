@@ -11,7 +11,8 @@ $output = Join-Path $root ('.validation\logic-' + (Get-Date -Format 'yyyyMMdd-HH
 New-Item -ItemType Directory -Path $output -Force | Out-Null
 $bepInEx = Join-Path $GameRoot 'BepInEx\core\BepInEx.dll'
 $mono = Join-Path $GameRoot 'Overcooked2_Data\Managed'
-$sources = @('tests\BehaviorTests.cs', 'tests\LocalizationTests.cs', 'tests\RecipeMotionTests.cs', 'tests\ConfigMigrationTests.cs',
+$sources = @('tests\BehaviorTests.cs', 'tests\LocalizationTests.cs', 'tests\RecipeMotionTests.cs', 'tests\ConfigMigrationTests.cs', 'tests\HudEditorTests.cs',
+    'src\Editing\HudGeometry.cs', 'src\Editing\HudEditorConfig.cs', 'src\Localization\EditorText.cs',
     'src\PluginInfo.cs', 'src\ConfigMigration.cs', 'src\HudSettings.cs',
     'src\Localization\HudSettings.Display.cs', 'src\Localization\SettingsText.cs',
     'src\Localization\SettingsLanguageSync.cs', 'src\Localization\GameLanguage.cs',

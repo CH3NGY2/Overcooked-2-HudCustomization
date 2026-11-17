@@ -21,7 +21,17 @@ try {
         @('ClientIngredientContentGUI', 'OnOrderChanged', 'AssembledDefinitionNode'),
         @('ClientIngredientContentGUI', 'OnDisable'), @('ClientIngredientContentGUI', 'OnDestroy'),
         @('IngredientContentsUIContainer', 'RefreshIcons', 'UnityEngine.GameObject'),
-        @('UISubElementContainer', 'RefreshSubElements')
+        @('UISubElementContainer', 'RefreshSubElements'),
+        @('ClientWorkableItem', 'StartSynchronising', 'UnityEngine.Component'),
+        @('ClientCookingHandler', 'StartSynchronising', 'UnityEngine.Component'),
+        @('ClientMixingHandler', 'StartSynchronising', 'UnityEngine.Component'),
+        @('ClientHeatedStationGUI', 'OnHeatValueChanged', 'System.Single'),
+        @('ClientWashingStation', 'Awake'), @('ClientWashable', 'StartSynchronising', 'UnityEngine.Component'),
+        @('ClientFlammable', 'Ignite'), @('ScoreUIController', 'Awake'), @('LevelTimerUIController', 'Awake'),
+        @('RectTransformExtension', 'UpdateAspectRatio'), @('UI_Move', 'UpdateGraphics'),
+        @('ScoreUIController', 'ScoreUpdate', 'TeamID', 'TeamMonitor/TeamScoreStats'),
+        @('GameUtils', 'InstantiateUIControllerOnScalingHUDCanvas', 'UnityEngine.GameObject'),
+        @('PlayerControls', 'Awake'), @('T17EventSystem', 'Awake'), @('PauseMenuManager', 'UpdateWhileClosed')
     )
     $targets = foreach ($spec in $targetSpecs) {
         $type = $game.MainModule.Types | Where-Object FullName -eq $spec[0]
@@ -35,7 +45,11 @@ try {
         @('RecipeFlowGUI','m_distanceBetweenOrders'), @('RecipeFlowGUI','m_distanceFromEndOfScreen'),
         @('RecipeWidgetUIController','m_recipeTiles'), @('ClientIngredientContentGUI','m_uiInstance'),
         @('UISubElementContainer','m_container'), @('RecipeWidgetTile','m_backgroundTop'), @('IngredientContentsUIContainer','m_icons'),
-        @('IngredientContentsUIContainer','m_iconsInUse'), @('IngredientContentsUIContainer','m_emptySprite')
+        @('IngredientContentsUIContainer','m_iconsInUse'), @('IngredientContentsUIContainer','m_emptySprite'),
+        @('ClientWorkableItem','m_guibar'), @('ClientCookingHandler','m_gui'), @('ClientMixingHandler','m_progressUI'),
+        @('ClientHeatedStationGUI','m_uiInstance'), @('ClientWashingStation','m_progressUI'),
+        @('ClientWashable','m_progressBar'), @('ClientFlammable','m_fireGUIBar'),
+        @('ProgressUIController','m_progressBar'), @('CookingUIController','m_progressBar'), @('HeatValueUIController','m_progressBar')
     )) {
         $type = $game.MainModule.Types | Where-Object FullName -eq $spec[0]
         $field = @($type.Fields | Where-Object Name -eq $spec[1])
@@ -91,6 +105,24 @@ try {
     $refresh = $identity.Methods | Where-Object Name -eq 'RefreshSettingsDisplay'
     $refreshCalls = @($refresh.Body.Instructions | Where-Object { $_.Operand -is [Mono.Cecil.MethodReference] } | ForEach-Object { $_.Operand.FullName })
     if (!($refreshCalls -match 'ModSettingsClient::Connect') -or !($refreshCalls -match 'ModSettingsClient::Refresh')) { throw 'Missing SDK refresh path.' }
+    $editor = $plugin.MainModule.Types | Where-Object FullName -eq 'OC2HudCustomization.HudEditor'
+    $editorUpdate = $editor.Methods | Where-Object Name -eq 'Update'
+    $keyCalls = @($editorUpdate.Body.Instructions | Where-Object {
+        $_.Operand -is [Mono.Cecil.MethodReference] -and $_.Operand.DeclaringType.FullName -eq 'UnityEngine.Input'
+    })
+    if ($keyCalls.Count -ne 1 -or $keyCalls[0].Operand.Name -ne 'GetKeyDown' -or [int]$keyCalls[0].Previous.Operand -ne 96) {
+        throw 'Editor exit must read BackQuote only, not all-key state.'
+    }
+    $providerPath = Join-Path $GameRoot 'BepInEx\plugins\OC2ModSettings\OC2ModSettings.dll'
+    $provider = [Mono.Cecil.AssemblyDefinition]::ReadAssembly($providerPath, $parameters)
+    try {
+        $shortcut = $provider.MainModule.Types | Where-Object FullName -eq 'OC2ModSettings.NativeShortcut'
+        $shortcutTick = @($shortcut.Methods | Where-Object { $_.Name -eq 'Tick' -and $_.ReturnType.FullName -eq 'System.Void' -and $_.Parameters.Count -eq 1 -and $_.Parameters[0].ParameterType.FullName -eq 'System.Boolean' })
+        if ($shortcutTick.Count -ne 1) { throw 'Installed ModSettings shortcut coordination contract changed.' }
+        $shortcutSignature = $shortcutTick[0].FullName
+        $providerVersion = $provider.Name.Version.ToString()
+    }
+    finally { $provider.Dispose() }
     $result = [ordered]@{
         checkedAt=(Get-Date -Format o); level='static-metadata-and-compiled-IL; no Unity UI execution'
         gameAssembly=$game.MainModule.FileName; gameSha256=(Get-FileHash -LiteralPath $game.MainModule.FileName -Algorithm SHA256).Hash
@@ -102,6 +134,8 @@ try {
         nonPublicDirectAccess=@($violations); dependencies=$references
         languageContract=@($languageMembers); gameLanguageCalls=$languageCalls
         modSettingsSoftDependency=$serviceGuid; modSettingsRefreshCalls=$refreshCalls
+        editorExitKey='BackQuote (96); one Input.GetKeyDown call'; editorShortcutContract=$shortcutSignature
+        installedModSettingsVersion=$providerVersion; installedModSettingsSha256=(Get-FileHash -LiteralPath $providerPath -Algorithm SHA256).Hash
         runtimeFiles=@(Get-ChildItem -LiteralPath (Split-Path -Parent $artifact) -Filter '*.dll' | ForEach-Object Name)
     }
     $output = Join-Path $projectRoot 'docs\evidence\implementation-verification.json'

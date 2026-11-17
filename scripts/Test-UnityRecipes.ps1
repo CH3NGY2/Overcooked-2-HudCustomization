@@ -1,7 +1,8 @@
 param(
     [string]$GameRoot = 'E:\SteamLibrary\steamapps\common\Overcooked! 2',
     [string]$MSBuild = 'D:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe',
-    [switch]$KeepProductionBuild
+    [switch]$KeepProductionBuild,
+    [switch]$Editor
 )
 $ErrorActionPreference = 'Stop'
 if (Get-Process -Name Overcooked2 -ErrorAction SilentlyContinue) { throw 'Player game running; no deployment performed.' }
@@ -46,6 +47,7 @@ try {
     $arguments = @('-applaunch','728880','-screen-fullscreen','0','-screen-width','1920','-screen-height','1080',
         '-logFile',('"' + (Join-Path $run 'player.log') + '"'),'-hudRecipeTest',('"' + $run + '"'))
     if ($legacyMigrationExpected) { $arguments += '-hudRecipeLegacyMigration' }
+    if ($Editor) { $arguments += '-hudEditorTest' }
     Start-Process -FilePath $steam -ArgumentList $arguments -WindowStyle Hidden | Out-Null
     Write-Output "Unity recipe run: $run"
     $deadline = (Get-Date).AddSeconds(300)

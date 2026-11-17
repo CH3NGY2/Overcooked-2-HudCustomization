@@ -12,6 +12,8 @@ namespace OC2HudCustomization
     public sealed class Plugin : BaseUnityPlugin
     {
         internal static HudRuntime Runtime;
+        internal static HudEditor Editor;
+        private HudEditorConfig _editorConfig;
         private HudSettings _settings;
         private HudLog _log;
         private int _settingsDirty = 1;
@@ -29,6 +31,7 @@ namespace OC2HudCustomization
             }
             catch (Exception exception) { _log.ErrorOnce("HUD configuration migration", exception); }
             _settings = new HudSettings(Config);
+            _editorConfig = new HudEditorConfig(Config);
             _language = new SettingsLanguageSync(GameLanguage.Read, _settings.SetDisplayLanguage,
                 RefreshSettingsDisplay, _log.ErrorOnce);
             Config.SettingChanged += SettingChanged;
@@ -54,6 +57,17 @@ namespace OC2HudCustomization
             if (Runtime != null) return;
             Runtime = new HudRuntime(_settings.Snapshot(), _log);
             Runtime.Start();
+            try
+            {
+                Editor = new HudEditor(this, _settings, _editorConfig, _modSettings, _log);
+                Editor.Start();
+            }
+            catch (Exception e)
+            {
+                _log.ErrorOnce("HUD editor initialization", e);
+                if (Editor != null) Editor.Dispose();
+                Editor = null;
+            }
         }
 
         private void SettingChanged(object sender, SettingChangedEventArgs args)
@@ -64,6 +78,7 @@ namespace OC2HudCustomization
 
         private void Update()
         {
+            if (Editor != null) Editor.Update();
             if (_language != null && Time.realtimeSinceStartup >= _nextLanguageCheck)
             {
                 _nextLanguageCheck = Time.realtimeSinceStartup + 1f;
@@ -73,10 +88,12 @@ namespace OC2HudCustomization
                 Runtime.SetOptions(_settings.Snapshot());
         }
 
-        private void LateUpdate() { if (Runtime != null) Runtime.Tick(); }
+        private void LateUpdate() { if (Runtime != null) Runtime.Tick(); if (Editor != null) Editor.Tick(); }
+        private void OnGUI() { if (Editor != null) Editor.OnGUI(); }
 
         private void OnDisable()
         {
+            if (Editor != null) { Editor.Dispose(); Editor = null; }
             if (Runtime == null) return;
             HudRuntime runtime = Runtime;
             Runtime = null;

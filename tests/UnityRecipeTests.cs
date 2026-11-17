@@ -94,7 +94,9 @@ public sealed partial class UnityRecipeTests : BaseUnityPlugin
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "failure.png"));
             File.WriteAllText(Path.Combine(output, "result.txt"), "FAIL after " + assertions + " assertions\n" + error);
         }
-        else File.WriteAllText(Path.Combine(output, "result.txt"), "PASS: " + assertions + " actual Unity recipe assertions; native UI fixture in kitchen, scripted startup.");
+        else File.WriteAllText(Path.Combine(output, "result.txt"), "PASS: " + assertions + " actual Unity "
+            + (Array.IndexOf(Environment.GetCommandLineArgs(), "-hudEditorTest") >= 0 ? "HUD editor" : "recipe")
+            + " assertions; native UI fixture in kitchen, scripted startup/input.");
         foreach (string config in Directory.GetFiles(Paths.ConfigPath, "*.cfg", SearchOption.AllDirectories))
             File.AppendAllText(Path.Combine(output, "configs-final.tsv"), Hash(config) + "\t" + config + Environment.NewLine);
         yield return new WaitForEndOfFrame(); yield return new WaitForSecondsRealtime(.5f);
@@ -129,19 +131,28 @@ public sealed partial class UnityRecipeTests : BaseUnityPlugin
             || LobbyFlowController.Instance.m_themeSelectMenu.CurrentGamepadUser == null)) yield return null;
         Check(LobbyFlowController.Instance != null && !LoadingScreenFlow.IsLoading, "native couch lobby loaded");
         ThemeSelectRootMenu themes = LobbyFlowController.Instance.m_themeSelectMenu;
-        CarouselButton chosen = themes.GetCurrentButton(); Check(chosen != null, "native focused theme available");
+        CarouselButton chosen = themes.GetButtonForTheme(SceneDirectoryData.LevelTheme.Sushi);
+        Check(chosen != null, "native ordinary Sushi theme available (Horde excluded)");
+        themes.OnButtonSelected(chosen);
+        deadline = Time.realtimeSinceStartup + 8f;
+        while (themes.GetCurrentButton() != chosen && Time.realtimeSinceStartup < deadline) yield return null;
+        yield return new WaitForSecondsRealtime(.7f);
+        Check(themes.GetCurrentButton() == chosen, "native carousel focused ordinary kitchen theme before submission");
         UnityEngine.EventSystems.ExecuteEvents.Execute(chosen.Button.gameObject, new UnityEngine.EventSystems.BaseEventData(themes.CachedEventSystem), UnityEngine.EventSystems.ExecuteEvents.submitHandler);
         Phase("native kitchen load"); deadline = Time.realtimeSinceStartup + 100f;
         RecipeFlowGUI source = null;
         while (Time.realtimeSinceStartup < deadline)
         {
             source = UnityEngine.Object.FindObjectOfType<RecipeFlowGUI>();
+            if (!LoadingScreenFlow.IsLoading && GameUtils.GetLevelConfig() is GameModes.Horde.HordeLevelConfig)
+                throw new InvalidOperationException("Horde is excluded; ordinary native theme selection failed.");
             bool inLevel = Team17.Online.ClientUserSystem.m_Users.Count > 0
                 && Team17.Online.ClientUserSystem.m_Users._items[0].GameState == GameState.InLevel;
             if (inLevel && source != null && !LoadingScreenFlow.IsLoading && UnityEngine.Object.FindObjectOfType<ServerKitchenFlowControllerBase>() != null) break;
             yield return null;
         }
         Check(source != null && !LoadingScreenFlow.IsLoading, "actual kitchen and native recipe flow loaded");
-        yield return Scenario(source);
+        if (Array.IndexOf(Environment.GetCommandLineArgs(), "-hudEditorTest") >= 0) yield return EditorScenario();
+        else yield return Scenario(source);
     }
 }
