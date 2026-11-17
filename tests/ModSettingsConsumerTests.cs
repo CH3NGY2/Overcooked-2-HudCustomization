@@ -36,7 +36,7 @@ internal static class ModSettingsConsumerTests
         ConfigFile config = new ConfigFile(Path.Combine(args[0], "provider-consumer.cfg"), false);
         config.SaveOnConfigSet = false;
         object settings = Activator.CreateInstance(settingsType, Members, null, new object[] { config }, null);
-        Check(config.Count == 9, "built HUD binds nine entries");
+        Check(config.Count == 13, "built HUD binds nine visible entries and four hidden contents values");
         string[] sections = { "General", "Recipes", "Recipes", "Recipes", "Contents", "Contents", "Opacity", "Opacity", "Opacity" };
         string[] keys = { "Enabled", "RecipeScale", "RecipesPerRow", "RecipeRowSpacing", "ContentsScale", "ContentsPerRow", "RecipeOpacity", "EmptySlotOpacity", "IngredientOpacity" };
         int[] categoryOrders = { 400, 300, 300, 300, 200, 200, 100, 100, 100 };
@@ -72,7 +72,7 @@ internal static class ModSettingsConsumerTests
                 Check(((ConfigEntryBase)Field(rows[i], "Entry")).Definition.Key == keys[i], "same display order in " + language + ": " + keys[i]);
         }
         Check((string)Field(original, "Name") == "Enable HUD customization", "previous provider snapshots remain immutable");
-        Check(changes == 0 && config.Count == 9 && Equals(config["Recipes", "RecipeScale"].BoxedValue, 1.5f)
+        Check(changes == 0 && config.Count == 13 && Equals(config["Recipes", "RecipeScale"].BoxedValue, 1.5f)
             && File.ReadAllText(config.ConfigFilePath) == disk, "built consumer translations preserve real cfg and values");
         Activator.CreateInstance(consumer.GetType("OC2HudCustomization.HudEditorConfig", true), Members, null, new object[] { config }, null);
         int hidden = 0;
@@ -83,7 +83,7 @@ internal static class ModSettingsConsumerTests
             Check((bool)Field(metadata, "Hidden") == shouldHide, "actual provider hides exactly editor configuration " + pair.Key);
             if (shouldHide) hidden++;
         }
-        Check(hidden == 56 && config.Count == 65, "56 hidden entries added without hiding nine existing controls");
+        Check(hidden == 60 && config.Count == 69, "60 hidden entries without hiding nine existing controls");
         Console.WriteLine("PASS " + checks + " actual-provider/compiled-HUD assertions; 9 entries x 12 languages (desktop; no Unity UI).");
     }
 

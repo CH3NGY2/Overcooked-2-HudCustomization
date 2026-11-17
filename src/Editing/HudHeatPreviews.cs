@@ -19,6 +19,19 @@ namespace OC2HudCustomization
             ClientHeatedStationGUI heat = owner as ClientHeatedStationGUI;
             if (heat && !_owners.Contains(heat)) _owners.Add(heat);
         }
+        internal bool Available
+        {
+            get
+            {
+                foreach (ClientHeatedStationGUI owner in _owners)
+                {
+                    if (!owner || !owner.gameObject.scene.IsValid() || !owner.isActiveAndEnabled) continue;
+                    HeatedStationGUI definition = owner.GetSynchronisedComponent() as HeatedStationGUI;
+                    if (definition && definition.m_heatUIPrefab) return true;
+                }
+                return false;
+            }
+        }
         internal void Show(Action<Component, Component> register)
         {
             // Idempotent while this category remains selected.

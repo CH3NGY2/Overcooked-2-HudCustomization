@@ -50,17 +50,19 @@ namespace OC2HudCustomization
                 Restore(); // Restore the remaining owned fields; preserve the conflicting one.
                 return;
             }
-            if (count == 0 || (options.ContentsPerRow == 0 && Mathf.Approximately(options.ContentsScale, 1f)))
+            if (count == 0 || (options.ContentsPerRow == 0 && Mathf.Approximately(options.ContentsScale, 1f)
+                && options.ContentsWidth == 1f && options.ContentsHeight == 1f && options.ContentsX == 0f && options.ContentsY == 0f))
             { Restore(); return; }
             Vector2 native = NativeSize;
             if (native.x <= 0.01f || native.y <= 0.01f) return;
-            Vector2 target = native * options.ContentsScale;
+            Vector2 factor = new Vector2(options.ContentsScale * options.ContentsWidth, options.ContentsScale * options.ContentsHeight);
+            Vector2 target = Vector2.Scale(native, factor);
             if (options.ContentsPerRow > 0)
             {
                 int columns = HudLayoutMath.Columns(count, options.ContentsPerRow);
                 int rows = HudLayoutMath.Rows(count, columns);
-                Vector2 pixels = Vector2.Scale(native, _baseCell) * options.ContentsScale;
-                Vector2 gaps = Vector2.Scale(native, _baseSpacing) * options.ContentsScale;
+                Vector2 pixels = Vector2.Scale(Vector2.Scale(native, _baseCell), factor);
+                Vector2 gaps = Vector2.Scale(Vector2.Scale(native, _baseSpacing), factor);
                 target = new Vector2(HudLayoutMath.Extent(columns, pixels.x, gaps.x, _grid.padding.horizontal),
                     HudLayoutMath.Extent(rows, pixels.y, gaps.y, _grid.padding.vertical));
                 if (target.x <= 0.01f || target.y <= 0.01f) return;
@@ -77,8 +79,14 @@ namespace OC2HudCustomization
             // Expand the existing generated region around its original center; the native hover
             // controller, parent anchors, pivot, material and child ownership remain intact.
             Vector2 halfChange = (target - native) * 0.5f;
-            _min.Apply(_baseMin - halfChange);
-            _max.Apply(_baseMax + halfChange);
+            Canvas canvas = _rect.GetComponentInParent<Canvas>();
+            RectTransform canvasRect = canvas ? canvas.rootCanvas.transform as RectTransform : null;
+            Vector3 screen = canvasRect ? canvasRect.TransformVector(new Vector3(canvasRect.rect.width * options.ContentsX,
+                canvasRect.rect.height * options.ContentsY, 0f)) : Vector3.zero;
+            Vector3 local = _rect.parent.InverseTransformVector(screen);
+            Vector2 offset = new Vector2(local.x, local.y);
+            _min.Apply(_baseMin - halfChange + offset);
+            _max.Apply(_baseMax + halfChange + offset);
         }
 
         internal void Restore()

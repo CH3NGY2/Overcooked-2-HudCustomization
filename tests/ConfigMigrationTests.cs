@@ -22,7 +22,7 @@ internal static partial class BehaviorTests
         Check(Directory.GetFiles(directory, "*.migration").Length == 0, "successful migration leaves no temporary file");
         config.SaveOnConfigSet = false;
         HudSettings settings = new HudSettings(config);
-        Check(config.Count == 9, "migration retains nine native discoverable entries");
+        Check(config.Count == 13, "migration retains nine visible entries and adds four hidden native-default contents values");
         Check(!settings.Enabled.Value && settings.RecipeScale.Value == 1.25f && settings.RecipesPerRow.Value == 3
             && settings.RecipeRowSpacing.Value == 17f, "legacy general and recipe values load through real ConfigFile");
         Check(settings.ContentsScale.Value == .75f && settings.ContentsPerRow.Value == 4, "legacy contents values are retained");

@@ -14,6 +14,9 @@ namespace OC2HudCustomization
 
         internal ContentsAdapter(ContentsAccess access, HudLog log) { _access = access; _log = log; }
 
+        internal bool HasInstance
+        { get { foreach (ContentsState state in _states.Values) if (state.UI && state.UI.gameObject.scene.IsValid()) return true; return false; } }
+
         internal void Observe(ClientIngredientContentGUI owner, HudOptions options)
         {
             if (!owner) return;

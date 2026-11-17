@@ -26,6 +26,9 @@ namespace OC2HudCustomization
 
         internal RecipeAdapter(RecipeAccess access, HudLog log) { _access = access; _log = log; }
 
+        internal bool HasInstance
+        { get { foreach (RecipeWidgetUIController card in _cards.Keys) if (card && card.gameObject.scene.IsValid()) return true; return false; } }
+
         // Only actual flow-owned widgets enter this registry. RecipeViewer clones never do.
         internal void Observe(RecipeFlowGUI flow, bool nativeLayout, bool added)
         {

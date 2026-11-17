@@ -83,7 +83,7 @@ public sealed partial class UnityRecipeTests
         yield return new WaitForSecondsRealtime(1.2f);
         object assets = ReadField(editor, "_assets");
         File.AppendAllText(Path.Combine(output, "editor-geometry.tsv"), "native-assets\tready="
-            + AccessTools.Property(assets.GetType(), "Ready").GetValue(assets, null) + "\tpaper=" + ReadField(assets, "Paper")
+            + AccessTools.Property(assets.GetType(), "Ready").GetValue(assets, null) + "\theader=" + ReadField(assets, "Header")
             + "\tbodyFont=" + ReadField(assets, "BodyFont") + "\theaderFont=" + ReadField(assets, "HeaderFont") + "\n");
         Check((bool)Call(editor, "CanEnter"), "local kitchen editor action enabled");
         object service = Chainloader.PluginInfos["com.ch3ngyz.plugin.overcooked2.modsettings"].Instance;

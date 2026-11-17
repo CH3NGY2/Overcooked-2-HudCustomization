@@ -19,6 +19,9 @@ public sealed partial class UnityRecipeTests
     {
         yield return new WaitForEndOfFrame(); yield return null;
         GameObject root = NativeRoot(editor); EventSystem domain = root.GetComponent<EventSystem>();
+        Transform popup = root.transform.Find("HudEditorPanel/CategoryPickerPopup");
+        if (name.StartsWith("Category_", StringComparison.Ordinal) && !popup.gameObject.activeSelf)
+            yield return NativeClick(editor, "CategoryPicker");
         Transform target = null;
         foreach (Button button in root.GetComponentsInChildren<Button>(true)) if (button.name == name) { target = button.transform; break; }
         Check(target != null && target.gameObject.activeInHierarchy, "native editor button available: " + name);
@@ -44,10 +47,46 @@ public sealed partial class UnityRecipeTests
         Check(root.GetComponent<Canvas>() != null && root.GetComponent<GraphicRaycaster>() != null
             && root.GetComponent<StandaloneInputModule>() != null && domain.isActiveAndEnabled,
             "production floating panel uses native Canvas and active input module");
-        Check(root.GetComponentsInChildren<Button>(true).Length == 13 && root.GetComponentsInChildren<InputField>(true).Length == 6,
-            "ten unified categories plus reset/save/cancel, six reusable native number fields");
+        Check(root.GetComponentsInChildren<Button>(true).Length == 17 && root.GetComponentsInChildren<InputField>(true).Length == 7,
+            "one dropdown with ten items and dismissal, two contents subitems, three actions, seven number fields");
         Image paper = root.transform.Find("HudEditorPanel").GetComponent<Image>();
-        Check(paper.sprite != null && paper.sprite.name.Contains("HUD editor"), "native GameOptions paper retained in owned artwork");
+        Check(paper.sprite == null && paper.color.a > .95f && paper.transform.Find("PaperInset") == null,
+            "one opaque panel background has no native decorative side strips or inset");
+        Check(root.transform.Find("HudEditorPanel/Help") == null && root.transform.Find("HudEditorPanel/Selection") == null,
+            "top click-category help and duplicate category heading removed");
+        Transform popup = root.transform.Find("HudEditorPanel/CategoryPickerPopup");
+        Check(!popup.gameObject.activeSelf && !root.transform.Find("HudEditorPanel/Category_0"),
+            "ten categories stay collapsed behind one compact selector");
+        yield return NativeClick(editor, "CategoryPicker");
+        Check(popup.gameObject.activeSelf && (bool)AccessTools.Property(panel.GetType(), "BlocksHudInput").GetValue(panel, null),
+            "opening category popup blocks underlying HUD dragging");
+        RectTransform list = (RectTransform)popup.Find("CategoryList");
+        Vector3[] popupCorners = new Vector3[4]; list.GetWorldCorners(popupCorners);
+        Check(popupCorners[0].x >= 0 && popupCorners[2].x <= Screen.width
+            && popupCorners[0].y >= 0 && popupCorners[2].y <= Screen.height,
+            "all ten dropdown items fit inside the screen without clipping");
+        File.AppendAllText(Path.Combine(output, "editor-geometry.tsv"), "category-popup-ui\t" + list.rect.size
+            + "\tvisible-number-fields=7\told-panel-height=836\n");
+        ScreenCapture.CaptureScreenshot(Path.Combine(output, "editor-category-dropdown.png"));
+        yield return new WaitForEndOfFrame(); yield return null;
+        for (int i = 0; i < 10; i++)
+        {
+            Button category = popup.Find("CategoryList/Category_" + i).GetComponent<Button>();
+            bool available = (bool)Call(editor, "CategoryAvailable", i);
+            Check(category.interactable == available, "category button reflects real level availability " + i);
+            if (!available)
+            {
+                int previous = (int)ReadField(editor, "_editingKind");
+                yield return NativeClick(editor, "Category_" + i);
+                Check((int)ReadField(editor, "_editingKind") == previous, "disabled category ignores real pointer click " + i);
+                Call(editor, "ToggleCategory", i);
+                Check((int)ReadField(editor, "_editingKind") == previous, "missing category cannot be enabled by callback bypass " + i);
+                Check(popup.gameObject.activeSelf, "disabled dropdown item keeps picker open " + i);
+            }
+        }
+        yield return NativeClick(editor, "CategoryPickerDismiss");
+        Check(!popup.gameObject.activeSelf && !(bool)AccessTools.Property(panel.GetType(), "BlocksHudInput").GetValue(panel, null),
+            "outside pointer dismisses category list and releases HUD input blocking");
         Text title = root.transform.Find("HudEditorPanel/DragHeader/Title").GetComponent<Text>();
         Check(title.font != null && title.font.name == "Header_Font", "native header font survives frontend bundle unloading");
         RectTransform header = (RectTransform)ReadField(panel, "Header");
@@ -72,6 +111,8 @@ public sealed partial class UnityRecipeTests
         yield return NativeClick(editor, "Category_8");
         Check((int)ReadField(editor, "_editingKind") == 8 && root.GetComponentsInChildren<Slider>().Length == 4,
             "recipe category exposes original layout parameters inside native editor");
+        Check(!popup.gameObject.activeSelf && root.transform.Find("HudEditorPanel/CategoryPicker/Label").GetComponent<Text>().text
+            == (string)Call(editor, "CategoryName", 8), "choosing dropdown category closes list and updates localized caption");
         string disk = File.ReadAllText(hud.Config.ConfigFilePath);
         Slider slider = root.transform.Find("HudEditorPanel/ParameterViewport/Parameters/Parameter_0/Slider").GetComponent<Slider>();
         float savedScale = (float)hud.Config["Recipes", "RecipeScale"].BoxedValue;
@@ -89,11 +130,7 @@ public sealed partial class UnityRecipeTests
         field.text = "2"; yield return null;
         Check(File.ReadAllText(hud.Config.ConfigFilePath) == disk, "native number preview leaves configuration bytes untouched");
         yield return RecipeEditorScenario(editor, hud);
-        yield return NativeClick(editor, "Category_9");
-        slider = root.transform.Find("HudEditorPanel/ParameterViewport/Parameters/Parameter_2/Slider").GetComponent<Slider>();
-        slider.value = 45; yield return null;
-        Check(Mathf.Abs((float)ReadField(ReadField(runtime, "Options"), "EmptySlotOpacity") - .45f) < .001f,
-            "container plus opacity uses existing adapter through unified draft");
+        yield return ContentsEditorScenario(editor, hud);
         ScreenCapture.CaptureScreenshot(Path.Combine(output, "editor-native-panel.png")); yield return new WaitForEndOfFrame(); yield return null;
         Rect bounds = (Rect)AccessTools.Property(panel.GetType(), "Bounds").GetValue(panel, null);
         File.AppendAllText(Path.Combine(output, "editor-geometry.tsv"), "native-panel-ui\t" + bounds + "\tscale=" + scale + "\tdrag=" + (moved-start) + "\n");

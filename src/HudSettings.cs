@@ -1,4 +1,5 @@
 using BepInEx.Configuration;
+using OC2ModSettings.SDK;
 
 namespace OC2HudCustomization
 {
@@ -13,6 +14,7 @@ namespace OC2HudCustomization
         internal readonly ConfigEntry<float> RecipeOpacity;
         internal readonly ConfigEntry<float> EmptySlotOpacity;
         internal readonly ConfigEntry<float> IngredientOpacity;
+        internal readonly ConfigEntry<float> ContentsX, ContentsY, ContentsWidth, ContentsHeight;
 
         internal HudSettings(ConfigFile config)
         {
@@ -34,13 +36,22 @@ namespace OC2HudCustomization
                 SettingsText.Opacity, 100, 90, new AcceptableValueRange<float>(0f, 100f));
             IngredientOpacity = Bind(config, "Opacity", "IngredientOpacity", 100f, SettingsText.IngredientOpacity, SettingsText.IngredientOpacityDescription,
                 SettingsText.Opacity, 100, 80, new AcceptableValueRange<float>(0f, 100f));
+            ContentsX = BindHidden(config, "X", 0f, -1f, 1f);
+            ContentsY = BindHidden(config, "Y", 0f, -1f, 1f);
+            ContentsWidth = BindHidden(config, "Width", 1f, .25f, 4f);
+            ContentsHeight = BindHidden(config, "Height", 1f, .25f, 4f);
         }
+
+        private static ConfigEntry<float> BindHidden(ConfigFile config, string key, float value, float min, float max)
+        { return config.Bind("HudEditor.Contents", key, value, new ConfigDescription("Shared contents geometry; X/Y are screen fractions (Y up).",
+            new AcceptableValueRange<float>(min, max), new ModSettingsAttributes { Browsable = false })); }
 
         internal HudOptions Snapshot()
         {
             return new HudOptions(Enabled.Value, Finite(RecipeScale.Value, 1f), RecipesPerRow.Value, Finite(RecipeRowSpacing.Value, 8f),
                 Finite(ContentsScale.Value, 1f), ContentsPerRow.Value, Finite(RecipeOpacity.Value, 100f) / 100f,
-                Finite(EmptySlotOpacity.Value, 100f) / 100f, Finite(IngredientOpacity.Value, 100f) / 100f);
+                Finite(EmptySlotOpacity.Value, 100f) / 100f, Finite(IngredientOpacity.Value, 100f) / 100f,
+                Finite(ContentsX.Value, 0f), Finite(ContentsY.Value, 0f), Finite(ContentsWidth.Value, 1f), Finite(ContentsHeight.Value, 1f));
         }
 
         internal void Apply(HudOptions value)
@@ -49,6 +60,8 @@ namespace OC2HudCustomization
             RecipeRowSpacing.Value = value.RecipeRowSpacing; ContentsScale.Value = value.ContentsScale;
             ContentsPerRow.Value = value.ContentsPerRow; RecipeOpacity.Value = value.RecipeOpacity * 100f;
             EmptySlotOpacity.Value = value.EmptySlotOpacity * 100f; IngredientOpacity.Value = value.IngredientOpacity * 100f;
+            ContentsX.Value = value.ContentsX; ContentsY.Value = value.ContentsY;
+            ContentsWidth.Value = value.ContentsWidth; ContentsHeight.Value = value.ContentsHeight;
         }
 
         // Defense after BepInEx range validation; never send non-finite values into Unity.
@@ -62,6 +75,7 @@ namespace OC2HudCustomization
         internal readonly float RecipeScale, RecipeRowSpacing, ContentsScale;
         internal readonly int RecipesPerRow, ContentsPerRow;
         internal readonly float RecipeOpacity, EmptySlotOpacity, IngredientOpacity;
+        internal readonly float ContentsX, ContentsY, ContentsWidth, ContentsHeight;
 
         internal bool Same(HudOptions other)
         {
@@ -69,11 +83,18 @@ namespace OC2HudCustomization
                 && RecipesPerRow == other.RecipesPerRow && RecipeRowSpacing == other.RecipeRowSpacing
                 && ContentsScale == other.ContentsScale && ContentsPerRow == other.ContentsPerRow
                 && RecipeOpacity == other.RecipeOpacity && EmptySlotOpacity == other.EmptySlotOpacity
-                && IngredientOpacity == other.IngredientOpacity;
+                && IngredientOpacity == other.IngredientOpacity && ContentsX == other.ContentsX && ContentsY == other.ContentsY
+                && ContentsWidth == other.ContentsWidth && ContentsHeight == other.ContentsHeight;
         }
 
         internal HudOptions(bool enabled, float recipeScale, int recipesPerRow, float recipeRowSpacing,
             float contentsScale, int contentsPerRow, float recipeOpacity, float emptySlotOpacity, float ingredientOpacity)
+            : this(enabled, recipeScale, recipesPerRow, recipeRowSpacing, contentsScale, contentsPerRow, recipeOpacity,
+                emptySlotOpacity, ingredientOpacity, 0f, 0f, 1f, 1f) { }
+
+        internal HudOptions(bool enabled, float recipeScale, int recipesPerRow, float recipeRowSpacing,
+            float contentsScale, int contentsPerRow, float recipeOpacity, float emptySlotOpacity, float ingredientOpacity,
+            float contentsX, float contentsY, float contentsWidth, float contentsHeight)
         {
             Enabled = enabled;
             RecipeScale = recipeScale;
@@ -84,6 +105,7 @@ namespace OC2HudCustomization
             RecipeOpacity = recipeOpacity;
             EmptySlotOpacity = emptySlotOpacity;
             IngredientOpacity = ingredientOpacity;
+            ContentsX = contentsX; ContentsY = contentsY; ContentsWidth = contentsWidth; ContentsHeight = contentsHeight;
         }
     }
 }

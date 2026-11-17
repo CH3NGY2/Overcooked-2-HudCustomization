@@ -32,6 +32,8 @@ namespace OC2HudCustomization
         { if (kind == HudTargetKind.Heat) _heat.Show(delegate(Component owner, Component display) { Observe(owner, display, kind, true); }); }
         internal bool HasInstance(HudTargetKind kind)
         { foreach (HudTarget target in _targets) if (target.Pickable && target.Alive && target.Kind == kind) return true; return false; }
+        internal bool Available(HudTargetKind kind)
+        { return HasInstance(kind) || (kind == HudTargetKind.Heat && _heat.Available); }
         internal IList<HudTarget> Targets { get { return _view; } }
         internal HudTargetRegistry(HudGeometry[] values, HudLog log) { Values = values; _log = log; _view = _targets.AsReadOnly(); _heat = new HudHeatPreviews(log); }
         internal void Start()

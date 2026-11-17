@@ -51,7 +51,8 @@ namespace OC2HudCustomization
                 }
                 Event input = Event.current;
                 if (input != null && input.type == EventType.KeyDown && input.keyCode == KeyCode.BackQuote) input.Use();
-                if (input != null && !_panel.Dragging && (!Panel.Contains(pointerPixels / scale) || _dragging)) Pointer(input, pointerPixels);
+                if (input != null && !_panel.Dragging && !_panel.BlocksHudInput
+                    && (!Panel.Contains(pointerPixels / scale) || _dragging)) Pointer(input, pointerPixels);
             }
             finally { GUI.matrix = previousMatrix; GUI.depth = previousDepth; }
         }
@@ -71,7 +72,7 @@ namespace OC2HudCustomization
         }
         private void ActivateCategory(int kind)
         {
-            if (kind < 0 || kind >= 10) return;
+            if (!CategoryAvailable(kind)) return;
             _selected = null; _editingKind = kind; _dragging = false;
             Targets.ClearPreviews();
             if (kind < (int)HudTargetKind.Count)

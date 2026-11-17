@@ -29,7 +29,15 @@ internal static partial class BehaviorTests
         config.SaveOnConfigSet = false;
         HudSettings settings = new HudSettings(config);
         Check(settings.DisplayLanguage == HudLanguage.English && !settings.SetDisplayLanguage(HudLanguage.English), "English startup without a redundant change");
-        ConfigDefinition[] definitions = new ConfigDefinition[config.Count]; config.Keys.CopyTo(definitions, 0);
+        System.Collections.Generic.List<ConfigDefinition> visible = new System.Collections.Generic.List<ConfigDefinition>();
+        foreach (System.Collections.Generic.KeyValuePair<ConfigDefinition, ConfigEntryBase> pair in config)
+        {
+            ModSettingsAttributes tag = (ModSettingsAttributes)pair.Value.Description.Tags[0];
+            if (tag.Browsable == false) { Check(pair.Key.Section == "HudEditor.Contents", "contents geometry remains hidden from localized rows"); continue; }
+            visible.Add(pair.Key);
+        }
+        ConfigDefinition[] definitions = visible.ToArray();
+        Check(definitions.Length == 9, "nine visible localized controls preserved");
         ConfigEntryBase[] entries = new ConfigEntryBase[definitions.Length];
         ModSettingsAttributes[] tags = new ModSettingsAttributes[definitions.Length];
         int[] priorities = new int[definitions.Length], orders = new int[definitions.Length];

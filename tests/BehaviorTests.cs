@@ -90,11 +90,14 @@ internal static partial class BehaviorTests
         string path = Path.Combine(root, "hud.cfg");
         ConfigFile config = new ConfigFile(path, false); config.SaveOnConfigSet = false;
         HudSettings settings = new HudSettings(config);
-        Check(config.Count == 9, "nine discoverable ConfigEntry values");
+        Check(config.Count == 13, "nine visible and four hidden contents ConfigEntry values");
         HudOptions defaults = settings.Snapshot();
         Check(defaults.Enabled && defaults.RecipeScale == 1f && defaults.ContentsScale == 1f
             && defaults.RecipesPerRow == 0 && defaults.ContentsPerRow == 0, "native geometry defaults");
         Check(defaults.RecipeOpacity == 1f && defaults.EmptySlotOpacity == 1f && defaults.IngredientOpacity == 1f, "native alpha defaults");
+        Check(defaults.ContentsX == 0f && defaults.ContentsY == 0f && defaults.ContentsWidth == 1f && defaults.ContentsHeight == 1f, "new contents geometry defaults preserve native position and aspect");
+        settings.ContentsX.Value = .12f; settings.ContentsY.Value = -.08f;
+        settings.ContentsWidth.Value = 1.6f; settings.ContentsHeight.Value = .7f;
         int changed = 0; config.SettingChanged += delegate { changed++; };
         config["Recipes", "RecipeScale"].BoxedValue = 1.5f;
         Check(changed == 1 && settings.Snapshot().RecipeScale == 1.5f, "external ModSettings-style boxed write raises event");
@@ -113,12 +116,16 @@ internal static partial class BehaviorTests
         HudSettings persisted = new HudSettings(reloaded);
         Check(persisted.RecipeScale.Value == 1.5f && persisted.RecipesPerRow.Value == 3
             && persisted.EmptySlotOpacity.Value == 0f, "native cfg persistence");
+        Check(persisted.ContentsX.Value == .12f && persisted.ContentsY.Value == -.08f
+            && persisted.ContentsWidth.Value == 1.6f && persisted.ContentsHeight.Value == .7f, "hidden shared contents position and aspect survive actual cfg reload");
+        persisted.ContentsX.Value = float.NaN; persisted.ContentsHeight.Value = float.NaN;
         persisted.Enabled.Value = false; Check(!persisted.Snapshot().Enabled, "disable option");
         persisted.RecipeScale.Value = float.NaN;
         persisted.EmptySlotOpacity.Value = float.NaN;
         HudOptions safe = persisted.Snapshot();
         Check(!float.IsNaN(safe.RecipeScale) && !float.IsInfinity(safe.RecipeScale) && safe.RecipeScale >= 0.5f && safe.RecipeScale <= 2f
-            && !float.IsNaN(safe.EmptySlotOpacity) && safe.EmptySlotOpacity >= 0f && safe.EmptySlotOpacity <= 1f,
+            && !float.IsNaN(safe.EmptySlotOpacity) && safe.EmptySlotOpacity >= 0f && safe.EmptySlotOpacity <= 1f
+            && !float.IsNaN(safe.ContentsX) && !float.IsNaN(safe.ContentsHeight),
             "non-finite cfg cannot poison Unity geometry or alpha");
     }
 }

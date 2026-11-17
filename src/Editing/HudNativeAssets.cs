@@ -14,9 +14,9 @@ namespace OC2HudCustomization
         private readonly Dictionary<Object, Object> _copies = new Dictionary<Object, Object>();
         private readonly List<Object> _owned = new List<Object>();
         private bool _fontLease;
-        internal Sprite Paper, Header, Button;
+        internal Sprite Header, Button;
         internal Font BodyFont, HeaderFont;
-        internal bool Ready { get { return Paper && BodyFont && HeaderFont; } }
+        internal bool Ready { get { return Header && BodyFont && HeaderFont; } }
         internal void Capture(FrontendRootMenu root)
         {
             if (Ready || !root) return;
@@ -25,7 +25,6 @@ namespace OC2HudCustomization
             try
             {
                 Transform body = options.Find("SettingsBody");
-                Paper = CopySprite(body.GetComponent<Image>().sprite);
                 Header = CopySprite(body.Find("HeaderBacker").GetComponent<Image>().sprite);
                 T17Button button = body.Find("ContentPC/Viewport/Content/ScreenAdjuster").GetComponent<T17Button>();
                 Image backer = button.targetGraphic as Image;
@@ -75,7 +74,7 @@ namespace OC2HudCustomization
         public void Dispose()
         {
             for (int i = _owned.Count - 1; i >= 0; i--) if (_owned[i]) Object.Destroy(_owned[i]);
-            _copies.Clear(); _owned.Clear(); Paper = Header = Button = null; BodyFont = HeaderFont = null;
+            _copies.Clear(); _owned.Clear(); Header = Button = null; BodyFont = HeaderFont = null;
             if (_fontLease) { _fontLease = false; AssetBundleManager.UnloadAssetBundle("bundle22"); }
         }
     }

@@ -62,6 +62,7 @@ namespace OC2HudCustomization
             _kind = kind; _index = index;
             bool visible = index < _editor.NumberCount; _root.gameObject.SetActive(visible);
             if (!visible) return;
+            HudNativeUi.Box(_root, 0, index * 47, 412, 44);
             bool integer; _label.text = _editor.NumberLabel(index);
             _editor.NumberRange(index, out _min, out _max, out integer);
             _sync = true;

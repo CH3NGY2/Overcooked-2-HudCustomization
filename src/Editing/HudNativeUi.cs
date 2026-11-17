@@ -40,6 +40,7 @@ namespace OC2HudCustomization
             Button button = rect.gameObject.AddComponent<Button>(); button.targetGraphic = backer;
             ColorBlock colors = button.colors; colors.normalColor = Color.white;
             colors.highlightedColor = new Color(1.2f, 1.2f, 1.2f, 1f); colors.pressedColor = new Color(.8f, .8f, .8f, 1f);
+            colors.disabledColor = new Color(.48f, .52f, .55f, .55f);
             colors.fadeDuration = .08f; button.colors = colors;
             Text text = Text(Rect(rect, "Label", 9, 2, width - 18, height - 4), label, assets.BodyFont, 18, Color.white);
             text.alignment = TextAnchor.MiddleCenter; text.resizeTextForBestFit = true; text.resizeTextMinSize = 13; text.resizeTextMaxSize = 18;
