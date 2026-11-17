@@ -79,6 +79,7 @@ namespace OC2HudCustomization
                 // Historical Editable=false remains readable; explicitly selecting a category
                 // enables picking it in this draft, without disabling other saved HUD geometry.
                 Targets.Values[kind].Allowed = true; Targets.Previews[kind] = true;
+                Targets.PreparePreview((HudTargetKind)kind);
                 Targets.Tick();
                 foreach (HudTarget target in Targets.Targets)
                 {

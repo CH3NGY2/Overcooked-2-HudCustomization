@@ -20,6 +20,7 @@ namespace OC2HudCustomization
         private readonly RecipeMotion _motion;
         private UI_Move _nativeMove;
         private Animator _animator;
+        private RecipeAnimationPreview _preview;
         private int _entranceLayer = -1;
         private bool _nativeEntranceSeen;
         private float _horizontalExtent;
@@ -83,6 +84,7 @@ namespace OC2HudCustomization
 
         private void CacheBoundsObjects()
         {
+            Preview(false);
             for (int i = 0; i < _headers.Count; i++) _headers[i].Restore();
             _headers.Clear();
             _visuals.Clear();
@@ -185,6 +187,14 @@ namespace OC2HudCustomization
         { for (int i = 0; i < _branches.Count; i++) _branches[i].Restore(); }
 
         private static int FindEntranceLayer(Animator animator) { return animator.GetLayerIndex("Override"); }
+        internal void Preview(bool active)
+        {
+            if (!active)
+            { if (_preview != null) { _preview.Apply(false); _preview = null; } return; }
+            if (!_animator) return;
+            if (_preview == null) _preview = new RecipeAnimationPreview(_animator, _log);
+            _preview.Apply(true);
+        }
 
         private float ReadNativeProgress()
         {
@@ -196,6 +206,7 @@ namespace OC2HudCustomization
 
         internal void Restore()
         {
+            Preview(false);
             if (!Widget) return;
             for (int i = 0; i < _headers.Count; i++) _headers[i].Restore();
             _trimmed = false;

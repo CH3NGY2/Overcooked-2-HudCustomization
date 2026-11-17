@@ -131,8 +131,10 @@ public sealed partial class UnityRecipeTests : BaseUnityPlugin
             || LobbyFlowController.Instance.m_themeSelectMenu.CurrentGamepadUser == null)) yield return null;
         Check(LobbyFlowController.Instance != null && !LoadingScreenFlow.IsLoading, "native couch lobby loaded");
         ThemeSelectRootMenu themes = LobbyFlowController.Instance.m_themeSelectMenu;
-        CarouselButton chosen = themes.GetButtonForTheme(SceneDirectoryData.LevelTheme.Sushi);
-        Check(chosen != null, "native ordinary Sushi theme available (Horde excluded)");
+        bool heatTest = Array.IndexOf(Environment.GetCommandLineArgs(), "-hudHeatTest") >= 0;
+        SceneDirectoryData.LevelTheme theme = heatTest ? SceneDirectoryData.LevelTheme.Beach : SceneDirectoryData.LevelTheme.Sushi;
+        CarouselButton chosen = themes.GetButtonForTheme(theme);
+        Check(chosen != null, "native ordinary " + theme + " theme available (Horde excluded)");
         themes.OnButtonSelected(chosen);
         deadline = Time.realtimeSinceStartup + 8f;
         while (themes.GetCurrentButton() != chosen && Time.realtimeSinceStartup < deadline) yield return null;

@@ -31,6 +31,7 @@ namespace OC2HudCustomization
         private float _nextServiceCheck;
         private static int _exitFrame = -1;
         internal bool Active { get { return _lease != null; } }
+        internal bool AllowsRecipePreview { get { return Active && _lease.AllowsRecipePreview; } }
         internal static bool BlocksShortcut { get { return (Plugin.Editor != null && Plugin.Editor.Active) || Time.frameCount == _exitFrame; } }
         internal HudEditor(Plugin plugin, HudSettings settings, HudEditorConfig config, ModSettingsClient client, HudLog log)
         {
@@ -117,7 +118,12 @@ namespace OC2HudCustomization
             _exitFrame = Time.frameCount; _selected = null; _editingKind = -1; _dragging = false;
             if (!save && _saved != null) Targets.Values = _saved;
             try { if (_panel != null) _panel.Hide(); Targets.ClearPreviews(); }
-            finally { lease.Dispose(); if (Plugin.Runtime != null) Plugin.Runtime.SetOptions(_settings.Snapshot()); }
+            finally
+            {
+                // Restore display-only animation ownership before releasing the native pause.
+                try { if (Plugin.Runtime != null && Plugin.Runtime.Recipes != null) Plugin.Runtime.Recipes.StopPreview(); }
+                finally { lease.Dispose(); if (Plugin.Runtime != null) Plugin.Runtime.SetOptions(_settings.Snapshot()); }
+            }
             _log.Info(save ? "HUD editor saved and exited." : "HUD editor cancelled; draft discarded.");
         }
         private void SceneUnloaded(Scene scene) { if (Active) End(false); }

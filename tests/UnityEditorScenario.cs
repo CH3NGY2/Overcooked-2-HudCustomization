@@ -118,6 +118,7 @@ public sealed partial class UnityRecipeTests
         foreach (PlayerControls player in UnityEngine.Object.FindObjectsOfType<PlayerControls>()) Check(player.IsSuppressed(), "native player input suppressed while editing");
         foreach (T17EventSystem system in UnityEngine.Object.FindObjectsOfType<T17EventSystem>()) Check(system.IsDisabled(), "native event-system input suppressed while editor owns native Canvas");
         yield return NativePanelScenario(editor, hud);
+        yield return HeatEditorScenario(editor, hud, registry);
         int timerValue = UnityEngine.Object.FindObjectOfType<LevelTimerUIController>().Value;
         yield return new WaitForSecondsRealtime(1.2f);
         Check(UnityEngine.Object.FindObjectOfType<LevelTimerUIController>().Value == timerValue, "round timer frozen across real elapsed time");

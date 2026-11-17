@@ -50,7 +50,8 @@ try {
         @('ClientWorkableItem','m_guibar'), @('ClientCookingHandler','m_gui'), @('ClientMixingHandler','m_progressUI'),
         @('ClientHeatedStationGUI','m_uiInstance'), @('ClientWashingStation','m_progressUI'),
         @('ClientWashable','m_progressBar'), @('ClientFlammable','m_fireGUIBar'),
-        @('ProgressUIController','m_progressBar'), @('CookingUIController','m_progressBar'), @('HeatValueUIController','m_progressBar')
+        @('ProgressUIController','m_progressBar'), @('CookingUIController','m_progressBar'), @('HeatValueUIController','m_progressBar'),
+        @('TimeManager','m_arbitrationSupressors')
     )) {
         $type = $game.MainModule.Types | Where-Object FullName -eq $spec[0]
         $field = @($type.Fields | Where-Object Name -eq $spec[1])

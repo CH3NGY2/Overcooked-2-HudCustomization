@@ -2,10 +2,12 @@ param(
     [string]$GameRoot = 'E:\SteamLibrary\steamapps\common\Overcooked! 2',
     [string]$MSBuild = 'D:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe',
     [switch]$KeepProductionBuild,
-    [switch]$Editor
+    [switch]$Editor,
+    [switch]$Heat
 )
 $ErrorActionPreference = 'Stop'
 if (Get-Process -Name Overcooked2 -ErrorAction SilentlyContinue) { throw 'Player game running; no deployment performed.' }
+if ($Heat -and !$Editor) { throw '-Heat requires -Editor.' }
 $root = Split-Path -Parent $PSScriptRoot
 & (Join-Path $PSScriptRoot 'Build.ps1') -GameRoot $GameRoot -MSBuild $MSBuild
 & $MSBuild (Join-Path $root 'tests\UnityRecipeTests.csproj') /t:Rebuild "/p:GameRoot=$GameRoot" /v:minimal /nologo
@@ -48,6 +50,7 @@ try {
         '-logFile',('"' + (Join-Path $run 'player.log') + '"'),'-hudRecipeTest',('"' + $run + '"'))
     if ($legacyMigrationExpected) { $arguments += '-hudRecipeLegacyMigration' }
     if ($Editor) { $arguments += '-hudEditorTest' }
+    if ($Heat) { $arguments += '-hudHeatTest' }
     Start-Process -FilePath $steam -ArgumentList $arguments -WindowStyle Hidden | Out-Null
     Write-Output "Unity recipe run: $run"
     $deadline = (Get-Date).AddSeconds(300)

@@ -76,9 +76,9 @@ namespace OC2HudCustomization
             new SettingsMessage("Scoreboard", "Score", "Punteggio", "Punktestand", "Marcador", "Счёт", "Placar", "Wynik", "计分板", "スコア", "점수판", "計分板"),
             new SettingsMessage("Timer", "Chronomètre", "Timer", "Timer", "Temporizador", "Таймер", "Cronômetro", "Czas", "倒计时", "タイマー", "타이머", "倒數計時"),
             new SettingsMessage("Chopping", "Découpe", "Taglio", "Schneiden", "Cortar", "Нарезка", "Corte", "Krojenie", "切菜进度", "切る進捗", "썰기", "切菜進度"),
-            new SettingsMessage("Cooking", "Cuisson", "Cottura", "Kochen", "Cocción", "Готовка", "Cozimento", "Gotowanie", "烹饪进度", "調理進捗", "요리", "烹飪進度"),
+            new SettingsMessage("Cooking / skewers", "Cuisson / brochettes", "Cottura / spiedini", "Kochen / Spieße", "Cocción / brochetas", "Готовка / шашлыки", "Cozimento / espetos", "Gotowanie / szaszłyki", "烹饪 / 烤串进度", "調理 / 串焼き", "요리 / 꼬치", "烹飪 / 烤串進度"),
             new SettingsMessage("Mixing", "Mélange", "Miscelazione", "Mixen", "Mezclar", "Смешивание", "Mistura", "Mieszanie", "搅拌进度", "混ぜる進捗", "섞기", "攪拌進度"),
-            new SettingsMessage("Stove heat", "Chaleur", "Calore", "Herdhitze", "Calor", "Температура", "Calor", "Temperatura", "炉温表盘", "コンロ温度", "화력", "爐溫錶盤"),
+            new SettingsMessage("BBQ heat", "Chaleur du barbecue", "Calore barbecue", "Grillhitze", "Calor de barbacoa", "Жар гриля", "Calor da grelha", "Żar grilla", "烧烤火力 / 热力条", "バーベキュー火力", "바비큐 화력", "燒烤火力 / 熱力條"),
             new SettingsMessage("Washing", "Lavage", "Lavaggio", "Spülen", "Lavar", "Мытьё", "Lavagem", "Zmywanie", "洗碗进度", "洗う進捗", "설거지", "洗碗進度"),
             new SettingsMessage("Extinguishing", "Extinction", "Estinzione", "Löschen", "Extinción", "Тушение", "Extinção", "Gaszenie", "灭火进度", "消火進捗", "소화", "滅火進度")
         };

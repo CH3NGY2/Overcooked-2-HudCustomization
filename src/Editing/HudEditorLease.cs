@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace OC2HudCustomization
@@ -14,6 +15,18 @@ namespace OC2HudCustomization
         private readonly UnityEngine.Object _owner;
         private readonly HudLog _log;
         private TimeManager _time;
+        private static readonly FieldInfo PauseOwners = Required.Field(typeof(TimeManager), "m_arbitrationSupressors", typeof(List<object>[]));
+        private List<object>[] _pauseOwners;
+        internal bool AllowsRecipePreview
+        {
+            get
+            {
+                if (!_time || _pauseOwners == null) return false;
+                foreach (List<object> owners in _pauseOwners)
+                    foreach (object owner in owners) if (!ReferenceEquals(owner, this)) return false;
+                return true;
+            }
+        }
         private Suppressor _engagement;
         private T17FrontendFlow _frontend;
         private bool _previousBlock, _cursorVisible, _main, _ui, _camera, _cursorOwned;
@@ -23,6 +36,7 @@ namespace OC2HudCustomization
         {
             _time = GameUtils.RequestManager<TimeManager>();
             if (!_time) throw new InvalidOperationException("No native TimeManager available");
+            _pauseOwners = (List<object>[])PauseOwners.GetValue(_time);
             _main = true; _time.SetPaused(TimeManager.PauseLayer.Main, true, this);
             _ui = true; _time.SetPaused(TimeManager.PauseLayer.UI, true, this);
             _camera = true; _time.SetPaused(TimeManager.PauseLayer.Camera, true, this);
@@ -70,7 +84,7 @@ namespace OC2HudCustomization
                 if (_ui) Release("UI pause", delegate { _time.SetPaused(TimeManager.PauseLayer.UI, false, this); });
                 if (_main) Release("main pause", delegate { _time.SetPaused(TimeManager.PauseLayer.Main, false, this); });
             }
-            _main = _ui = _camera = false; _time = null;
+            _main = _ui = _camera = false; _time = null; _pauseOwners = null;
             if (_cursorOwned) Release("cursor", delegate { Cursor.lockState = _cursorLock; Cursor.visible = _cursorVisible; });
             _cursorOwned = false;
         }

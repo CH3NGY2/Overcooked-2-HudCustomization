@@ -88,6 +88,7 @@ public sealed partial class UnityRecipeTests
         Call(editor, "End", true); Check(IsEditing(editor), "invalid native numeric draft blocks save without dropping editor");
         field.text = "2"; yield return null;
         Check(File.ReadAllText(hud.Config.ConfigFilePath) == disk, "native number preview leaves configuration bytes untouched");
+        yield return RecipeEditorScenario(editor, hud);
         yield return NativeClick(editor, "Category_9");
         slider = root.transform.Find("HudEditorPanel/ParameterViewport/Parameters/Parameter_2/Slider").GetComponent<Slider>();
         slider.value = 45; yield return null;

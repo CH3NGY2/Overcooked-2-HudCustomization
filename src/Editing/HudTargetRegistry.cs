@@ -13,6 +13,7 @@ namespace OC2HudCustomization
         private readonly List<OwnerSpec> _owners = new List<OwnerSpec>();
         private readonly Harmony _harmony = new Harmony(PluginInfo.Guid + ".editor.targets");
         private readonly HudLog _log;
+        private readonly HudHeatPreviews _heat;
         private readonly IList<HudTarget> _view;
         internal HudGeometry[] Values;
         internal bool Enabled;
@@ -22,11 +23,17 @@ namespace OC2HudCustomization
             Array.Clear(Previews, 0, Previews.Length);
             foreach (HudTarget target in _targets)
                 try { target.Preview(false); } catch (Exception e) { _log.ErrorOnce("HUD editor preview release " + target.Kind, e); }
+            for (int i = _targets.Count - 1; i >= 0; i--)
+                if (_heat.Owns(_targets[i].Rect))
+                { _targets[i].Restore(); _byRect.Remove(_targets[i].Rect); _targets.RemoveAt(i); }
+            _heat.Dispose();
         }
+        internal void PreparePreview(HudTargetKind kind)
+        { if (kind == HudTargetKind.Heat) _heat.Show(delegate(Component owner, Component display) { Observe(owner, display, kind, true); }); }
         internal bool HasInstance(HudTargetKind kind)
         { foreach (HudTarget target in _targets) if (target.Pickable && target.Alive && target.Kind == kind) return true; return false; }
         internal IList<HudTarget> Targets { get { return _view; } }
-        internal HudTargetRegistry(HudGeometry[] values, HudLog log) { Values = values; _log = log; _view = _targets.AsReadOnly(); }
+        internal HudTargetRegistry(HudGeometry[] values, HudLog log) { Values = values; _log = log; _view = _targets.AsReadOnly(); _heat = new HudHeatPreviews(log); }
         internal void Start()
         {
             AddOwner(typeof(ClientWorkableItem), "m_guibar", typeof(ProgressUIController), HudTargetKind.Chopping, "StartSynchronising", typeof(Component));
@@ -72,6 +79,7 @@ namespace OC2HudCustomization
         internal void ObserveOwner(Component owner)
         {
             if (!owner || !owner.gameObject.scene.IsValid()) return;
+            _heat.Track(owner);
             foreach (OwnerSpec spec in _owners)
                 if (spec.Type.IsInstanceOfType(owner))
                 { Observe(owner, spec.Field.GetValue(owner) as Component, spec.Kind, true); return; }
@@ -101,6 +109,7 @@ namespace OC2HudCustomization
         }
         public void Dispose()
         {
+            ClearPreviews();
             foreach (HudTarget target in _targets)
                 try { target.Restore(); } catch (Exception error) { _log.ErrorOnce("HUD editor target restore " + target.Kind, error); }
             _targets.Clear(); _byRect.Clear(); _harmony.UnpatchSelf();

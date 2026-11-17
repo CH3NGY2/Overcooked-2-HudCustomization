@@ -68,11 +68,12 @@ namespace OC2HudCustomization
 
         internal void Tick(HudOptions options)
         {
+            bool preview = Plugin.Editor != null && Plugin.Editor.AllowsRecipePreview;
             _deadFlows.Clear();
             foreach (KeyValuePair<RecipeFlowGUI, FlowState> pair in _flows)
             {
                 if (!pair.Key) { _deadFlows.Add(pair.Key); continue; }
-                if (options.Enabled && pair.Key.isActiveAndEnabled) Apply(pair.Value, options);
+                if (options.Enabled && pair.Key.isActiveAndEnabled) Apply(pair.Value, options, preview);
             }
             for (int i = 0; i < _deadFlows.Count; i++) _flows.Remove(_deadFlows[i]);
             _deadCards.Clear();
@@ -81,7 +82,7 @@ namespace OC2HudCustomization
             for (int i = 0; i < _deadCards.Count; i++) _cards.Remove(_deadCards[i]);
         }
 
-        private void Apply(FlowState state, HudOptions options)
+        private void Apply(FlowState state, HudOptions options, bool preview)
         {
             bool customLayout = options.RecipesPerRow > 0 || !Mathf.Approximately(options.RecipeScale, 1f);
             Transform space = state.Flow.transform;
@@ -90,12 +91,13 @@ namespace OC2HudCustomization
             HudRowLayout layout = new HudRowLayout();
             bool started = false;
             float firstTop = 0f, firstRight = 0f, firstLeft = 0f;
-            float deltaTime = TimeManager.GetDeltaTime(state.Flow.gameObject);
+            float deltaTime = preview ? Time.unscaledDeltaTime : TimeManager.GetDeltaTime(state.Flow.gameObject);
             for (int i = 0; i < state.Cards.Count; i++)
             {
                 RecipeCardState card = state.Cards[i];
                 if (!card.Widget) continue;
                 card.Prepare(options);
+                card.Preview(preview);
                 if (!customLayout) continue;
                 Rect bounds;
                 if (!card.Measure(space, out bounds)) continue;
@@ -141,5 +143,6 @@ namespace OC2HudCustomization
         {
             foreach (RecipeCardState state in _cards.Values) state.Restore();
         }
+        internal void StopPreview() { foreach (RecipeCardState state in _cards.Values) state.Preview(false); }
     }
 }
