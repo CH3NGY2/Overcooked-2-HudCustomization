@@ -47,8 +47,8 @@ public sealed partial class UnityRecipeTests
         Check(root.GetComponent<Canvas>() != null && root.GetComponent<GraphicRaycaster>() != null
             && root.GetComponent<StandaloneInputModule>() != null && domain.isActiveAndEnabled,
             "production floating panel uses native Canvas and active input module");
-        Check(root.GetComponentsInChildren<Button>(true).Length == 17 && root.GetComponentsInChildren<InputField>(true).Length == 7,
-            "one dropdown with ten items and dismissal, two contents subitems, three actions, seven number fields");
+        Check(root.GetComponentsInChildren<Button>(true).Length == 15 && root.GetComponentsInChildren<InputField>(true).Length == 8,
+            "one dropdown with ten items and dismissal, three actions, eight number fields without subitem tabs");
         Image paper = root.transform.Find("HudEditorPanel").GetComponent<Image>();
         Check(paper.sprite == null && paper.color.a > .95f && paper.transform.Find("PaperInset") == null,
             "one opaque panel background has no native decorative side strips or inset");
@@ -66,7 +66,7 @@ public sealed partial class UnityRecipeTests
             && popupCorners[0].y >= 0 && popupCorners[2].y <= Screen.height,
             "all ten dropdown items fit inside the screen without clipping");
         File.AppendAllText(Path.Combine(output, "editor-geometry.tsv"), "category-popup-ui\t" + list.rect.size
-            + "\tvisible-number-fields=7\told-panel-height=836\n");
+            + "\treusable-number-fields=8\told-panel-height=836\n");
         ScreenCapture.CaptureScreenshot(Path.Combine(output, "editor-category-dropdown.png"));
         yield return new WaitForEndOfFrame(); yield return null;
         for (int i = 0; i < 10; i++)

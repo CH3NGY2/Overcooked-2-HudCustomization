@@ -16,6 +16,7 @@ namespace OC2HudCustomization
 
         internal bool HasInstance
         { get { foreach (ContentsState state in _states.Values) if (state.UI && state.UI.gameObject.scene.IsValid()) return true; return false; } }
+        internal IEnumerable<ContentsState> Targets { get { return _states.Values; } }
 
         internal void Observe(ClientIngredientContentGUI owner, HudOptions options)
         {
@@ -57,7 +58,7 @@ namespace OC2HudCustomization
         {
             ContentsState state;
             if (!object.ReferenceEquals(ui, null) && _states.TryGetValue(ui, out state))
-            { state.Restore(); _states.Remove(ui); }
+            { state.Release(); _states.Remove(ui); }
         }
 
         internal void Tick(HudOptions options)

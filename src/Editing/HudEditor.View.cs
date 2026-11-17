@@ -8,7 +8,7 @@ namespace OC2HudCustomization
     // The entire floating panel and all settings controls live on the native uGUI Canvas.
     internal sealed partial class HudEditor
     {
-        private HudTarget _selected;
+        private IHudEditorTarget _selected;
         private int _editingKind = -1;
         private bool _dragging, _moved, _error;
         private HudHandle _handle;
@@ -41,10 +41,10 @@ namespace OC2HudCustomization
             {
                 Rect selectedBounds;
                 if (_selected != null && !_selected.TryBounds(out selectedBounds)) { _selected = null; _dragging = false; }
-                foreach (HudTarget target in Targets.Targets)
+                foreach (IHudEditorTarget target in EditableTargets)
                 {
                     Rect bounds;
-                    if (!target.Pickable || (int)target.Kind != _editingKind || !target.TryBounds(out bounds)) continue;
+                    if (!target.TryBounds(out bounds)) continue;
                     Rect box = Scaled(bounds, 1f / scale);
                     Border(box, target == _selected ? new Color(1f, .8f, .15f, 1f) : new Color(.25f, .85f, 1f, .65f));
                     if (target == _selected) Handles(box);
@@ -57,10 +57,23 @@ namespace OC2HudCustomization
             finally { GUI.matrix = previousMatrix; GUI.depth = previousDepth; }
         }
         private void ClearText() { _invalid.Clear(); if (_panel != null) _panel.Refresh(true); }
-        private void Select(HudTarget target)
+        private IEnumerable<IHudEditorTarget> EditableTargets
+        {
+            get
+            {
+                if (_editingKind == 9)
+                {
+                    ContentsAdapter contents = Plugin.Runtime == null ? null : Plugin.Runtime.Contents;
+                    if (contents != null) foreach (ContentsState state in contents.Targets) yield return state;
+                }
+                else foreach (HudTarget target in Targets.Targets)
+                    if (target.Pickable && (int)target.Kind == _editingKind) yield return target;
+            }
+        }
+        private void Select(IHudEditorTarget target)
         {
             if (target == null) { _selected = null; _dragging = false; return; }
-            int kind = (int)target.Kind;
+            int kind = target.Category;
             if (_editingKind != kind) ActivateCategory(kind);
             _selected = target; _dragging = false;
         }
@@ -82,12 +95,9 @@ namespace OC2HudCustomization
                 Targets.Values[kind].Allowed = true; Targets.Previews[kind] = true;
                 Targets.PreparePreview((HudTargetKind)kind);
                 Targets.Tick();
-                foreach (HudTarget target in Targets.Targets)
-                {
-                    Rect bounds;
-                    if (target.Pickable && (int)target.Kind == kind && target.TryBounds(out bounds)) { _selected = target; break; }
-                }
             }
+            foreach (IHudEditorTarget target in EditableTargets)
+            { Rect bounds; if (target.TryBounds(out bounds)) { _selected = target; break; } }
             ClearText();
         }
         private void Pointer(Event input, Vector2 mouse)
@@ -95,21 +105,21 @@ namespace OC2HudCustomization
             float scale = UiScale;
             if (input.type == EventType.MouseDown && input.button == 0)
             {
-                HudTarget picked = null; Rect bounds = new Rect(); float area = float.MaxValue;
+                IHudEditorTarget picked = null; Rect bounds = new Rect(); float area = float.MaxValue;
                 Rect current;
                 if (_selected != null && _selected.TryBounds(out current) && Expanded(current, 9f * scale).Contains(mouse))
                 { picked = _selected; bounds = current; }
-                else foreach (HudTarget target in Targets.Targets)
+                else foreach (IHudEditorTarget target in EditableTargets)
                 {
                     Rect candidate;
-                    if (!target.Pickable || (int)target.Kind != _editingKind || !target.TryBounds(out candidate)
+                    if (!target.TryBounds(out candidate)
                         || !candidate.Contains(mouse) || candidate.width * candidate.height >= area) continue;
                     picked = target; bounds = candidate; area = candidate.width * candidate.height;
                 }
                 Select(picked);
                 if (picked != null)
                 {
-                    _down = mouse; _downBounds = bounds; _downValue = Targets.Values[(int)picked.Kind].Copy();
+                    _down = mouse; _downBounds = bounds; _downValue = ReadGeometry(picked.Category);
                     _handle = HitHandle(bounds, mouse, 9f * scale); _dragging = true; _moved = false;
                 }
                 input.Use();
@@ -120,8 +130,9 @@ namespace OC2HudCustomization
                 if (delta.magnitude >= 4f * scale) _moved = true;
                 if (_moved && _selected != null)
                 {
-                    Targets.Values[(int)_selected.Kind] = HudDragMath.Drag(_downValue, _handle, delta.x, delta.y,
-                        _downBounds.width, _downBounds.height, Screen.width, Screen.height);
+                    bool contents = _selected.Category == 9;
+                    WriteGeometry(_selected.Category, HudDragMath.Drag(_downValue, _handle, delta.x, delta.y,
+                        _downBounds.width, _downBounds.height, Screen.width, Screen.height, contents ? .5f : .2f, contents ? 2f : 3f));
                     _invalid.Clear();
                 }
                 input.Use();

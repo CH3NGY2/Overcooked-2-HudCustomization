@@ -38,7 +38,7 @@ namespace OC2HudCustomization
         // Resizing pins the opposite edge. Corner movement projects onto the diagonal to
         // keep the original aspect ratio, independent of the pointer's movement direction.
         internal static HudGeometry Drag(HudGeometry start, HudHandle handle, float dx, float dy,
-            float width, float height, float screenWidth, float screenHeight)
+            float width, float height, float screenWidth, float screenHeight, float minScale, float maxScale)
         {
             HudGeometry next = start.Copy();
             if (handle == HudHandle.Move)
@@ -52,7 +52,7 @@ namespace OC2HudCustomization
                 if (sx != 0f && sy != 0f)
                 {
                     float factor = (width * width * fx + height * height * fy) / (width * width + height * height);
-                    next.Scale *= factor; next.Validate(); fx = fy = next.Scale / start.Scale;
+                    next.Scale = Math.Max(minScale, Math.Min(maxScale, next.Scale * factor)); next.Validate(); fx = fy = next.Scale / start.Scale;
                 }
                 else
                 {

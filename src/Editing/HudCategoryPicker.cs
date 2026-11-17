@@ -14,7 +14,7 @@ namespace OC2HudCustomization
         private readonly Text[] _labels = new Text[10];
         private readonly GameObject[] _markers = new GameObject[10];
         private readonly Text _caption, _arrow;
-        internal bool IsOpen { get { return _popup.gameObject.activeSelf; } }
+        internal bool IsOpen { get { return _popup && _popup.gameObject.activeSelf; } }
 
         internal HudCategoryPicker(HudEditor editor, HudNativeAssets assets, RectTransform frame)
         {
@@ -51,7 +51,8 @@ namespace OC2HudCustomization
         }
         private void SetOpen(bool open)
         {
-            _popup.gameObject.SetActive(open); _arrow.text = open ? "^" : "v";
+            if (!_popup) return;
+            _popup.gameObject.SetActive(open); if (_arrow) _arrow.text = open ? "^" : "v";
             if (open) { Refresh(); _popup.SetAsLastSibling(); }
         }
         internal void Close() { SetOpen(false); }

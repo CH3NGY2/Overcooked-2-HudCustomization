@@ -10,17 +10,21 @@ internal static partial class BehaviorTests
     private static void EditorRules(string output)
     {
         HudGeometry original = new HudGeometry();
-        HudGeometry moved = HudDragMath.Drag(original, HudHandle.Move, 192f, -108f, 200f, 80f, 1920f, 1080f);
+        HudGeometry moved = HudDragMath.Drag(original, HudHandle.Move, 192f, -108f, 200f, 80f, 1920f, 1080f, .2f, 3f);
         Check(Near(moved.X, .1f) && Near(moved.Y, .1f) && original.X == 0f, "drag is normalized screen XY and leaves original draft intact");
-        HudGeometry right = HudDragMath.Drag(original, HudHandle.Right, 100f, 0f, 200f, 80f, 1000f, 1000f);
+        HudGeometry right = HudDragMath.Drag(original, HudHandle.Right, 100f, 0f, 200f, 80f, 1000f, 1000f, .2f, 3f);
         Check(Near(right.Width, 1.5f) && Near(right.Height, 1f) && Near(right.X, .05f), "right edge changes width and pins left edge");
-        HudGeometry top = HudDragMath.Drag(original, HudHandle.Top, 0f, -40f, 200f, 80f, 1000f, 1000f);
+        HudGeometry top = HudDragMath.Drag(original, HudHandle.Top, 0f, -40f, 200f, 80f, 1000f, 1000f, .2f, 3f);
         Check(Near(top.Height, 1.5f) && Near(top.Width, 1f) && Near(top.Y, .02f), "top edge height and upward coordinate keep opposite edge pinned");
-        HudGeometry corner = HudDragMath.Drag(original, HudHandle.Right | HudHandle.Bottom, 100f, 40f, 200f, 80f, 1000f, 1000f);
+        HudGeometry corner = HudDragMath.Drag(original, HudHandle.Right | HudHandle.Bottom, 100f, 40f, 200f, 80f, 1000f, 1000f, .2f, 3f);
         Check(Near(corner.Scale, 1.5f) && corner.Width == 1f && corner.Height == 1f, "corner proportionally scales both axes");
         Check(Near(corner.X, .05f) && Near(corner.Y, -.02f), "corner pins opposite corner");
-        HudGeometry bounded = HudDragMath.Drag(original, HudHandle.Right, -1000f, 0f, 200f, 80f, 1000f, 1000f);
+        HudGeometry bounded = HudDragMath.Drag(original, HudHandle.Right, -1000f, 0f, 200f, 80f, 1000f, 1000f, .2f, 3f);
         Check(bounded.Width == .25f && Near(bounded.X, -.075f), "resize clamp still pins opposite edge");
+        HudGeometry contentsMax = HudDragMath.Drag(original, HudHandle.Right | HudHandle.Bottom, 900f, 360f, 200f, 80f, 1000f, 1000f, .5f, 2f);
+        Check(contentsMax.Scale == 2f && Near(contentsMax.X, .1f) && Near(contentsMax.Y, -.04f), "contents upper scale limit still pins opposite corner");
+        HudGeometry contentsMin = HudDragMath.Drag(original, HudHandle.Right | HudHandle.Bottom, -900f, -360f, 200f, 80f, 1000f, 1000f, .5f, 2f);
+        Check(contentsMin.Scale == .5f && Near(contentsMin.X, -.05f) && Near(contentsMin.Y, .02f), "contents lower scale limit still pins opposite corner");
         HudGeometry bad = new HudGeometry { X = float.NaN, Y = float.PositiveInfinity, Scale = -8f, Width = 99f, Height = float.NaN, Opacity = 3f };
         bad.Validate(); Check(bad.X == 0f && bad.Y == 0f && bad.Scale == .2f && bad.Width == 4f && bad.Height == 1f && bad.Opacity == 1f, "nonfinite and out-of-range hidden values never reach Unity");
         ConfigFile config = new ConfigFile(Path.Combine(output, "hud-editor.cfg"), false); config.SaveOnConfigSet = true;

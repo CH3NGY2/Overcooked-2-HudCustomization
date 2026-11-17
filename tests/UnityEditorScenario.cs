@@ -60,7 +60,7 @@ public sealed partial class UnityRecipeTests
     private static Rect TargetBounds(object target)
     {
         object[] args = new object[] { new Rect() };
-        if (!(bool)Call(target, "TryBounds", args)) throw new InvalidOperationException("Target lacks visible bounds " + ReadField(target, "Kind"));
+        if (!(bool)Call(target, "TryBounds", args)) throw new InvalidOperationException("Target lacks visible bounds " + target.GetType().Name);
         return (Rect)args[0];
     }
     private static object Target(object registry, string kind)
@@ -117,6 +117,8 @@ public sealed partial class UnityRecipeTests
             && TimeManager.IsPaused(TimeManager.PauseLayer.Camera), "native main/UI/camera layers frozen");
         foreach (PlayerControls player in UnityEngine.Object.FindObjectsOfType<PlayerControls>()) Check(player.IsSuppressed(), "native player input suppressed while editing");
         foreach (T17EventSystem system in UnityEngine.Object.FindObjectsOfType<T17EventSystem>()) Check(system.IsDisabled(), "native event-system input suppressed while editor owns native Canvas");
+        harmony.Patch(AccessTools.Method(hud.GetType(), "OnGUI"), new HarmonyMethod(typeof(UnityRecipeTests), "InjectEditorEvent"), new HarmonyMethod(typeof(UnityRecipeTests), "RestoreEditorEvent"));
+        harmony.Patch(AccessTools.PropertySetter(typeof(GUI), "matrix"), null, new HarmonyMethod(typeof(UnityRecipeTests), "EditorMatrixChanged"));
         yield return NativePanelScenario(editor, hud);
         yield return HeatEditorScenario(editor, hud, registry);
         int timerValue = UnityEngine.Object.FindObjectOfType<LevelTimerUIController>().Value;
@@ -133,8 +135,6 @@ public sealed partial class UnityRecipeTests
         Check(score != null && timer != null, "native fixed score and timer registered with visible geometry");
         Rect before = TargetBounds(score), timerBefore = TargetBounds(timer);
         ScreenCapture.CaptureScreenshot(Path.Combine(output, "editor-before.png")); yield return new WaitForEndOfFrame(); yield return null;
-        harmony.Patch(AccessTools.Method(hud.GetType(), "OnGUI"), new HarmonyMethod(typeof(UnityRecipeTests), "InjectEditorEvent"), new HarmonyMethod(typeof(UnityRecipeTests), "RestoreEditorEvent"));
-        harmony.Patch(AccessTools.PropertySetter(typeof(GUI), "matrix"), null, new HarmonyMethod(typeof(UnityRecipeTests), "EditorMatrixChanged"));
         Vector2 delta = new Vector2(Screen.width * .08f, -Screen.height * .12f);
         yield return GuiCategory(editor, 0);
         yield return GuiInput(EventType.MouseDown, before.center);

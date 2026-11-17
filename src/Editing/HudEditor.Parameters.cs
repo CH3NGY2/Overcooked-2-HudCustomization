@@ -5,13 +5,6 @@ namespace OC2HudCustomization
 {
     internal sealed partial class HudEditor
     {
-        private int _contentsPart;
-        internal int ContentsPart { get { return _contentsPart; } }
-        internal void SelectContentsPart(int part)
-        {
-            if (_editingKind != 9 || part < 0 || part > 1 || part == _contentsPart) return;
-            _contentsPart = part; ClearText();
-        }
         internal bool CategoryAvailable(int kind)
         {
             if (kind < 0 || kind >= 10) return false;
@@ -28,12 +21,12 @@ namespace OC2HudCustomization
             {
                 if (_editingKind < 0) return Text(EditorText.SelectCategoryText);
                 if (!CategoryAvailable(_editingKind)) return Text(EditorText.NoInstance);
-                if (_editingKind == 9) return Text(EditorText.ContentsShared);
+                if (_editingKind == 9) return "";
                 if (_editingKind >= 8) return Text(EditorText.LiveLayout);
                 return Text(Targets.HasInstance((HudTargetKind)_editingKind) ? EditorText.CategoryActive : EditorText.NoInstance);
             }
         }
-        internal int NumberCount { get { return _editingKind < 0 ? 0 : _editingKind < 8 ? 6 : _editingKind == 8 ? 4 : 7; } }
+        internal int NumberCount { get { return _editingKind < 0 ? 0 : _editingKind < 8 ? 6 : _editingKind == 8 ? 4 : 8; } }
         internal string NumberLabel(int index)
         {
             if (_editingKind < 8)
@@ -46,7 +39,7 @@ namespace OC2HudCustomization
                     : index == 2 ? SettingsText.RecipeRowSpacing : SettingsText.RecipeOpacity);
             if (index == 0) return "X (%)"; if (index == 1) return "Y (%)";
             return Text(index == 2 ? EditorText.Scale : index == 3 ? EditorText.Width : index == 4 ? EditorText.Height
-                : index == 5 ? SettingsText.ContentsPerRow : EditorText.Opacity);
+                : index == 5 ? SettingsText.ContentsPerRow : index == 6 ? EditorText.IngredientOpacity : EditorText.EmptySlotOpacity);
         }
         internal void NumberRange(int index, out float min, out float max, out bool integer)
         {
@@ -76,7 +69,7 @@ namespace OC2HudCustomization
             if (_editingKind == 8) return index == 0 ? o.RecipeScale : index == 1 ? o.RecipesPerRow : index == 2 ? o.RecipeRowSpacing : o.RecipeOpacity * 100;
             return index == 0 ? o.ContentsX * 100 : index == 1 ? o.ContentsY * 100 : index == 2 ? o.ContentsScale
                 : index == 3 ? o.ContentsWidth : index == 4 ? o.ContentsHeight : index == 5 ? o.ContentsPerRow
-                : (_contentsPart == 0 ? o.EmptySlotOpacity : o.IngredientOpacity) * 100;
+                : (index == 6 ? o.IngredientOpacity : o.EmptySlotOpacity) * 100;
         }
         internal void SetNumber(int index, float value)
         {
@@ -100,8 +93,8 @@ namespace OC2HudCustomization
                     recipes && index == 0 ? value : o.RecipeScale, recipes && index == 1 ? (int)value : o.RecipesPerRow,
                     recipes && index == 2 ? value : o.RecipeRowSpacing, !recipes && index == 2 ? value : o.ContentsScale,
                     !recipes && index == 5 ? (int)value : o.ContentsPerRow, recipes && index == 3 ? value / 100 : o.RecipeOpacity,
-                    !recipes && index == 6 && _contentsPart == 0 ? value / 100 : o.EmptySlotOpacity,
-                    !recipes && index == 6 && _contentsPart == 1 ? value / 100 : o.IngredientOpacity,
+                    !recipes && index == 7 ? value / 100 : o.EmptySlotOpacity,
+                    !recipes && index == 6 ? value / 100 : o.IngredientOpacity,
                     !recipes && index == 0 ? value / 100 : o.ContentsX, !recipes && index == 1 ? value / 100 : o.ContentsY,
                     !recipes && index == 3 ? value : o.ContentsWidth, !recipes && index == 4 ? value : o.ContentsHeight);
                 if (Plugin.Runtime != null) Plugin.Runtime.SetOptions(DraftOptions);
@@ -112,12 +105,28 @@ namespace OC2HudCustomization
             if (_editingKind < 0) return;
             if (_editingKind < 8) Targets.Values[_editingKind] = new HudGeometry();
             else if (_editingKind == 8) { SetNumber(0, 1); SetNumber(1, 0); SetNumber(2, 8); SetNumber(3, 100); }
-            else { SetNumber(0, 0); SetNumber(1, 0); SetNumber(2, 1); SetNumber(3, 1); SetNumber(4, 1); SetNumber(5, 0); SetNumber(6, 100); }
+            else { SetNumber(0, 0); SetNumber(1, 0); SetNumber(2, 1); SetNumber(3, 1); SetNumber(4, 1); SetNumber(5, 0); SetNumber(6, 100); SetNumber(7, 100); }
             ClearText();
         }
         private string NumberKey(int index) { return _editingKind.ToString(CultureInfo.InvariantCulture) + ":" + index; }
         internal void Invalid(int index, bool value)
         { if (value) _invalid.Add(NumberKey(index)); else _invalid.Remove(NumberKey(index)); if (_invalid.Count == 0) _error = false; }
         internal bool IsInvalid(int index) { return _invalid.Contains(NumberKey(index)); }
+        private HudGeometry ReadGeometry(int category)
+        {
+            if (category < 8) return Targets.Values[category].Copy();
+            HudOptions o = DraftOptions;
+            return new HudGeometry { X = o.ContentsX, Y = o.ContentsY, Scale = o.ContentsScale,
+                Width = o.ContentsWidth, Height = o.ContentsHeight };
+        }
+        private void WriteGeometry(int category, HudGeometry value)
+        {
+            if (category < 8) { Targets.Values[category] = value; return; }
+            HudOptions o = DraftOptions;
+            DraftOptions = new HudOptions(o.Enabled, o.RecipeScale, o.RecipesPerRow, o.RecipeRowSpacing,
+                value.Scale, o.ContentsPerRow, o.RecipeOpacity, o.EmptySlotOpacity, o.IngredientOpacity,
+                value.X, value.Y, value.Width, value.Height);
+            if (Plugin.Runtime != null) Plugin.Runtime.SetOptions(DraftOptions);
+        }
     }
 }

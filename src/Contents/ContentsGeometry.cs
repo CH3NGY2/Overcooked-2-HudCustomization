@@ -7,6 +7,7 @@ namespace OC2HudCustomization
     {
         private readonly RectTransform _rect;
         private readonly AnchorGridLayoutGroup _grid;
+        private readonly Canvas _canvas;
         private readonly Vector2 _baseCell, _baseSpacing, _baseMin, _baseMax, _anchorMin, _anchorMax;
         private readonly OwnedValue<Vector2> _min, _max, _cell, _spacing;
         private readonly OwnedValue<AnchorGridLayoutGroup.Constraint> _constraint;
@@ -16,7 +17,7 @@ namespace OC2HudCustomization
 
         internal ContentsGeometry(RectTransform rect, AnchorGridLayoutGroup grid, HudLog log)
         {
-            _rect = rect; _grid = grid;
+            _rect = rect; _grid = grid; _canvas = rect.GetComponentInParent<Canvas>();
             _baseCell = grid.cellSize; _baseSpacing = grid.spacing;
             _baseMin = rect.offsetMin; _baseMax = rect.offsetMax;
             _anchorMin = rect.anchorMin; _anchorMax = rect.anchorMax;
@@ -39,6 +40,9 @@ namespace OC2HudCustomization
                 return Vector2.Scale(parent.rect.size, _anchorMax - _anchorMin) + _baseMax - _baseMin;
             }
         }
+        private RectTransform CanvasRect { get { return _canvas ? _canvas.rootCanvas.transform as RectTransform : null; } }
+        internal Vector2 CanvasSize { get { RectTransform rect = CanvasRect; return rect ? rect.rect.size : Vector2.zero; } }
+        internal Vector3 ParentScale { get { return _rect.parent.lossyScale; } }
 
         internal void Apply(int count, HudOptions options)
         {
@@ -79,8 +83,7 @@ namespace OC2HudCustomization
             // Expand the existing generated region around its original center; the native hover
             // controller, parent anchors, pivot, material and child ownership remain intact.
             Vector2 halfChange = (target - native) * 0.5f;
-            Canvas canvas = _rect.GetComponentInParent<Canvas>();
-            RectTransform canvasRect = canvas ? canvas.rootCanvas.transform as RectTransform : null;
+            RectTransform canvasRect = CanvasRect;
             Vector3 screen = canvasRect ? canvasRect.TransformVector(new Vector3(canvasRect.rect.width * options.ContentsX,
                 canvasRect.rect.height * options.ContentsY, 0f)) : Vector3.zero;
             Vector3 local = _rect.parent.InverseTransformVector(screen);

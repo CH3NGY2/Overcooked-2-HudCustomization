@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace OC2HudCustomization
 {
-    internal sealed class ContentsState
+    internal sealed class ContentsState : IHudEditorTarget
     {
         internal readonly IngredientContentsUIContainer UI;
         private readonly ContentsAccess _access;
@@ -14,11 +14,20 @@ namespace OC2HudCustomization
         private readonly List<Image> _dead = new List<Image>();
         private GameObject _generated;
         private ContentsGeometry _geometry;
-        private Vector2 _lastNativeSize;
+        private Vector2 _lastNativeSize, _lastCanvasSize;
+        private Vector3 _lastParentScale;
         private bool _dirty = true;
+        private bool _registered = true;
+        private readonly HudGraphicBounds _bounds;
+        private Graphic[] _graphics;
 
         internal ContentsState(IngredientContentsUIContainer ui, ContentsAccess access, HudLog log)
-        { UI = ui; _access = access; _log = log; }
+        { UI = ui; _access = access; _log = log; _bounds = new HudGraphicBounds((RectTransform)ui.transform); }
+
+        int IHudEditorTarget.Category { get { return 9; } }
+        bool IHudEditorTarget.TryBounds(out Rect bounds) { return TryBounds(out bounds); }
+        internal bool TryBounds(out Rect bounds) { bounds = new Rect(); return _registered && _bounds.TryBounds(_graphics, out bounds); }
+        internal void Release() { _registered = false; Restore(); }
 
         internal void BeforeNativeRefresh()
         {
@@ -48,10 +57,16 @@ namespace OC2HudCustomization
                 _dirty = true;
             }
             Vector2 nativeSize = _geometry == null ? Vector2.zero : _geometry.NativeSize;
-            if (!_dirty && nativeSize == _lastNativeSize) return;
+            Vector2 canvasSize = _geometry == null ? Vector2.zero : _geometry.CanvasSize;
+            Vector3 parentScale = _geometry == null ? Vector3.one : _geometry.ParentScale;
+            // Native prefabs initially have zero scale before RectTransformExtension
+            // runs. Screen-space offsets must follow that scale and canvas size.
+            if (!_dirty && nativeSize == _lastNativeSize && canvasSize == _lastCanvasSize && parentScale == _lastParentScale) return;
             List<Image> icons = (List<Image>)_access.Icons.GetValue(UI);
             int count = (int)_access.Count.GetValue(UI);
             if (count < 0 || count > icons.Count) throw new InvalidOperationException("IngredientContentsUIContainer.m_iconsInUse is outside m_icons.");
+            if (_graphics == null || _graphics.Length != count) _graphics = new Graphic[count];
+            for (int i = 0; i < count; i++) _graphics[i] = icons[i];
             Sprite empty = (Sprite)_access.Empty.GetValue(UI);
             bool pendingAlpha = false;
             if (empty)
@@ -76,7 +91,7 @@ namespace OC2HudCustomization
                 _log.WarnOnce("missing-empty-sprite", "Contents empty-slot sprite is missing; preserve opacity rather than guess the icon category.");
             }
             if (_geometry != null) _geometry.Apply(count, options);
-            _lastNativeSize = nativeSize; _dirty = pendingAlpha;
+            _lastNativeSize = nativeSize; _lastCanvasSize = canvasSize; _lastParentScale = parentScale; _dirty = pendingAlpha;
             _dead.Clear();
             foreach (Image image in _alphas.Keys) if (!image) _dead.Add(image);
             for (int i = 0; i < _dead.Count; i++) _alphas.Remove(_dead[i]);

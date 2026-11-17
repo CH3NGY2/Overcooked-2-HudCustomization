@@ -4,14 +4,14 @@ using UnityEngine.UI;
 
 namespace OC2HudCustomization
 {
-    internal sealed class HudTarget
+    internal sealed class HudTarget : IHudEditorTarget
     {
         internal readonly Component Owner;
         internal readonly HudTargetKind Kind;
         internal readonly RectTransform Rect;
         internal readonly bool Pickable;
         private readonly HoverIconUIController _hover;
-        private readonly UI_Move _move;
+        private readonly HudGraphicBounds _bounds;
         private Canvas _canvas;
         private GraphicRaycaster _raycaster;
         private Transform _parent, _root;
@@ -22,7 +22,6 @@ namespace OC2HudCustomization
         private readonly OwnedValue<Vector2> _anchor;
         private readonly OwnedValue<Vector2> _position;
         private readonly OwnedValue<Vector3> _scale;
-        private readonly Vector3[] _corners = new Vector3[4];
         private readonly Vector3[] _nativeCorners = new Vector3[4];
         private Graphic[] _graphics;
         private Vector2 _baseAnchor, _basePosition;
@@ -34,7 +33,7 @@ namespace OC2HudCustomization
             Owner = owner; Kind = kind; Pickable = pickable; Rect = display.transform as RectTransform; _log = log;
             if (!Rect) throw new InvalidOperationException("HUD display is not a RectTransform: " + display);
             _hover = display as HoverIconUIController;
-            _move = Rect.GetComponent<UI_Move>();
+            _bounds = new HudGraphicBounds(Rect);
             ResolveCanvas();
             _alpha = new AlphaLayer(Rect.gameObject, log);
             Action conflict = delegate { log.WarnOnce("editor-geometry-" + kind, "HUD editor yielded a presentation property changed by another owner: " + kind); };
@@ -45,6 +44,8 @@ namespace OC2HudCustomization
             _graphics = Rect.GetComponentsInChildren<Graphic>(true);
         }
         internal bool Alive { get { return Owner && Rect; } }
+        int IHudEditorTarget.Category { get { return (int)Kind; } }
+        bool IHudEditorTarget.TryBounds(out Rect bounds) { return TryBounds(out bounds); }
         private void ResolveCanvas()
         {
             // Native Instantiate invokes Awake before parenting onto ScalingHUDCanvas.
@@ -131,24 +132,7 @@ namespace OC2HudCustomization
             if (!Alive || !Rect.gameObject.activeInHierarchy) return false;
             if (Rect.parent != _parent || Rect.root != _root) ResolveCanvas();
             if ((Kind == HudTargetKind.Score || Kind == HudTargetKind.Timer) && !_gameplayCanvas) return false;
-            bool found = false; Camera camera = Camera;
-            Vector3 shaderOffset = Vector3.zero;
-            if (_move && _canvas) shaderOffset = _canvas.transform.TransformVector((Vector3)_move.Offset);
-            for (int i = 0; i < _graphics.Length; i++)
-            {
-                Graphic graphic = _graphics[i];
-                if (!graphic || !graphic.isActiveAndEnabled) continue;
-                graphic.rectTransform.GetWorldCorners(_corners);
-                for (int j = 0; j < 4; j++)
-                {
-                    Vector2 point = RectTransformUtility.WorldToScreenPoint(camera, _corners[j] + shaderOffset);
-                    point.y = Screen.height - point.y; // Editor coordinates have their origin at the top left.
-                    if (!found) { bounds = new Rect(point.x, point.y, 0f, 0f); found = true; }
-                    else bounds = UnityEngine.Rect.MinMaxRect(Mathf.Min(bounds.xMin, point.x), Mathf.Min(bounds.yMin, point.y), Mathf.Max(bounds.xMax, point.x), Mathf.Max(bounds.yMax, point.y));
-                }
-            }
-            return found && bounds.width > 1f && bounds.height > 1f
-                && bounds.xMax >= 0f && bounds.yMax >= 0f && bounds.xMin <= Screen.width && bounds.yMin <= Screen.height;
+            return _bounds.TryBounds(_graphics, out bounds);
         }
         internal void Restore()
         {

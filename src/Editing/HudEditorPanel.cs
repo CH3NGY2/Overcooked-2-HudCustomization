@@ -19,8 +19,7 @@ namespace OC2HudCustomization
         private CanvasScaler _scaler;
         private EventSystem _previousDomain;
         private HudCategoryPicker _picker;
-        private readonly HudNumberRow[] _numbers = new HudNumberRow[7];
-        private readonly Button[] _contentsParts = new Button[2];
+        private readonly HudNumberRow[] _numbers = new HudNumberRow[8];
         private Text _title, _status, _error;
         private Button _reset, _save, _cancel;
         private ScrollRect _scroll;
@@ -81,12 +80,6 @@ namespace OC2HudCustomization
             _content = HudNativeUi.Rect(_viewport, "Parameters", 0, 0, 414, 0);
             _scroll = _viewport.gameObject.AddComponent<ScrollRect>(); _scroll.viewport = _viewport; _scroll.content = _content;
             _scroll.horizontal = false; _scroll.vertical = true; _scroll.movementType = ScrollRect.MovementType.Clamped; _scroll.scrollSensitivity = 25;
-            for (int i = 0; i < _contentsParts.Length; i++)
-            {
-                int part = i;
-                _contentsParts[i] = HudNativeUi.Button(Frame, "ContentsPart_" + i, "", _assets,
-                    28 + i * 211, 174, 203, 33, delegate { _editor.Ui(delegate { _editor.SelectContentsPart(part); }); });
-            }
             for (int i = 0; i < _numbers.Length; i++) _numbers[i] = new HudNumberRow(this, _editor, _assets, _content, i);
             _reset = HudNativeUi.Button(Frame, "ResetCategory", "", _assets, 28, Height - 100, 414, 31,
                 delegate { _editor.Ui(_editor.ResetCategory); });
@@ -118,8 +111,7 @@ namespace OC2HudCustomization
             _scaler.scaleFactor = Scale;
             if (!_positioned) { _position = new Vector2(Screen.width / Scale - 490f, 18f); _positioned = true; }
             Position = _position;
-            float subitems = _editor.EditingKind == 9 ? 44f : 0f;
-            HudNativeUi.Box(_viewport, 28, 174 + subitems, 414, Mathf.Max(64f, Height - 322 - subitems));
+            LayoutParameters();
             HudNativeUi.Box(_reset.transform as RectTransform, 28, Height - 100, 414, 31);
             HudNativeUi.Box(_save.transform as RectTransform, 28, Height - 59, 254, 34);
             HudNativeUi.Box(_cancel.transform as RectTransform, 290, Height - 59, 152, 34);
@@ -140,14 +132,7 @@ namespace OC2HudCustomization
                 _reset.GetComponentInChildren<Text>().text = _editor.Text(EditorText.Reset);
                 _reset.interactable = _kind >= 0;
                 for (int i = 0; i < _numbers.Length; i++) _numbers[i].Bind(_kind, i);
-                float subitems = _kind == 9 ? 44f : 0f;
-                HudNativeUi.Box(_viewport, 28, 174 + subitems, 414, Mathf.Max(64f, Height - 322 - subitems));
-                for (int i = 0; i < _contentsParts.Length; i++)
-                {
-                    _contentsParts[i].gameObject.SetActive(_kind == 9);
-                    _contentsParts[i].GetComponentInChildren<Text>().text = _editor.Text(i == 0 ? EditorText.EmptySlots : EditorText.Ingredients);
-                    _contentsParts[i].interactable = _editor.ContentsPart != i;
-                }
+                LayoutParameters();
                 _content.sizeDelta = new Vector2(414, _editor.NumberCount * 47f);
                 _scroll.verticalNormalizedPosition = 1f;
             }
@@ -157,6 +142,13 @@ namespace OC2HudCustomization
         }
         internal void FinishText()
         { if (Domain) Domain.SetSelectedGameObject(null); }
+        private void LayoutParameters()
+        {
+            bool contents = _editor.EditingKind == 9;
+            _status.gameObject.SetActive(!contents);
+            float top = contents ? 128f : 174f;
+            HudNativeUi.Box(_viewport, 28, top, 414, Mathf.Max(64f, Height - top - 148f));
+        }
         public void Dispose()
         { Hide(); if (Root) Object.Destroy(Root); Root = null; Domain = null; }
     }
