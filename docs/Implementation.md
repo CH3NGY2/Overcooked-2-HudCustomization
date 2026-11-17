@@ -160,6 +160,17 @@
 - 19:20:11 游戏未运行时单独部署正式 DLL，同时将用户当前旧 cfg 原样复制到新路径，旧文件保留；两者 SHA256 均为 `C74234589BC5CA4914FC319D9A806B9A2118E24DA577303E1670817E623EB85B`，不采用测试中临时设置。32 个 plugins DLL 中只有一份旧/新 HUD 身份候选，原路径覆盖后实际为新 GUID。构建 = 实机加载 = 安装 SHA256 `ECC1D3CEAC22000C0BEE2F1A544DAE7A07A8957318E598FBE24A14F118AB8FF5`，**75,776 字节**。备份及部署记录 `.validation/deploy-guid-20261117-192011-268/deployment.json`；机器摘要见 [guid-migration-verification.json](evidence/guid-migration-verification.json)。
 - 本轮发现目录已被外部初始化为 Git 仓库，但 main 无提交，已有全部源码、脚本和 docs 均为未跟踪文件。无法在不包含此前工作的情况下把本轮文件修改分离成有效基线，因此未混合创建首个提交；未执行远程操作。实际 ModSettings 视觉刷新、旧 GUID 的设置页收藏迁移及多人仍不在本轮验收范围，未修改提供端配置或源码。
 
+## 编辑暂停期间的菜谱布局与烧烤热力条（2026-11-18）
+
+- 菜谱重新定位原来消费原生暂停层的 delta=0，卡片 Animator 也被冻结。新增 `RecipeAnimationPreview` 展示租约，只借用菜谱 Animator 的 UnscaledTime / speed；`RecipeAdapter` 在本编辑器独占暂停时用非缩放时钟推进已有 `RecipeMotion`。关卡、订单、烹饪仍走原生暂停时钟，没有修改全局 timeScale 或业务计时。
+- 暂停仲裁从缓存的 `TimeManager.m_arbitrationSupressors` 判断；任何其他拥有者存在即暂停展示时钟。子对象重建、编辑退出、停用恢复 Animator；退出先停止展示，再释放自己的原生暂停。仍暂停的层上新创建 Animator 会保持 speed=0。
+- `HudHeatPreviews` 复用已有 Heat 类别和全局几何，从活跃冷炉的同步定义 `GetSynchronisedComponent()` 获取真实 prefab、visual root 和原 offset，只建立显示副本，不加热、不写业务 UI 引用。切换类别/退出恢复后注销并销毁。已有原生热力显示仍走原登记路径，烤串食材进度继续走通用 Cooking；12 语言类别名明确用途，没有新增配置键。
+- 新增真实 Unity 菜谱编辑/热力条场景，测试经实际原生类别按钮和 raycast；几何在渲染帧后取完整卡片边界。`-Editor -Heat` 明确选择 Beach 主题且要求实际炉子，防止 prefab fixture 被误报成冷炉验收；普通运行的 Sushi 主题不变。
+- 最终构建仍 0.1.0、154,624 字节，SHA256 `D572D8F045CF64322A169AC020E66E3B53EB4930C8FC999890E30C661D71FABE`。`Test.ps1` **1262** 项、`Test-ModSettings.ps1` **622** 项、`Test-RecipeBounds.ps1` **45** 项通过；Unity 测试 DLL 编译及 runner PowerShell 语法通过。静态 **27** 补丁、**23** 字段、**84** public 直接引用、**0** 非公开直访。
+- 实机 `.validation/unity-recipes-20261118-023516-211` **139** 项通过，**1366×768** 截图已查看。菜谱两列卡高106/净空22、单列卡高129.8/净空35（Canvas单位），计时不变；热力原生 prefab 从51.12×34.50到76.68×51.75px、alpha .4，退出恢复。该run仅验证热力显示，未覆盖真实冷炉分支；实际装载hash是 `215AF16F...44C16A`，最后同步定义取源修正后的最终hash还没有实机证据。
+- 两个失败run保留：`023039-162` 在Update早于LateUpdate取坐标且混用head/完整边界；`023307-518` 用不覆盖卡片layer的UI暂停断言Animator冻结。修正测试取样及Main层后上述139项通过。所有完成run退出自有进程、22文件清单恢复、原存档hash保持、临时测试DLL移除、恢复冲突0；通过run恢复的是150,016字节 `B66EABB8...2048`，以当时manifest为准。
+- 后续尝试被玩家运行进程阻止，均未部署或接管；期间观察到安装文件由外部更新，不能把较早恢复hash当作最终安装状态。最终hash的完整菜谱回归、真实冷炉及烤串业务生命周期仍待验。未升级版本、永久安装、push、Release或修改ModSettings/MOD源。证据汇总见 [增量核验](evidence/hud-live-layout-heat-verification.json)。
+
 ## 必须继续做的实机验收
 
 已完成上节范围内的临时测试部署、隔离存档和多行布局验收；下列其余行为仍未全部覆盖，不得把局部验证扩大为完整视觉验收。

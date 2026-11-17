@@ -1,0 +1,78 @@
+{
+  "date": "2026-11-18",
+  "scope": "Frozen gameplay with live recipe presentation; barbecue heat gauge and kebab cooking category names, cold-station display-only preview",
+  "artifact": {
+    "path": "bin/Release/OC2HudCustomization.dll",
+    "version": "0.1.0",
+    "bytes": 154624,
+    "sha256": "D572D8F045CF64322A169AC020E66E3B53EB4930C8FC999890E30C661D71FABE",
+    "visibleConfigEntries": 9,
+    "hiddenConfigEntries": 56,
+    "languages": 12,
+    "permanentlyDeployedByThisTask": false,
+    "published": false
+  },
+  "offline": {
+    "logic": { "assertions": 1262, "run": ".validation/logic-20261118-024700-586", "result": "PASS" },
+    "modSettingsMetadata": { "assertions": 622, "run": ".validation/modsettings-20261118-024703-737", "result": "PASS" },
+    "recipeBoundsWithUnityCallsReplaced": { "assertions": 45, "run": ".validation/recipe-bounds-20261118-024701-885", "result": "PASS" },
+    "contracts": { "patchSignatures": 27, "reflectedFields": 23, "directPublicGameMemberReferences": 84, "nonPublicDirectAccesses": 0, "result": "PASS" },
+    "productionAndUnityTestPluginCompilation": "PASS",
+    "runnerSyntax": "PASS"
+  },
+  "unity": {
+    "run": ".validation/unity-recipes-20261118-023516-211",
+    "result": "PASS",
+    "assertions": 139,
+    "loadedSha256": "215AF16F91AD94421498524504C767844C848AB433BC591D2DBC76C51F44C16A",
+    "isFinalArtifact": false,
+    "finalDifference": "Cold-station prefab source changed from same-object GetComponent to the game's actual GetSynchronisedComponent; compiled/static checked but not rerun in Unity",
+    "scene": "s_campsite_2_4",
+    "input": "Scripted native engagement and actual editor category raycasts/events; not physical input",
+    "screenshotPixels": { "width": 1366, "height": 768 },
+    "screenshotsViewed": [ "editor-recipe-live-layout.png", "editor-barbecue-heat.png" ],
+    "recipes": {
+      "twoColumns": { "scale": 0.5, "cardHeightCanvasUnits": 106, "gapCanvasUnits": 22 },
+      "oneColumn": { "scale": 0.65, "cardHeightCanvasUnits": 129.8, "gapCanvasUnits": 35 },
+      "roundTimerFrozen": true,
+      "realOrderLifetimesFrozen": true,
+      "nativeUnfoldContinues": true,
+      "otherMainPauseSurvivesExit": true,
+      "animatorAfterExitWithOtherPause": { "speed": 0, "updateMode": "Normal", "layer": 0, "delta": 0 }
+    },
+    "heat": {
+      "coverage": "Native display prefab fixture; actual cold station branch not exercised",
+      "beforePixels": { "width": 51.12, "height": 34.5 },
+      "afterPixels": { "width": 76.68, "height": 51.75 },
+      "scale": 1.5,
+      "opacity": 0.4,
+      "gaugeValue": 0.5,
+      "hiddenStateRestored": true
+    },
+    "restoration": {
+      "ownedProcessExited": true,
+      "manifestFiles": 22,
+      "filesRestoredToOriginal": 22,
+      "restoreErrors": [],
+      "originalSaveManifestEntries": 1,
+      "originalSavesUnchanged": true,
+      "testDllRemoved": true,
+      "restoredProductionSha256AtRunEnd": "B66EABB8A93B8741BBAF51AAE76878B61FED71D806A3B8B615811684642B2048"
+    },
+    "hudWarningOrErrorCount": 0,
+    "externalLogs": "HostUtilities random level selection is logged as Error by that mod; unrelated loader warnings retained in raw log"
+  },
+  "retainedFailedRuns": [
+    { "run": ".validation/unity-recipes-20261118-023039-162", "cause": "Test measured before LateUpdate and mixed head and complete-card geometry" },
+    { "run": ".validation/unity-recipes-20261118-023307-518", "cause": "Test requested UI pause while card Animator was on Main/default layer" }
+  ],
+  "pending": [
+    "Final artifact Unity rerun; subsequent attempts refused a running player game before deployment",
+    "Dedicated Beach scenario with a real barbecue station; now requires real station and fails instead of accepting only a prefab fixture",
+    "Cold preview cleanup and business heat unchanged on real station",
+    "Final artifact ordinary recipe regression",
+    "Actual kebab cooking lifecycle, physical mouse/controller, multiplayer and all-language glyph rendering"
+  ],
+  "installationObservation": "Installation files and player process changed externally after the completed run. Earlier restoration hash is time-bounded; this task did not overwrite subsequent changes or establish a stable final installed hash.",
+  "requirements": "BepInEx 5/HarmonyX, ModSettings >= 1.1.1, no remote players in an ordinary kitchen; load the intended DLL on next restart"
+}
