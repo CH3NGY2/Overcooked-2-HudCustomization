@@ -46,7 +46,7 @@ try {
         @('RecipeFlowGUI','m_distanceBetweenOrders'), @('RecipeFlowGUI','m_distanceFromEndOfScreen'),
         @('RecipeWidgetUIController','m_recipeTiles'), @('ClientIngredientContentGUI','m_uiInstance'),
         @('UISubElementContainer','m_container'), @('RecipeWidgetTile','m_backgroundTop'), @('IngredientContentsUIContainer','m_icons'),
-        @('IngredientContentsUIContainer','m_iconsInUse'), @('IngredientContentsUIContainer','m_emptySprite'),
+        @('IngredientContentsUIContainer','m_emptySprite'),
         @('ClientWorkableItem','m_guibar'), @('ClientCookingHandler','m_gui'), @('ClientMixingHandler','m_progressUI'),
         @('ClientHeatedStationGUI','m_uiInstance'), @('ClientWashingStation','m_progressUI'),
         @('ClientWashable','m_progressBar'), @('ClientFlammable','m_fireGUIBar'),

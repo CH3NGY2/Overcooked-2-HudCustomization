@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,7 +18,7 @@ namespace OC2HudCustomization
         private bool _dirty = true;
         private bool _registered = true;
         private readonly HudGraphicBounds _bounds;
-        private Graphic[] _graphics;
+        private readonly List<Graphic> _graphics = new List<Graphic>();
 
         internal ContentsState(IngredientContentsUIContainer ui, ContentsAccess access, HudLog log)
         { UI = ui; _access = access; _log = log; _bounds = new HudGraphicBounds((RectTransform)ui.transform); }
@@ -63,34 +62,34 @@ namespace OC2HudCustomization
             // runs. Screen-space offsets must follow that scale and canvas size.
             if (!_dirty && nativeSize == _lastNativeSize && canvasSize == _lastCanvasSize && parentScale == _lastParentScale) return;
             List<Image> icons = (List<Image>)_access.Icons.GetValue(UI);
-            int count = (int)_access.Count.GetValue(UI);
-            if (count < 0 || count > icons.Count) throw new InvalidOperationException("IngredientContentsUIContainer.m_iconsInUse is outside m_icons.");
-            if (_graphics == null || _graphics.Length != count) _graphics = new Graphic[count];
-            for (int i = 0; i < count; i++) _graphics[i] = icons[i];
+            _graphics.Clear();
             Sprite empty = (Sprite)_access.Empty.GetValue(UI);
             bool pendingAlpha = false;
-            if (empty)
+            for (int i = 0; i < icons.Count; i++)
             {
-                for (int i = 0; i < icons.Count; i++)
+                Image icon = icons[i];
+                if (!icon) continue;
+                // The prefab already renders its stock recipe (BeefBurger). A matching
+                // SetOrder skips RefreshIcons, so its counter still says zero. The grid
+                // and the editor must both use the active children in that case as well.
+                bool visible = icon.gameObject.activeSelf;
+                if (visible) _graphics.Add(icon);
+                if (!empty) continue;
+                AlphaLayer alpha;
+                if (!_alphas.TryGetValue(icon, out alpha))
                 {
-                    Image icon = icons[i];
-                    if (!icon) continue;
-                    AlphaLayer alpha;
-                    if (!_alphas.TryGetValue(icon, out alpha))
-                    {
-                        if (i >= count) continue;
-                        alpha = new AlphaLayer(icon.gameObject, _log); _alphas.Add(icon, alpha);
-                    }
-                    alpha.Apply(i < count ? (icon.sprite == empty ? options.EmptySlotOpacity : options.IngredientOpacity) : 1f);
-                    pendingAlpha |= alpha.IsRetiring;
+                    if (!visible) continue;
+                    alpha = new AlphaLayer(icon.gameObject, _log); _alphas.Add(icon, alpha);
                 }
+                alpha.Apply(visible ? (icon.sprite == empty ? options.EmptySlotOpacity : options.IngredientOpacity) : 1f);
+                pendingAlpha |= alpha.IsRetiring;
             }
-            else
+            if (!empty)
             {
                 foreach (AlphaLayer alpha in _alphas.Values) alpha.Restore();
                 _log.WarnOnce("missing-empty-sprite", "Contents empty-slot sprite is missing; preserve opacity rather than guess the icon category.");
             }
-            if (_geometry != null) _geometry.Apply(count, options);
+            if (_geometry != null) _geometry.Apply(_graphics.Count, options);
             _lastNativeSize = nativeSize; _lastCanvasSize = canvasSize; _lastParentScale = parentScale; _dirty = pendingAlpha;
             _dead.Clear();
             foreach (Image image in _alphas.Keys) if (!image) _dead.Add(image);

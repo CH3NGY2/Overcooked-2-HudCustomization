@@ -25,7 +25,6 @@ namespace OC2HudCustomization
         internal readonly FieldInfo Instance = Required.Field(typeof(ClientIngredientContentGUI), "m_uiInstance", typeof(IngredientContentsUIContainer));
         internal readonly FieldInfo Container = Required.Field(typeof(UISubElementContainer), "m_container", typeof(GameObject));
         internal readonly FieldInfo Icons = Required.Field(typeof(IngredientContentsUIContainer), "m_icons", typeof(List<Image>));
-        internal readonly FieldInfo Count = Required.Field(typeof(IngredientContentsUIContainer), "m_iconsInUse", typeof(int));
         internal readonly FieldInfo Empty = Required.Field(typeof(IngredientContentsUIContainer), "m_emptySprite", typeof(Sprite));
     }
 

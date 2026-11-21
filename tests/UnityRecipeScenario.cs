@@ -91,6 +91,8 @@ public sealed partial class UnityRecipeTests
         }
         hud.Config.SaveOnConfigSet = false;
         File.WriteAllText(Path.Combine(output, "loaded.txt"), hud.Info.Metadata.GUID + " " + hud.Info.Metadata.Version + " " + Hash(hud.GetType().Assembly.Location) + "\nScreen=" + Screen.width + "x" + Screen.height);
+        yield return PlateContentsScenario(hud);
+        Phase("native recipe generation fixture");
         OrderDefinitionNode recipe = null;
         foreach (OrderDefinitionNode candidate in Resources.FindObjectsOfTypeAll<OrderDefinitionNode>())
             if (HasCookware(candidate) && (recipe == null || candidate.name.ToLowerInvariant().Contains("burger"))) recipe = candidate;
