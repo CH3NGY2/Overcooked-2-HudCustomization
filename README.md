@@ -2,7 +2,7 @@
 
 《胡闹厨房 2》的独立局内 HUD 参数调整 MOD，基于 BepInEx 5 / HarmonyX，设置仅影响本机显示。
 
-当前版本为 **0.2.0**，插件标题为 `OC2 HUD 自定义 / OC2 HUD Customization`。本仓当前源码包含菜谱顶边裁剪、最大行数和盘中图标首帧修复。GitHub 的 v0.2.0 附件为此前发行的构建，使用这三项改动需要从当前源码构建 DLL。用法及验收记录见 [编辑器说明](docs/HudEditor.md) 和 [实施记录](docs/Implementation.md)。
+当前版本为 **0.2.1**，插件标题为 `OC2 HUD 自定义 / OC2 HUD Customization`。本版裁齐菜谱卡片的顶边，新增菜谱最大行数，并让盘中食材图标从首次显示起应用自定义大小和不透明度。用法及验收记录见 [编辑器说明](docs/HudEditor.md) 和 [实施记录](docs/Implementation.md)。
 
 **可拖动的原生风格 HUD 编辑面板**需 ModSettings ≥1.1.1。使用纯色底板、游戏蓝色标题栏和原生字体；十类通过一个下拉列表选择，选中即高亮并临时预览，本关未创建的项置灰。容器图标组支持主体拖动、四边改宽高、四角等比缩放，拖一个对全局同类生效；共享 X/Y、大小、宽高倍率和每行上限，原材料与加号不透明度用两条同时显示的滑块调整。保存统一提交，取消恢复，共60项隐藏参数。左右装饰条及顶部说明已移除。编辑期间关卡与订单计时暂停，菜谱仍可展开并平滑重排。
 
@@ -16,11 +16,11 @@
 
 ## 下载与安装
 
-从本仓库的 [GitHub Releases](https://github.com/CH3NGY2/Overcooked-2-HudCustomization/releases) 下载 `OC2HudCustomization-v0.2.0.zip`，解压后将唯一的 `OC2HudCustomization.dll` 放入游戏的 `BepInEx/plugins`，覆盖旧版并重新启动游戏，只保留一份本插件。ZIP 仅包含运行 DLL；GitHub 自动生成的 Source code 压缩包用于开发，不能直接安装。
+下载 [OC2HudCustomization-v0.2.1.zip](https://github.com/CH3NGY2/Overcooked-2-HudCustomization/releases/download/v0.2.1/OC2HudCustomization-v0.2.1.zip)。解压后将 `OC2HudCustomization.dll` 放入游戏的 `BepInEx/plugins`，覆盖旧 DLL 后重启游戏。保留现有配置文件和一份插件 DLL。
 
 需要 Windows 版《胡闹厨房 2》Mono 与已安装的 BepInEx 5 / HarmonyX。游戏内编辑入口需要 **ModSettings ≥1.1.1**；缺少设置面板时，cfg与已保存的参数仍可应用。默认参数保留原生布局与不透明度。编辑器限没有远程玩家的本地普通厨房。
 
-更新说明见 [v0.2.0](docs/releases/v0.2.0.md)，初版记录保留在 [v0.1.0](docs/releases/v0.1.0.md)。当前已验证 Windows 本机环境，物理输入、全部语言和分辨率、完整混合配方/订单生命周期及双端多人仍待验收。
+更新说明见 [v0.2.1](docs/releases/v0.2.1.md)、[v0.2.0](docs/releases/v0.2.0.md) 和 [v0.1.0](docs/releases/v0.1.0.md)。当前已验证 Windows 本机环境，物理输入、全部语言和分辨率、完整混合配方/订单生命周期及双端多人仍待验收。
 
 ## 开发入口
 

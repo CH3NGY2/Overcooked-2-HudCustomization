@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-21T15:14:46.7169411+08:00",
+  "checkedAt": "2026-11-21T16:08:57.6789706+08:00",
   "level": "desktop built-consumer and actual-provider metadata/sort; no Unity UI or Chainloader service execution",
   "consumer": "E:\\code\\OC2\\OtherMOD\\Overcooked-2-HudCustomization\\bin\\Release\\OC2HudCustomization.dll",
-  "consumerSha256": "4560E5CE1B13A3FE27DD6CCF40D02B149C31BB910EDDAD6CC1A4FFA2AE3865E3",
+  "consumerSha256": "A256312DC0F6DACE4CCA4614F6E61774E6AEF8ECBC43E184CC68F9C049EBF5A2",
   "provider": "E:\\code\\OC2\\OtherMOD\\Overcooked-2-ModSettings\\bin\\Release\\OC2ModSettings.dll",
   "providerSha256": "FFB370F82A0FC0128DA793AA8C804E510087A176748C559C01D5954B0258B796",
   "result": [

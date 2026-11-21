@@ -1,16 +1,16 @@
 # HUD Customization 实施记录
 
-2026-11-21 的本地构建包含菜谱顶边裁剪、最大行数和盘中图标首帧修复。GitHub v0.2.0 附件仍对应 2026-11-18 的构建，发布记录见 [v0.2.0 更新说明](releases/v0.2.0.md)。下方历史章节中的构建、实机结果和安装状态均对应当时版本。
+v0.2.1 收录菜谱顶边裁剪、最大行数和盘中图标首帧修复，发布 DLL 在 2560×1440 的普通厨房实机通过 116 项检查。安装与验收记录见 [v0.2.1 更新说明](releases/v0.2.1.md) 和 [发布核验](evidence/release-0.2.1.json)。下方历史章节中的构建、实机结果和安装状态均对应各轮验证所用版本。
 
 ## 菜谱顶边裁剪、最大行数与盘中图标（2026-11-21）
 
 - `RecipeCardState` 以主菜卡 `m_background` 白纸顶边为排布锚点，`RecipeTopClip` 按实际 Canvas 坐标裁掉超出顶边的 Graphic 像素。裁剪计入原生 `UI_Move` 位移，覆盖入场、展开和落位后仍露头的纸角。卡片底边仍由完整食材和炊具边界决定，保留原生步骤动画和单时间条。重建或恢复原生布局时撤销本插件设置的裁剪，已有外部矩形裁剪的图形由其原拥有者处理。
 - `HudRowLayout` 在允许的行内按数量和实际宽度换行，达到上限后将后续订单依次附在末行右侧。`Recipes.RecipeMaxRows` 是原生 `ConfigEntry`，默认 0 不限，最大 20。该设置共享 ModSettings 的 12 语言显示元数据与编辑器草稿，保持原有键值及 60 个隐藏配置。只改变可见布局，末行可能超出屏幕右缘。
 - `ContentsState` 从原生 `m_icons` 取当前活跃图标。盘中首份预置菜谱匹配时，原生 `SetOrder` 可以提前返回，图标已可见而 `m_iconsInUse` 仍为 0。按实际可见图标应用大小和不透明度能覆盖首次显示及后续加料，沿用现有位置、恢复和图标复用逻辑。
-- 编译产物 **165,376 字节**，SHA256 `4560E5CE1B13A3FE27DD6CCF40D02B149C31BB910EDDAD6CC1A4FFA2AE3865E3`。`Test.ps1` **1350** 项、`Test-ModSettings.ps1` **688** 项、`Test-RecipeBounds.ps1` **45+1** 项通过。`Verify-Contracts.ps1` 核验 **27** 个补丁签名、**23** 个反射字段、**86** 处 public 游戏成员引用、**0** 处非公开直接访问。
+- 发布前开发构建 **165,376 字节**，SHA256 `4560E5CE1B13A3FE27DD6CCF40D02B149C31BB910EDDAD6CC1A4FFA2AE3865E3`。`Test.ps1` **1350** 项、`Test-ModSettings.ps1` **688** 项、`Test-RecipeBounds.ps1` **45+1** 项通过。`Verify-Contracts.ps1` 核验 **27** 个补丁签名、**23** 个反射字段、**86** 处 public 游戏成员引用、**0** 处非公开直接访问。
 - 同一 DLL 在 **3840×2160** 的普通厨房实机通过 **116** 项。原生食材分支展开时高出纸面约 **98 Canvas 单位**，落位后仍高出 **5**，两个阶段的可见超出都已裁掉。每行 2 张、最多 2 行时 7 张卡排成 **2+5**，解除上限后为 **2+2+2+1**。盘中汉堡首帧及加料后均为 **43.2×43.2 像素**、不透明度 **64%**，停用后恢复 **86.4×86.4 像素**、100%。[展开截图](../.validation/unity-recipes-20261121-151516-604/entrance-unfold.png) · [落位截图](../.validation/unity-recipes-20261121-151516-604/entrance-settled.png) · [最大行数截图](../.validation/unity-recipes-20261121-151516-604/max-rows-2.png)
 - 最大行数的冻结预览、保存、重开、重置和取消已在实际编辑器通过。完整编辑器用例在已有计分板拖动断言失败，在 v0.2.0 发行源码隔离构建上复现同样的位置写回。直接写回者尚未确认。测试使用原生显示对象、盘子客户端更新及脚本输入，未覆盖所有配方、物理输入、所有分辨率和多人。
-- 每次运行都核对 **26/26** 清单文件恢复，测试插件移除，原存档核验通过。当前游戏恢复 v0.2.0 发行 DLL，使用修复需要安装本地构建并重启。编辑入口需要 ModSettings ≥1.1.1 和没有远端玩家的普通厨房。[核验摘要](evidence/recipe-top-clip-verification.json)
+- 当时每次运行都核对 **26/26** 清单文件恢复，测试插件移除，原存档核验通过。测试后游戏恢复启动前的 v0.2.0 发行 DLL。升级需安装新 DLL 并重启。编辑入口需要 ModSettings ≥1.1.1 和没有远端玩家的普通厨房。[开发构建核验](evidence/recipe-top-clip-verification.json)
 
 ## 容器拖动与双不透明度（2026-11-18）
 
@@ -79,7 +79,7 @@
 
 ## 身份、构建与设置
 
-- 独立插件 `com.ch3ngyz.plugin.overcooked2.hudcustomization`，程序集 `OC2HudCustomization.dll`，版本 `0.2.0`，目标 .NET Framework 3.5 / CLR 2，使用实际安装的原始游戏 DLL、BepInEx 5、HarmonyX。早期 GUID `com.oc2.hudcustomization` 仅用于配置迁移，历史证据保留原身份。
+- 独立插件 `com.ch3ngyz.plugin.overcooked2.hudcustomization`，程序集 `OC2HudCustomization.dll`，版本 `0.2.1`，目标 .NET Framework 3.5 / CLR 2，使用实际安装的原始游戏 DLL、BepInEx 5、HarmonyX。早期 GUID `com.oc2.hudcustomization` 仅用于配置迁移，历史证据保留原身份。
 - `scripts/Build.ps1` 仅构建，可传 `-GameRoot` 和 `-MSBuild`；不自动复制 DLL 到游戏、不启动游戏。
 - 设置通过插件原生 `Config.Bind` 创建，共 10 项可见配置和 60 项隐藏配置，路径为 `BepInEx/config/com.ch3ngyz.plugin.overcooked2.hudcustomization.cfg`。首次升级在新文件不存在时导入旧 GUID 的 cfg。插件无 HostUtilities、RecipeViewer 或 ModSettings DLL 硬依赖。
 - 用户确认公共 ModSettings 可直接读取这些配置。本机 ModSettings `src/Core/ConfigCatalog.cs` 的 `Chainloader.PluginInfos → plugin.Instance.Config → ConfigDefinition/ConfigEntry` 路径也与此一致；这里只核对源码契约，未执行实际面板读取。

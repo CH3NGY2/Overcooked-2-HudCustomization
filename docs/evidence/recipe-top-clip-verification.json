@@ -3,7 +3,7 @@
   "pluginVersion": "0.2.0",
   "pluginBytes": 165376,
   "pluginSha256": "4560E5CE1B13A3FE27DD6CCF40D02B149C31BB910EDDAD6CC1A4FFA2AE3865E3",
-  "scope": "Local development build. The v0.2.0 release asset and installed plugin still contain the earlier build.",
+  "scope": "Development build before v0.2.1. At the time of this run, the installed plugin was restored to the v0.2.0 release build.",
   "static": {
     "patchSignatures": 27,
     "reflectedFields": 23,
