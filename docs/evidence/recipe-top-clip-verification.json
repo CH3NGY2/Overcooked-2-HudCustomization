@@ -1,0 +1,83 @@
+{
+  "date": "2026-11-21",
+  "pluginVersion": "0.2.0",
+  "pluginBytes": 165376,
+  "pluginSha256": "4560E5CE1B13A3FE27DD6CCF40D02B149C31BB910EDDAD6CC1A4FFA2AE3865E3",
+  "scope": "Local development build. The v0.2.0 release asset and installed plugin still contain the earlier build.",
+  "static": {
+    "patchSignatures": 27,
+    "reflectedFields": 23,
+    "directPublicReferences": 86,
+    "privateDirectAccesses": 0,
+    "receipt": "docs/evidence/implementation-verification.json"
+  },
+  "desktop": {
+    "logicConfigAssertions": 1350,
+    "logicRun": ".validation/logic-20261121-151445-230",
+    "modSettingsAssertions": 688,
+    "modSettingsRun": ".validation/modsettings-20261121-151446-408",
+    "visibleEntries": 10,
+    "hiddenEntries": 60,
+    "languages": 12,
+    "recipeBoundsAssertions": 45,
+    "recipeBoundsRun": ".validation/recipe-bounds-20261121-151447-096",
+    "entranceAssertions": 1,
+    "entranceRun": ".validation/recipe-bounds-20261121-151447-876"
+  },
+  "unity": {
+    "command": "scripts/Test-UnityRecipes.ps1",
+    "run": ".validation/unity-recipes-20261121-151516-604",
+    "assertionsPassed": 116,
+    "loadedSha256": "4560E5CE1B13A3FE27DD6CCF40D02B149C31BB910EDDAD6CC1A4FFA2AE3865E3",
+    "screen": [3840, 2160],
+    "fixture": "Ordinary kitchen with native ChickenBurger cards and a display fixture that invokes the real client plate update path.",
+    "recipe": {
+      "sampledUnfoldOverhangCanvasUnits": 97.59717,
+      "settledOverhangCanvasUnits": 5,
+      "topClippingOnActiveGraphics": true,
+      "restoresNativeClippingOnDisable": true,
+      "cardsAtTwoColumnsAndTwoRows": [2, 5],
+      "cardsWithRowCapRemoved": [2, 2, 2, 1],
+      "geometry": ["entrance-unfold.tsv", "top-clip.tsv", "geometry.tsv"],
+      "screenshots": ["entrance-unfold.png", "entrance-settled.png", "max-rows-2.png"]
+    },
+    "plate": {
+      "nativeIconsInUseAtFirstDisplay": 0,
+      "firstFrameIconPixels": [43.2, 43.2],
+      "afterAddingIconPixels": [43.2, 43.2],
+      "configuredAlpha": 0.64,
+      "restoredIconPixels": [86.4, 86.4],
+      "restoredAlpha": 1,
+      "geometry": "plate-geometry.tsv",
+      "screenshots": ["plate-first.png", "plate-added.png"]
+    },
+    "restore": {
+      "filesRestored": 26,
+      "filesInManifest": 26,
+      "errors": 0,
+      "originalSaveHashVerified": true,
+      "temporaryTestDllRemoved": true,
+      "ownedProcessExited": true,
+      "installedSha256": "9C589F54C28FB8170B86B4F506B6F8A23741ADEFBDC30B91680DA5539367B765"
+    },
+    "log": "No HUD or test-plugin errors in this run. An external LobbyLevelRandomizer message was logged at Error level."
+  },
+  "editor": {
+    "command": "scripts/Test-UnityRecipes.ps1 -Editor",
+    "verified": ["Frozen row-cap preview without writing config", "Cancel", "Save using the native button and ConfigEntry", "Reopen", "Reset draft to default"],
+    "failedAssertion": "drag produces exact measured screen XY shift without layout drift",
+    "scorePositionWritten": [183.599976, 159.599976],
+    "scorePositionReadBack": [30, 30],
+    "runs": [
+      { "run": ".validation/unity-recipes-20261121-151857-712", "passedBeforeFailure": 265 },
+      { "run": ".validation/unity-recipes-20261121-152454-801", "passedBeforeFailure": 270 },
+      { "run": ".validation/baseline-editor-20261121-152738-499/.validation/unity-recipes-20261121-152739-959", "sourceBaseline": "fee0f7a", "passedBeforeFailure": 252 }
+    ],
+    "note": "The failure also occurs in the isolated v0.2.0 source baseline. The writer of the position reset has not been identified. Each run restored all 26 manifest files and removed its test DLL."
+  },
+  "earlierPlateRuns": [
+    { "run": ".validation/unity-recipes-20261121-143637-170", "result": "Failed after 21 passing assertions. Native size persisted until the next ingredient refresh." },
+    { "run": ".validation/unity-recipes-20261121-144451-287", "result": "Passed 80 assertions after the plate fix, before the recipe changes." }
+  ],
+  "notCovered": ["All recipe prefabs and cooking paths", "Physical mouse and controller input", "Full language and resolution matrix", "Multiplayer, survival and Horde"]
+}

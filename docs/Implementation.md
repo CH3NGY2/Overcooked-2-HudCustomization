@@ -1,8 +1,16 @@
 # HUD Customization 实施记录
 
-日期：2026-11-17。首版工程已实现并安装；**多行菜谱遮挡、主菜卡多余纸面及分阶段入场已完成局部真实 Unity 截图与几何验证，其余 UI 路径仍按下文保留待验范围**。研究报告保持原始研究语义，当前实现与限制以本记录和根目录 GOAL.md 为准。
+2026-11-21 的本地构建包含菜谱顶边裁剪、最大行数和盘中图标首帧修复。GitHub v0.2.0 附件仍对应 2026-11-18 的构建，发布记录见 [v0.2.0 更新说明](releases/v0.2.0.md)。下方历史章节中的构建、实机结果和安装状态均对应当时版本。
 
-2026-11-18：**v0.2.0** 汇总局内编辑器、类别下拉、容器图标拖动/拉伸及两条独立不透明度滑块，见 [更新说明](releases/v0.2.0.md) 和 [编辑器说明](HudEditor.md)。发布验证后恢复启动前的安装，不执行永久部署。本页各历史章节的版本、构建hash和安装状态仅适用于当时；当前发布产物另见版本核验记录。
+## 菜谱顶边裁剪、最大行数与盘中图标（2026-11-21）
+
+- `RecipeCardState` 以主菜卡 `m_background` 白纸顶边为排布锚点，`RecipeTopClip` 按实际 Canvas 坐标裁掉超出顶边的 Graphic 像素。裁剪计入原生 `UI_Move` 位移，覆盖入场、展开和落位后仍露头的纸角。卡片底边仍由完整食材和炊具边界决定，保留原生步骤动画和单时间条。重建或恢复原生布局时撤销本插件设置的裁剪，已有外部矩形裁剪的图形由其原拥有者处理。
+- `HudRowLayout` 在允许的行内按数量和实际宽度换行，达到上限后将后续订单依次附在末行右侧。`Recipes.RecipeMaxRows` 是原生 `ConfigEntry`，默认 0 不限，最大 20。该设置共享 ModSettings 的 12 语言显示元数据与编辑器草稿，保持原有键值及 60 个隐藏配置。只改变可见布局，末行可能超出屏幕右缘。
+- `ContentsState` 从原生 `m_icons` 取当前活跃图标。盘中首份预置菜谱匹配时，原生 `SetOrder` 可以提前返回，图标已可见而 `m_iconsInUse` 仍为 0。按实际可见图标应用大小和不透明度能覆盖首次显示及后续加料，沿用现有位置、恢复和图标复用逻辑。
+- 编译产物 **165,376 字节**，SHA256 `4560E5CE1B13A3FE27DD6CCF40D02B149C31BB910EDDAD6CC1A4FFA2AE3865E3`。`Test.ps1` **1350** 项、`Test-ModSettings.ps1` **688** 项、`Test-RecipeBounds.ps1` **45+1** 项通过。`Verify-Contracts.ps1` 核验 **27** 个补丁签名、**23** 个反射字段、**86** 处 public 游戏成员引用、**0** 处非公开直接访问。
+- 同一 DLL 在 **3840×2160** 的普通厨房实机通过 **116** 项。原生食材分支展开时高出纸面约 **98 Canvas 单位**，落位后仍高出 **5**，两个阶段的可见超出都已裁掉。每行 2 张、最多 2 行时 7 张卡排成 **2+5**，解除上限后为 **2+2+2+1**。盘中汉堡首帧及加料后均为 **43.2×43.2 像素**、不透明度 **64%**，停用后恢复 **86.4×86.4 像素**、100%。[展开截图](../.validation/unity-recipes-20261121-151516-604/entrance-unfold.png) · [落位截图](../.validation/unity-recipes-20261121-151516-604/entrance-settled.png) · [最大行数截图](../.validation/unity-recipes-20261121-151516-604/max-rows-2.png)
+- 最大行数的冻结预览、保存、重开、重置和取消已在实际编辑器通过。完整编辑器用例在已有计分板拖动断言失败，在 v0.2.0 发行源码隔离构建上复现同样的位置写回。直接写回者尚未确认。测试使用原生显示对象、盘子客户端更新及脚本输入，未覆盖所有配方、物理输入、所有分辨率和多人。
+- 每次运行都核对 **26/26** 清单文件恢复，测试插件移除，原存档核验通过。当前游戏恢复 v0.2.0 发行 DLL，使用修复需要安装本地构建并重启。编辑入口需要 ModSettings ≥1.1.1 和没有远端玩家的普通厨房。[核验摘要](evidence/recipe-top-clip-verification.json)
 
 ## 容器拖动与双不透明度（2026-11-18）
 
@@ -71,9 +79,9 @@
 
 ## 身份、构建与设置
 
-- 独立插件 `com.ch3ngyz.plugin.overcooked2.hudcustomization`，程序集 `OC2HudCustomization.dll`，版本 `0.1.0`，目标 .NET Framework 3.5 / CLR 2，使用实际安装的原始游戏 DLL、BepInEx 5、HarmonyX。早期 GUID `com.oc2.hudcustomization` 仅用于配置迁移，历史证据保留原身份。
+- 独立插件 `com.ch3ngyz.plugin.overcooked2.hudcustomization`，程序集 `OC2HudCustomization.dll`，版本 `0.2.0`，目标 .NET Framework 3.5 / CLR 2，使用实际安装的原始游戏 DLL、BepInEx 5、HarmonyX。早期 GUID `com.oc2.hudcustomization` 仅用于配置迁移，历史证据保留原身份。
 - `scripts/Build.ps1` 仅构建，可传 `-GameRoot` 和 `-MSBuild`；不自动复制 DLL 到游戏、不启动游戏。
-- 设置全部通过插件原生 `Config.Bind` 创建，共 9 个 `ConfigEntry`，正常配置路径 `BepInEx/config/com.ch3ngyz.plugin.overcooked2.hudcustomization.cfg`。首次升级在新文件不存在时导入旧 GUID 的 cfg，已有新文件不覆盖。不依赖 HostUtilities、RecipeViewer 或 ModSettings DLL。
+- 设置通过插件原生 `Config.Bind` 创建，共 10 项可见配置和 60 项隐藏配置，路径为 `BepInEx/config/com.ch3ngyz.plugin.overcooked2.hudcustomization.cfg`。首次升级在新文件不存在时导入旧 GUID 的 cfg。插件无 HostUtilities、RecipeViewer 或 ModSettings DLL 硬依赖。
 - 用户确认公共 ModSettings 可直接读取这些配置。本机 ModSettings `src/Core/ConfigCatalog.cs` 的 `Chainloader.PluginInfos → plugin.Instance.Config → ConfigDefinition/ConfigEntry` 路径也与此一致；这里只核对源码契约，未执行实际面板读取。
 - `ConfigFile.SettingChanged` 只标记 dirty；主线程 Update 拍摄参数快照，LateUpdate 改 UI。ModSettings 的合法提交可触发此路径，不另建一份设置或持久化格式。不自动轮询磁盘 cfg，外部手工改文件需重启或由配置工具 Reload。
 
@@ -82,6 +90,7 @@
 | General.Enabled | true | 关闭时恢复本插件仍拥有的属性 |
 | Recipes.RecipeScale | 1 | 0.5–2；基于实例原始 RectTransformExtension.scale |
 | Recipes.RecipesPerRow | 0 | 0–20；0 原版单行，正数为上限，宽度不足提前换行 |
+| Recipes.RecipeMaxRows | 0 | 0–20。开启换行后限制行数，0 不限。多出的订单依次接到末行右侧 |
 | Recipes.RecipeRowSpacing | 8 | 0–100 Canvas 单位；只用于自定义多行 |
 | Contents.ContentsScale | 1 | 0.5–2；空位和真实内容共用大小 |
 | Contents.ContentsPerRow | 0 | 0–20；0 保留实例原网格，正数固定水平列数 |
@@ -94,9 +103,9 @@
 ## 运行职责
 
 - `Plugin/ConfigMigration/HudSettings`：独立身份、旧 GUID 配置的首次导入、ConfigEntry、主线程应用及启停。
-- `HudRuntime/HudPatches/GameAccess`：明确的 10 个窄挂点、12 个缓存字段、启动契约验证、按订单/内容物两组独立降级；不替换原生业务方法，不全局 Patch Graphic 或 RectTransformExtension。
+- `HudRuntime/HudPatches/GameAccess` 管理窄挂点和反射缓存，启动时验契约，按订单和内容物两组独立降级。挂点仅覆盖所需的局内路径。
 - `Recipes/`：只登记实际 RecipeFlowGUI 列表拥有的卡片；读取原版排序后的活跃及退出卡片；使用当前生成节点的实际 Graphic 联合边界，按实际宽度排布，下一行依据上一行最大高度下移。主菜 Graphic 顶边作为运动锚点，完整卡片高度负责行间净空；两者不混作同一基准。没有 flow 归属的 RecipeViewer 克隆不进入适配。
-- `Contents/`：只登记 ClientIngredientContentGUI 实际持有的 m_uiInstance；RefreshIcons 完成后从 m_iconsInUse 与 m_emptySprite 分类。本轮未使用图标维持原生隐藏，不改 sprite、容量、minimum size、跟随目标、UI_Move 材质或网络。
+- `Contents/` 只登记 ClientIngredientContentGUI 实际持有的 m_uiInstance。RefreshIcons 完成后遍历 m_icons 中活跃项，按 m_emptySprite 区分加号与食材。未使用的图标维持原生隐藏。
 - `ContentsGeometry`：从原父区域、cellSize、spacing 计算单图标尺寸；固定列数时横向扩宽、纵向按实际行数收缩，再反算归一化 cellSize。保持图标大小与列数独立。列数为 0 时保留实例原 constraint/startAxis 等，只按需缩放区域。
 - `Presentation/`：组件专属 CanvasGroup alpha 倍率保留原生 Image.color/动画；不修改已有外来 CanvasGroup。属性恢复先比较最后写值，发现其他持有者则保留并去重警告；只删除自己创建且仍拥有的 alpha 组件。
 - 原生 RefreshSubElements 会重置 GeneratedChildren 几何，因此在它前面先撤回自己的几何，RefreshIcons 后重新应用；这是附加的窄前置清理，原方法仍完整运行。对象复用、刷新、停用、销毁、总开关关闭均有清理路径。
@@ -114,7 +123,7 @@
 
 - 构建使用真实安装引用，WarningsAsErrors；版本、依赖、输出 SHA256、成员访问与目标签名见 [implementation-verification.json](evidence/implementation-verification.json)。输出目录只包含本插件 DLL 和调试 PDB，不复制任何原版/第三方 DLL。
 - 桌面测试直接编译生产 `HudLayoutMath`、`OwnedValue`、`HudSettings` 源码，使用真实 BepInEx ConfigFile；覆盖默认值、盒装外部写入事件、独立设置、范围、cfg 保存/重读、非有限数值、宽度/列数换行、混合行高、0/1/多图标、重复应用不累乘、重新捕获与恢复所有权。**不运行 Unity ECall，不构成真实 UI 或 Harmony 执行证据。**
-- 验证脚本用实际安装 DLL 的 Cecil 元数据核验 10 个目标签名、12 个字段；扫描编译 IL 中直接游戏成员访问均为 public，且无 HostUtilities/RecipeViewer/ModSettings/测试依赖。
+- 验证脚本用实际安装 DLL 的 Cecil 元数据核验补丁目标签名和反射字段，扫描编译 IL 中的直接游戏成员访问和依赖。当前结果见 [实施核验](evidence/implementation-verification.json)。
 - 初版本地结果（下节多语言改动前）：生产构建成功、DLL 34,816 字节；`scripts/Test.ps1` **35 项断言通过**，原始结果 `.validation/logic-20261117-135007-716/result.txt`。元数据/IL：**10 个补丁签名、11 个字段、21 处直接 public 游戏成员引用、0 处非公开直访**。3 个 PowerShell 脚本语法检查和本地文档链接检查通过；当时最大生产源码文件 149 行。当前产物摘要以实施核验 JSON 为准。
 - 测试脚本初次运行出现两项桌面 harness 问题：csc 默认 rsp 与 Mono 引用重复；ConfigFile 初始化缺少链加载器通常注入的路径。分别以 `/noconfig` 和仅指向测试目录的 BepInEx Paths 初始化修正，未修改游戏或生产逻辑绕过失败。失败目录保留在 `.validation/`，不提交临时文件。
 - 后续非有限数值测试的最初断言预期“必然回退默认值”，实际 BepInEx 的范围校验先把输入转换为合法边界，故原断言失败；保留该轮失败证据，改为验证最终进入 Unity 的值有限且在范围内，再运行原测试。此项不构成游戏中 NaN 行为证据。

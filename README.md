@@ -2,14 +2,14 @@
 
 《胡闹厨房 2》的独立局内 HUD 参数调整 MOD，基于 BepInEx 5 / HarmonyX，设置仅影响本机显示。
 
-当前版本：**0.2.0**，插件标题为 `OC2 HUD 自定义 / OC2 HUD Customization`。包含局内 HUD 编辑器、容器图标拖动及双不透明度滑块；保留跨行炊具净空、主菜卡去除多余纸面和“第一行滑入→快速落位→展开食材与步骤”的入场节奏。用法及验收边界见 [编辑器说明](docs/HudEditor.md) 和 [实施记录](docs/Implementation.md)。
+当前版本为 **0.2.0**，插件标题为 `OC2 HUD 自定义 / OC2 HUD Customization`。本仓当前源码包含菜谱顶边裁剪、最大行数和盘中图标首帧修复。GitHub 的 v0.2.0 附件为此前发行的构建，使用这三项改动需要从当前源码构建 DLL。用法及验收记录见 [编辑器说明](docs/HudEditor.md) 和 [实施记录](docs/Implementation.md)。
 
 **可拖动的原生风格 HUD 编辑面板**需 ModSettings ≥1.1.1。使用纯色底板、游戏蓝色标题栏和原生字体；十类通过一个下拉列表选择，选中即高亮并临时预览，本关未创建的项置灰。容器图标组支持主体拖动、四边改宽高、四角等比缩放，拖一个对全局同类生效；共享 X/Y、大小、宽高倍率和每行上限，原材料与加号不透明度用两条同时显示的滑块调整。保存统一提交，取消恢复，共60项隐藏参数。左右装饰条及顶部说明已移除。编辑期间关卡与订单计时暂停，菜谱仍可展开并平滑重排。
 
 ## 基础功能
 
-- 调整常规局内菜谱卡片大小、每行显示数量。
-- 调整容器内容物与空位加号图标大小、每行显示数量。
+- 调整常规局内菜谱卡片大小、每行显示数量和最大行数。每行数量设为 `0` 时保持原生单行。开启换行后，最大行数 `0` 表示不限，达到上限则把剩余订单按顺序接在末行右侧，末行可能延伸到屏幕外。
+- 调整容器内容物与空位加号图标大小、每行显示数量。盘中食材图标从首次显示起使用已配置的大小和不透明度。
 - 分别调整菜谱、空位加号、已加入食材的不透明度。
 
 以上参数只作用于本机显示，保留原订单数量、容器容量、配方、计时及网络同步。Horde 的独立订单显示链需要另外适配。
@@ -51,7 +51,7 @@
 
 需要 Visual Studio MSBuild/.NET Framework 3.5 开发引用，以及真实游戏目录内的 BepInEx 5 / HarmonyX。支持 `-GameRoot`，构建和逻辑测试可传 `-MSBuild`。产物位于 `bin/Release/OC2HudCustomization.dll`；构建不会自动安装或启动游戏。
 
-设置使用原生 BepInEx `ConfigEntry`，公共 ModSettings 可按其自动发现契约读取，不需要本插件引用它。共 9 项，包含大小、列数、三类不透明度、总开关和菜谱行间距；默认保持原生显示。插件 GUID 为 `com.ch3ngyz.plugin.overcooked2.hudcustomization`，设置文件是 `BepInEx/config/com.ch3ngyz.plugin.overcooked2.hudcustomization.cfg`，参数范围见实施记录；面板修改在主线程应用，手工编辑磁盘文件需重启或由工具 Reload。
+设置使用原生 BepInEx `ConfigEntry`，公共 ModSettings 可直接发现。共 10 项，包含大小、列数、菜谱最大行数、三类不透明度、总开关和菜谱行间距，默认保持原生显示。插件 GUID 为 `com.ch3ngyz.plugin.overcooked2.hudcustomization`，设置文件为 `BepInEx/config/com.ch3ngyz.plugin.overcooked2.hudcustomization.cfg`。面板修改在主线程应用，手工编辑磁盘文件需重启或由工具 Reload。参数范围见 [实施记录](docs/Implementation.md#身份构建与设置)。
 
 另有60项 `HudEditor.*` 隐藏设置，不在设置页逐项列出；ModSettings 1.1.1 通过一个操作按钮进入编辑器。缺少该服务时，原有设置和已保存的隐藏参数仍可应用，但不能打开编辑器。
 
@@ -63,10 +63,10 @@
 
 手动安装只需复制本插件 DLL 到游戏 `BepInEx/plugins` 并重启加载。编译和打包不会自动安装；隔离实机测试会恢复启动前的插件、配置和共享日志，并核对原存档。旧身份迁移的历史验证见实施记录；不要分发游戏 DLL、依赖 DLL、测试文件或证据目录。
 
-菜谱换行实时测量已缓存的实际 Graphic 完整边界，包括纸面拼接和底部炊具；节点重建时更新缓存，每行按最高卡片加行间距下移。自定义大小或列数时仅隐藏主菜卡向上延伸的空白纸面，保留时间条、菜品、配料分支和炊具；关闭自定义布局恢复原状。
+菜谱换行根据实际显示边界计算行高，每行按最高卡片加行间距下移。自定义大小或列数时，以主菜卡白纸的顶边裁掉上方露出的纸角和展开中的分支。白纸下的食材与炊具继续按原动画展开，每张卡保留一个时间进度条。关闭自定义布局会恢复原生显示。
 
 新菜谱先沿第一行从右向左进入，横向剩余距离降到约 20% 时快速落位，再显示食材与烹饪步骤，接原生展开。落位进度跟随原生 Animator，不另按墙上时钟计时；当前原生 1.5 秒动画下，快速落位约 0.21 秒。已有卡片换行使用平滑回流，不重播入场。
 
-`scripts/Test-RecipeBounds.ps1` 可运行生产测量/排布代码的桌面边界替换回归；`scripts/Test-UnityRecipes.ps1` 会临时部署测试插件、隔离存档并启动真实游戏，只能在玩家游戏未运行时使用。它默认恢复原 DLL，`-KeepProductionBuild` 保留本轮正式构建；两种方式均恢复配置、共享日志及临时测试文件。实机结果见 [菜谱布局核验](docs/evidence/recipe-layout-verification.json)。
+`scripts/Test-RecipeBounds.ps1` 可运行生产测量/排布代码的桌面边界替换回归；`scripts/Test-UnityRecipes.ps1` 会临时部署测试插件、隔离存档并启动真实游戏，只能在玩家游戏未运行时使用。它默认恢复原 DLL，`-KeepProductionBuild` 保留本轮正式构建；两种方式均恢复配置、共享日志及临时测试文件。实机结果见 [菜谱与盘中图标核验](docs/evidence/recipe-top-clip-verification.json)。
 
 `scripts/Test-UnityRecipes.ps1 -Editor` 沿用同一隔离和恢复入口，检查真实设置页编辑按钮、原生 HUD 拖动/缩放、隐藏元素预览及退出恢复。`Package.ps1` 要求显式传入已验证构建的 `-ExpectedSha256`，不重新编译；单DLL白名单、版本一致性和解压后hash均会检查。
