@@ -11,13 +11,15 @@ namespace OC2HudCustomization
         private RectTransformExtension _extension;
         private readonly HudLog _log;
         private readonly List<RecipeWidgetTile> _tiles;
-        private readonly FieldInfo _container, _topPaper;
+        private readonly FieldInfo _container, _headPaperField, _topPaper;
         private readonly List<Graphic> _visuals = new List<Graphic>();
         private readonly List<Graphic> _descendants = new List<Graphic>();
         private readonly List<Graphic> _headVisuals = new List<Graphic>();
         private readonly List<AlphaLayer> _branches = new List<AlphaLayer>();
         private readonly List<OwnedValue<bool>> _headers = new List<OwnedValue<bool>>();
         private readonly RecipeMotion _motion;
+        private RecipeTopClip _topClip;
+        private Image _headPaper;
         private UI_Move _nativeMove;
         private Animator _animator;
         private RecipeAnimationPreview _preview;
@@ -39,6 +41,7 @@ namespace OC2HudCustomization
             _log = log;
             _tiles = (List<RecipeWidgetTile>)access.Tiles.GetValue(widget);
             _container = access.Container;
+            _headPaperField = access.HeadPaper;
             _topPaper = access.TopPaper;
             _motion = new RecipeMotion(entering);
             _alpha = new AlphaLayer(widget.gameObject, log);
@@ -62,11 +65,11 @@ namespace OC2HudCustomization
         internal void Prepare(HudOptions options)
         {
             if (_boundsDirty || _cachedTileCount != _tiles.Count) CacheBoundsObjects();
-            bool customLayout = options.RecipesPerRow > 0 || !Mathf.Approximately(options.RecipeScale, 1f);
+            bool customLayout = options.UsesCustomRecipeLayout;
             _trimmed = customLayout;
             for (int i = 0; i < _headers.Count; i++)
                 if (_trimmed) _headers[i].Apply(false); else _headers[i].Restore();
-            if (!customLayout) { _motion.Reset(); RestoreBranches(); }
+            if (!customLayout) { _motion.Reset(); RestoreBranches(); RestoreTopClip(); }
             _alpha.Apply(options.RecipeOpacity);
             if (!_extension || _scale == null) return;
             if (Mathf.Approximately(options.RecipeScale, 1f)) { _scale.Restore(); _scaled = false; }
@@ -85,10 +88,12 @@ namespace OC2HudCustomization
         private void CacheBoundsObjects()
         {
             Preview(false);
+            RestoreTopClip();
             for (int i = 0; i < _headers.Count; i++) _headers[i].Restore();
             _headers.Clear();
             _visuals.Clear();
             _headVisuals.Clear();
+            _headPaper = null;
             RestoreBranches();
             _branches.Clear();
             GameObject widgetContainer = Widget ? (GameObject)_container.GetValue(Widget) : null;
@@ -105,6 +110,7 @@ namespace OC2HudCustomization
                 // Branch stitches, progress bar, pictures and cooking modifiers stay native.
                 if (tile is TopRecipeWidgetTile)
                 {
+                    _headPaper = (Image)_headPaperField.GetValue(tile);
                     Image paper = (Image)_topPaper.GetValue(tile);
                     if (paper)
                     {
@@ -136,48 +142,66 @@ namespace OC2HudCustomization
             _boundsDirty = false;
         }
 
-        internal bool Measure(Transform space, out Rect bounds)
+        internal bool Measure(Transform space, out Rect bounds, out Rect head)
         {
             if (_boundsDirty || _cachedTileCount != _tiles.Count) CacheBoundsObjects();
-            return MeasureGraphics(_visuals, space, out bounds);
-        }
-
-        internal bool MeasureHead(Transform space, out Rect bounds)
-        { return MeasureGraphics(_headVisuals, space, out bounds); }
-
-        private bool MeasureGraphics(List<Graphic> graphics, Transform space, out Rect bounds)
-        {
             bounds = new Rect();
-            bool found = false;
-            for (int i = 0; i < graphics.Count; i++)
+            head = new Rect();
+            bool found = false, foundHead = false;
+            bool hasPaper = _headPaper && _headPaper.isActiveAndEnabled;
+            if (hasPaper)
             {
-                Graphic graphic = graphics[i];
-                if (!graphic || !graphic.isActiveAndEnabled) continue;
-                RectTransform rect = graphic.rectTransform;
-                rect.GetWorldCorners(_corners);
-                for (int j = 0; j < _corners.Length; j++)
+                IncludeGraphic(_headPaper, space, ref head, ref foundHead);
+            }
+            else
+            {
+                for (int i = 0; i < _headVisuals.Count; i++)
                 {
-                    Vector3 point = space.InverseTransformPoint(_corners[j]);
-                    if (!found) { bounds = new Rect(point.x, point.y, 0f, 0f); found = true; }
-                    else bounds = Rect.MinMaxRect(Mathf.Min(bounds.xMin, point.x), Mathf.Min(bounds.yMin, point.y),
-                        Mathf.Max(bounds.xMax, point.x), Mathf.Max(bounds.yMax, point.y));
+                    Graphic graphic = _headVisuals[i];
+                    if (graphic && graphic.isActiveAndEnabled) IncludeGraphic(graphic, space, ref head, ref foundHead);
                 }
             }
+            for (int i = 0; i < _visuals.Count; i++)
+            {
+                Graphic graphic = _visuals[i];
+                if (!graphic || !graphic.isActiveAndEnabled) continue;
+                IncludeGraphic(graphic, space, ref bounds, ref found);
+            }
+            if (!foundHead) head = bounds;
+            // Animated branches and their stitches may extend above the line we render.
+            if (_trimmed && hasPaper) bounds.yMax = head.yMax;
             return found && bounds.width > 0.01f && bounds.height > 0.01f;
         }
 
-        internal void Move(Vector2 target, Vector2 entry, Rect bounds, Transform space, float deltaTime)
+        private void IncludeGraphic(Graphic graphic, Transform space, ref Rect bounds, ref bool found)
+        {
+            graphic.rectTransform.GetWorldCorners(_corners);
+            for (int i = 0; i < _corners.Length; i++)
+            {
+                Vector3 point = space.InverseTransformPoint(_corners[i]);
+                if (!found) { bounds = new Rect(point.x, point.y, 0f, 0f); found = true; }
+                else bounds = Rect.MinMaxRect(Mathf.Min(bounds.xMin, point.x), Mathf.Min(bounds.yMin, point.y),
+                    Mathf.Max(bounds.xMax, point.x), Mathf.Max(bounds.yMax, point.y));
+            }
+        }
+
+        internal void Move(Vector2 target, Vector2 entry, Rect head, float deltaTime)
         {
             if (!_extension) return;
-            float horizontal = _nativeMove ? _nativeMove.Offset.magnitude : 0f;
+            Vector2 shaderOffset = _nativeMove ? _nativeMove.Offset : Vector2.zero;
+            float horizontal = shaderOffset.magnitude;
             _horizontalExtent = Mathf.Max(_horizontalExtent, horizontal);
             float remaining = _horizontalExtent > .01f ? horizontal / _horizontalExtent : 0f;
             float progress = _animator && _entranceLayer >= 0 ? ReadNativeProgress() : -1f;
-            Rect head;
-            if (MeasureHead(space, out head)) bounds = head;
             Vector2 position = _motion.Step(target, entry, remaining, progress, deltaTime);
-            _lastOffset = _nativeOffset + position - new Vector2(bounds.xMin, bounds.yMax);
+            _lastOffset = _nativeOffset + position - new Vector2(head.xMin, head.yMax);
             _extension.PixelOffset = _lastOffset;
+            if (_headPaper && _headPaper.isActiveAndEnabled)
+            {
+                if (_topClip == null) _topClip = new RecipeTopClip();
+                _topClip.Apply(_headPaper, _visuals, shaderOffset.y, _corners);
+            }
+            else RestoreTopClip();
             for (int i = 0; i < _branches.Count; i++)
                 if (_motion.Entering) _branches[i].Apply(_motion.BranchOpacity); else _branches[i].Restore();
             _moved = true;
@@ -185,6 +209,9 @@ namespace OC2HudCustomization
 
         private void RestoreBranches()
         { for (int i = 0; i < _branches.Count; i++) _branches[i].Restore(); }
+
+        private void RestoreTopClip()
+        { if (_topClip != null) _topClip.Restore(); }
 
         private static int FindEntranceLayer(Animator animator) { return animator.GetLayerIndex("Override"); }
         internal void Preview(bool active)
@@ -207,6 +234,7 @@ namespace OC2HudCustomization
         internal void Restore()
         {
             Preview(false);
+            RestoreTopClip();
             if (!Widget) return;
             for (int i = 0; i < _headers.Count; i++) _headers[i].Restore();
             _trimmed = false;

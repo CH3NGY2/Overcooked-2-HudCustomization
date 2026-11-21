@@ -54,12 +54,25 @@ internal static partial class BehaviorTests
         Check(HudLayoutMath.Extent(4, 50f, 2f, 0f) == 206f, "more columns retain individual icon size");
         Check(HudLayoutMath.Extent(4, 100f, 4f, 0f) == 412f, "scale independent of column count");
         Check(HudLayoutMath.Extent(0, 50f, 2f, 4f) == 0f, "zero count no negative gap");
-        HudRowLayout layout = new HudRowLayout(5f, 0f, 2, 5f, 8f, 500f);
+        HudRowLayout layout = new HudRowLayout(5f, 0f, 2, 0, 5f, 8f, 500f);
         float left, top;
         layout.Place(100f, 50f, out left, out top); Check(left == 5f && top == 0f, "native first-card origin");
         layout.Place(200f, 150f, out left, out top); Check(left == 110f && top == 0f, "variable card widths plus native gap");
         layout.Place(80f, 60f, out left, out top); Check(left == 5f && top == -158f, "new row below maximum full-card height");
         layout.Place(450f, 40f, out left, out top); Check(left == 5f && top == -226f, "safe-width wrap before column upper limit");
+
+        var capped = new HudRowLayout(5f, 0f, 2, 2, 5f, 8f, 300f);
+        capped.Place(100f, 50f, out left, out top);
+        capped.Place(210f, 65f, out left, out top);
+        Check(capped.RowIndex == 1 && left == 5f && top == -58f, "safe width opens the final row before the column limit");
+        capped.Place(120f, 120f, out left, out top);
+        Check(capped.RowIndex == 1 && left == 220f && top == -58f, "final row appends a card past the safe width");
+        capped.Place(70f, 60f, out left, out top);
+        Check(capped.RowIndex == 1 && left == 345f && top == -58f, "final row appends a card past the column limit in order");
+        var single = new HudRowLayout(5f, 0f, 1, 1, 5f, 8f, 100f);
+        single.Place(100f, 60f, out left, out top);
+        single.Place(100f, 60f, out left, out top);
+        Check(single.RowIndex == 0 && left == 110f && top == 0f, "maximum one row appends immediately");
     }
 
     private static void Ownership()
@@ -90,10 +103,10 @@ internal static partial class BehaviorTests
         string path = Path.Combine(root, "hud.cfg");
         ConfigFile config = new ConfigFile(path, false); config.SaveOnConfigSet = false;
         HudSettings settings = new HudSettings(config);
-        Check(config.Count == 13, "nine visible and four hidden contents ConfigEntry values");
+        Check(config.Count == 14, "ten visible and four hidden contents ConfigEntry values");
         HudOptions defaults = settings.Snapshot();
         Check(defaults.Enabled && defaults.RecipeScale == 1f && defaults.ContentsScale == 1f
-            && defaults.RecipesPerRow == 0 && defaults.ContentsPerRow == 0, "native geometry defaults");
+            && defaults.RecipesPerRow == 0 && defaults.RecipeMaxRows == 0 && defaults.ContentsPerRow == 0, "native geometry defaults");
         Check(defaults.RecipeOpacity == 1f && defaults.EmptySlotOpacity == 1f && defaults.IngredientOpacity == 1f, "native alpha defaults");
         Check(defaults.ContentsX == 0f && defaults.ContentsY == 0f && defaults.ContentsWidth == 1f && defaults.ContentsHeight == 1f, "new contents geometry defaults preserve native position and aspect");
         settings.ContentsX.Value = .12f; settings.ContentsY.Value = -.08f;
@@ -102,6 +115,7 @@ internal static partial class BehaviorTests
         config["Recipes", "RecipeScale"].BoxedValue = 1.5f;
         Check(changed == 1 && settings.Snapshot().RecipeScale == 1.5f, "external ModSettings-style boxed write raises event");
         settings.RecipesPerRow.Value = 3;
+        settings.RecipeMaxRows.Value = 2;
         settings.ContentsPerRow.Value = 4;
         settings.RecipeOpacity.Value = 50f;
         settings.EmptySlotOpacity.Value = 0f;
@@ -114,7 +128,7 @@ internal static partial class BehaviorTests
         config.Save();
         ConfigFile reloaded = new ConfigFile(path, true); reloaded.SaveOnConfigSet = false;
         HudSettings persisted = new HudSettings(reloaded);
-        Check(persisted.RecipeScale.Value == 1.5f && persisted.RecipesPerRow.Value == 3
+        Check(persisted.RecipeScale.Value == 1.5f && persisted.RecipesPerRow.Value == 3 && persisted.RecipeMaxRows.Value == 2
             && persisted.EmptySlotOpacity.Value == 0f, "native cfg persistence");
         Check(persisted.ContentsX.Value == .12f && persisted.ContentsY.Value == -.08f
             && persisted.ContentsWidth.Value == 1.6f && persisted.ContentsHeight.Value == .7f, "hidden shared contents position and aspect survive actual cfg reload");

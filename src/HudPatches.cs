@@ -8,7 +8,7 @@ namespace OC2HudCustomization
         {
             HudRuntime r = Plugin.Runtime;
             if (r == null || r.Recipes == null) return;
-            try { r.Recipes.Observe(__instance, false, r.Options.Enabled && (r.Options.RecipesPerRow > 0 || !UnityEngine.Mathf.Approximately(r.Options.RecipeScale, 1f))); }
+            try { r.Recipes.Observe(__instance, false, r.Options.Enabled && r.Options.UsesCustomRecipeLayout); }
             catch (Exception e) { r.FailRecipes("RecipeFlowGUI.AddElement Postfix", e); }
         }
         private static void RecipeLayout(RecipeFlowGUI __instance)

@@ -36,13 +36,15 @@ internal static class ModSettingsConsumerTests
         ConfigFile config = new ConfigFile(Path.Combine(args[0], "provider-consumer.cfg"), false);
         config.SaveOnConfigSet = false;
         object settings = Activator.CreateInstance(settingsType, Members, null, new object[] { config }, null);
-        Check(config.Count == 13, "built HUD binds nine visible entries and four hidden contents values");
-        string[] sections = { "General", "Recipes", "Recipes", "Recipes", "Contents", "Contents", "Opacity", "Opacity", "Opacity" };
-        string[] keys = { "Enabled", "RecipeScale", "RecipesPerRow", "RecipeRowSpacing", "ContentsScale", "ContentsPerRow", "RecipeOpacity", "EmptySlotOpacity", "IngredientOpacity" };
-        int[] categoryOrders = { 400, 300, 300, 300, 200, 200, 100, 100, 100 };
-        int[] orders = { 100, 100, 90, 80, 100, 90, 100, 90, 80 };
+        Check(config.Count == 14, "built HUD binds ten visible entries and four hidden contents values");
+        string[] sections = { "General", "Recipes", "Recipes", "Recipes", "Recipes", "Contents", "Contents", "Opacity", "Opacity", "Opacity" };
+        string[] keys = { "Enabled", "RecipeScale", "RecipesPerRow", "RecipeMaxRows", "RecipeRowSpacing", "ContentsScale", "ContentsPerRow", "RecipeOpacity", "EmptySlotOpacity", "IngredientOpacity" };
+        int[] categoryOrders = { 400, 300, 300, 300, 300, 200, 200, 100, 100, 100 };
+        int[] orders = { 100, 100, 90, 85, 80, 100, 90, 100, 90, 80 };
         object original = read.Invoke(null, new object[] { config["General", "Enabled"], null });
-        Check((string)Field(original, "Name") == "Enable HUD customization" && (string)Field(original, "Category") == "General", "provider sees English before game readiness");
+        object maxRows = read.Invoke(null, new object[] { config["Recipes", "RecipeMaxRows"], null });
+        Check((string)Field(original, "Name") == "Enable HUD customization" && (string)Field(original, "Category") == "General"
+            && (string)Field(maxRows, "Name") == "Maximum recipe rows", "provider sees English before game readiness");
         config["Recipes", "RecipeScale"].BoxedValue = 1.5f;
         config.Save(); string disk = File.ReadAllText(config.ConfigFilePath);
         int changes = 0; config.SettingChanged += delegate { changes++; };
@@ -66,13 +68,15 @@ internal static class ModSettingsConsumerTests
                 rows.Insert(0, row);
                 if (language.ToString() == "Chinese" && i == 0)
                     Check((string)Field(metadata, "Name") == "启用 HUD 自定义" && (bool)rowType.GetMethod("Matches", Members).Invoke(row, new object[] { "本机玩家", false }), "actual provider Chinese name and description search");
+                if (language.ToString() == "Chinese" && keys[i] == "RecipeMaxRows")
+                    Check((string)Field(metadata, "Name") == "菜谱最大行数", "actual provider sees localized maximum rows");
             }
             sort.Invoke(null, new object[] { rows });
             for (int i = 0; i < keys.Length; i++)
                 Check(((ConfigEntryBase)Field(rows[i], "Entry")).Definition.Key == keys[i], "same display order in " + language + ": " + keys[i]);
         }
         Check((string)Field(original, "Name") == "Enable HUD customization", "previous provider snapshots remain immutable");
-        Check(changes == 0 && config.Count == 13 && Equals(config["Recipes", "RecipeScale"].BoxedValue, 1.5f)
+        Check(changes == 0 && config.Count == 14 && Equals(config["Recipes", "RecipeScale"].BoxedValue, 1.5f)
             && File.ReadAllText(config.ConfigFilePath) == disk, "built consumer translations preserve real cfg and values");
         Activator.CreateInstance(consumer.GetType("OC2HudCustomization.HudEditorConfig", true), Members, null, new object[] { config }, null);
         int hidden = 0;
@@ -83,8 +87,8 @@ internal static class ModSettingsConsumerTests
             Check((bool)Field(metadata, "Hidden") == shouldHide, "actual provider hides exactly editor configuration " + pair.Key);
             if (shouldHide) hidden++;
         }
-        Check(hidden == 60 && config.Count == 69, "60 hidden entries without hiding nine existing controls");
-        Console.WriteLine("PASS " + checks + " actual-provider/compiled-HUD assertions; 9 entries x 12 languages (desktop; no Unity UI).");
+        Check(hidden == 60 && config.Count == 70, "60 hidden entries and ten visible controls");
+        Console.WriteLine("PASS " + checks + " actual-provider/compiled-HUD assertions; 10 entries x 12 languages (desktop; no Unity UI).");
     }
 
     public static int Main(string[] args)

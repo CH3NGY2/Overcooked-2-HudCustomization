@@ -21,21 +21,25 @@ namespace OC2HudCustomization
 
     internal struct HudRowLayout
     {
-        private readonly int _limit;
+        private readonly int _limit, _maxRows;
         private readonly float _origin, _gap, _rowGap, _safeWidth;
         private float _cursor, _top, _height, _used;
-        private int _count;
-        internal HudRowLayout(float origin, float top, int limit, float gap, float rowGap, float safeWidth)
+        private int _count, _rowIndex;
+        internal int RowIndex { get { return _rowIndex; } }
+
+        internal HudRowLayout(float origin, float top, int limit, int maxRows, float gap, float rowGap, float safeWidth)
         {
-            _origin = origin; _cursor = origin; _top = top; _limit = limit;
+            _origin = origin; _cursor = origin; _top = top; _limit = limit; _maxRows = maxRows;
             _gap = gap; _rowGap = rowGap; _safeWidth = safeWidth;
-            _height = 0f; _used = 0f; _count = 0;
+            _height = 0f; _used = 0f; _count = 0; _rowIndex = 0;
         }
 
         internal void Place(float width, float height, out float left, out float top)
         {
-            if (HudLayoutMath.NeedsWrap(_count, _limit, _used, width, _gap, _safeWidth))
+            // The last allowed row keeps accepting cards in native order, even past the width limit.
+            if ((_maxRows == 0 || _rowIndex + 1 < _maxRows) && HudLayoutMath.NeedsWrap(_count, _limit, _used, width, _gap, _safeWidth))
             {
+                _rowIndex++;
                 _top -= _height + _rowGap;
                 _cursor = _origin; _height = 0f; _count = 0; _used = 0f;
             }

@@ -45,7 +45,7 @@ try {
         @('RecipeFlowGUI','m_widgets'), @('RecipeFlowGUI','m_dyingWidgets'), @('RecipeFlowGUI','m_ordererWidgets'),
         @('RecipeFlowGUI','m_distanceBetweenOrders'), @('RecipeFlowGUI','m_distanceFromEndOfScreen'),
         @('RecipeWidgetUIController','m_recipeTiles'), @('ClientIngredientContentGUI','m_uiInstance'),
-        @('UISubElementContainer','m_container'), @('RecipeWidgetTile','m_backgroundTop'), @('IngredientContentsUIContainer','m_icons'),
+        @('UISubElementContainer','m_container'), @('RecipeWidgetTile','m_background'), @('RecipeWidgetTile','m_backgroundTop'), @('IngredientContentsUIContainer','m_icons'),
         @('IngredientContentsUIContainer','m_emptySprite'),
         @('ClientWorkableItem','m_guibar'), @('ClientCookingHandler','m_gui'), @('ClientMixingHandler','m_progressUI'),
         @('ClientHeatedStationGUI','m_uiInstance'), @('ClientWashingStation','m_progressUI'),
@@ -116,6 +116,9 @@ try {
         throw 'Editor exit must read BackQuote only, not all-key state.'
     }
     $providerPath = Join-Path $GameRoot 'BepInEx\plugins\OC2ModSettings\OC2ModSettings.dll'
+    if (!(Test-Path -LiteralPath $providerPath -PathType Leaf)) {
+        $providerPath = Join-Path $GameRoot 'BepInEx\plugins\OC2ModSettings.dll'
+    }
     $provider = [Mono.Cecil.AssemblyDefinition]::ReadAssembly($providerPath, $parameters)
     try {
         $shortcut = $provider.MainModule.Types | Where-Object FullName -eq 'OC2ModSettings.NativeShortcut'

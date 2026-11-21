@@ -14,7 +14,9 @@ public sealed partial class UnityRecipeTests
     private Rect Bounds(RecipeWidgetUIController widget, Transform space)
     {
         Rect result = new Rect(); bool found = false;
-        // Independently measure rendered native graphics, rather than reusing the production cache.
+        UnityEngine.UI.Image paper = MainPaper(widget);
+        float visibleTop = paper && paper.canvasRenderer.hasRectClipping ? HeadBounds(widget, space).yMax : float.MaxValue;
+        // Independently measure native graphics. Only graphics with an active clip use the paper edge.
         foreach (UnityEngine.UI.Graphic graphic in widget.GetComponentsInChildren<UnityEngine.UI.Graphic>())
         {
             if (!graphic.isActiveAndEnabled) continue;
@@ -22,6 +24,7 @@ public sealed partial class UnityRecipeTests
             foreach (Vector3 corner in corners)
             {
                 Vector3 point = space.InverseTransformPoint(corner);
+                if (graphic.canvasRenderer.hasRectClipping) point.y = Mathf.Min(point.y, visibleTop);
                 if (!found) { result = new Rect(point.x, point.y, 0, 0); found = true; }
                 else result = Rect.MinMaxRect(Mathf.Min(result.xMin, point.x), Mathf.Min(result.yMin, point.y), Mathf.Max(result.xMax, point.x), Mathf.Max(result.yMax, point.y));
             }
@@ -31,21 +34,24 @@ public sealed partial class UnityRecipeTests
     }
     private Rect HeadBounds(RecipeWidgetUIController widget, Transform space)
     {
-        TopRecipeWidgetTile head = widget.GetComponentInChildren<TopRecipeWidgetTile>(true);
-        Rect result = new Rect(); bool found = false;
-        foreach (UnityEngine.UI.Graphic graphic in head.GetComponentsInChildren<UnityEngine.UI.Graphic>())
+        UnityEngine.UI.Image paper = MainPaper(widget);
+        if (!paper || !paper.isActiveAndEnabled) throw new InvalidOperationException("Native main paper is not generated yet");
+        paper.rectTransform.GetWorldCorners(corners);
+        Vector3 first = space.InverseTransformPoint(corners[0]);
+        Rect result = new Rect(first.x, first.y, 0f, 0f);
+        for (int i = 1; i < corners.Length; i++)
         {
-            if (!graphic.isActiveAndEnabled) continue;
-            graphic.rectTransform.GetWorldCorners(corners);
-            foreach (Vector3 corner in corners)
-            {
-                Vector3 point = space.InverseTransformPoint(corner);
-                if (!found) { result = new Rect(point.x, point.y, 0, 0); found = true; }
-                else result = Rect.MinMaxRect(Mathf.Min(result.xMin, point.x), Mathf.Min(result.yMin, point.y), Mathf.Max(result.xMax, point.x), Mathf.Max(result.yMax, point.y));
-            }
+            Vector3 point = space.InverseTransformPoint(corners[i]);
+            result = Rect.MinMaxRect(Mathf.Min(result.xMin, point.x), Mathf.Min(result.yMin, point.y), Mathf.Max(result.xMax, point.x), Mathf.Max(result.yMax, point.y));
         }
-        if (!found) throw new InvalidOperationException("Native head is not generated yet");
         return result;
+    }
+
+    private static UnityEngine.UI.Image MainPaper(RecipeWidgetUIController widget)
+    {
+        TopRecipeWidgetTile head = widget.GetComponentInChildren<TopRecipeWidgetTile>(true);
+        Transform paper = head ? FindNamed(head.transform, "RecipeWidgetTile_Background") : null;
+        return paper ? paper.GetComponent<UnityEngine.UI.Image>() : null;
     }
     private static float BranchOpacity(RecipeWidgetUIController widget)
     {
@@ -105,6 +111,7 @@ public sealed partial class UnityRecipeTests
         rect.sizeDelta = nativeRect.sizeDelta; rect.anchoredPosition = nativeRect.anchoredPosition; rect.localScale = nativeRect.localScale; rect.localRotation = nativeRect.localRotation;
         RecipeFlowGUI flow = fixture.AddComponent<RecipeFlowGUI>();
         AccessTools.Field(typeof(RecipeFlowGUI), "m_recipeWidgetPrefab").SetValue(flow, AccessTools.Field(typeof(RecipeFlowGUI), "m_recipeWidgetPrefab").GetValue(source));
+        AccessTools.Field(typeof(RecipeFlowGUI), "m_maxOrdersAllowed").SetValue(flow, 7);
         fixture.SetActive(true);
         // Leave the real business flow running: deactivation would break its later AddElement
         // coroutines. Only hide that flow while the independent display fixture is captured.
@@ -115,8 +122,10 @@ public sealed partial class UnityRecipeTests
         foreach (RecipeFlowGUI.ElementToken token in tokens) widgets.Add(flow.GetData(token).m_widget);
         hud.Config["General", "Enabled"].BoxedValue = true;
         hud.Config["Recipes", "RecipesPerRow"].BoxedValue = 2;
+        hud.Config["Recipes", "RecipeMaxRows"].BoxedValue = 0;
         hud.Config["Recipes", "RecipeRowSpacing"].BoxedValue = 20.77099f;
         hud.Config["Recipes", "RecipeScale"].BoxedValue = .5f;
+        hud.Config["Opacity", "RecipeOpacity"].BoxedValue = 100f;
         yield return Settle(widgets, rect, "scale-05-initial");
         VerifyRows(widgets, rect, "scale-05-initial");
         RecipeFlowGUI.ElementToken incomingToken = flow.AddElement(recipe, 180f, delegate(RecipeFlowGUI.ElementToken token) { });
@@ -126,11 +135,13 @@ public sealed partial class UnityRecipeTests
         yield return Settle(widgets, rect, "scale-05");
         VerifyRows(widgets, rect, "scale-05");
         Check(PresentationPreserved(widgets), "custom layout hides only the upper paper and keeps one active progress bar per card");
+        VerifyTopClip(widgets, rect, "custom", true);
         ScreenCapture.CaptureScreenshot(Path.Combine(output, "scale-05.png")); yield return new WaitForEndOfFrame(); yield return null;
         // Rebuild the same native widget objects, exercising the production cache invalidation hook.
         foreach (RecipeWidgetUIController widget in widgets) widget.RefreshSubElements();
         yield return Settle(widgets, rect, "rebuilt-scale-05");
         VerifyRows(widgets, rect, "rebuilt-scale-05");
+        VerifyTopClip(widgets, rect, "rebuilt", true);
         ScreenCapture.CaptureScreenshot(Path.Combine(output, "rebuilt-scale-05.png")); yield return new WaitForEndOfFrame(); yield return null;
         foreach (float scale in new float[] { 1f, 2f })
         {
@@ -146,7 +157,7 @@ public sealed partial class UnityRecipeTests
         RecipeFlowGUI.ElementToken singleToken = flow.AddElement(recipe, 180f, delegate(RecipeFlowGUI.ElementToken token) { });
         RecipeWidgetUIController singleIncoming = flow.GetData(singleToken).m_widget;
         widgets.Add(singleIncoming);
-        yield return CaptureEntrance(widgets, rect, singleIncoming, "single-entrance", 1);
+        yield return CaptureEntrance(widgets, rect, singleIncoming, "single-entrance", 5);
         yield return Settle(widgets, rect, "single-column-added");
         VerifyColumn(widgets, rect, "single-column-added");
         ScreenCapture.CaptureScreenshot(Path.Combine(output, "single-column.png")); yield return new WaitForEndOfFrame(); yield return null;
@@ -154,11 +165,24 @@ public sealed partial class UnityRecipeTests
         yield return Settle(widgets, rect, "column-change");
         VerifyRows(widgets, rect, "column-change");
         Check(PresentationPreserved(widgets), "changing columns preserves trimmed head, one progress bar and visible branches");
+        hud.Config["Recipes", "RecipeMaxRows"].BoxedValue = 2;
+        yield return Settle(widgets, rect, "max-rows-before-new-order");
+        VerifyCappedRows(widgets, rect, "max-rows-before-new-order");
+        RecipeWidgetUIController overflow = flow.GetData(flow.AddElement(recipe, 180f, delegate(RecipeFlowGUI.ElementToken token) { })).m_widget;
+        widgets.Add(overflow);
+        yield return CaptureEntrance(widgets, rect, overflow, "max-rows-entrance", 1);
+        yield return Settle(widgets, rect, "max-rows-2");
+        VerifyCappedRows(widgets, rect, "max-rows-2");
+        ScreenCapture.CaptureScreenshot(Path.Combine(output, "max-rows-2.png")); yield return new WaitForEndOfFrame(); yield return null;
+        hud.Config["Recipes", "RecipeMaxRows"].BoxedValue = 0;
+        yield return Settle(widgets, rect, "max-rows-0");
+        VerifyRows(widgets, rect, "max-rows-0");
         hud.Config["General", "Enabled"].BoxedValue = false;
         yield return Settle(widgets, rect, "disabled-native");
         Rect first = Bounds(widgets[0], rect), second = Bounds(widgets[1], rect);
         Check(Mathf.Abs(first.yMax - second.yMax) < .1f, "disable returns cards to native single row");
         Check(PresentationRestored(widgets), "disabling restores the native upper paper and progress bar");
+        VerifyTopClip(widgets, rect, "disabled-native", false);
         Phase("completed UI geometry and restore checks");
     }
 
@@ -204,7 +228,7 @@ public sealed partial class UnityRecipeTests
     }
 
     private IEnumerator CaptureEntrance(List<RecipeWidgetUIController> widgets, Transform space,
-        RecipeWidgetUIController incoming, string label, int columns)
+        RecipeWidgetUIController incoming, string label, int targetRow)
     {
         string path = Path.Combine(output, label + ".tsv");
         File.WriteAllText(path, "frame\tseconds\tyMax\txMin\tshaderOffsetX\tshaderOffsetY\tstate\tnormalizedTime\tlength\tinTransition\n");
@@ -216,7 +240,7 @@ public sealed partial class UnityRecipeTests
         float deadline = begin + 4f; int frame = 0, stable = 0;
         float horizontalExtent = 0f, landingTime = -1f, descentTime = -1f, revealTime = -1f;
         bool branchHeld = true, revealAtDestination = true;
-        int targetRow = (widgets.Count - 1) / columns;
+        UnfoldSample unfold = new UnfoldSample(this, space, incoming, label);
         float targetHeadTop = HeadBounds(widgets[0], space).yMax - targetRow * (Bounds(widgets[0], space).height + 20.77099f);
         while (Time.realtimeSinceStartup < deadline)
         {
@@ -238,6 +262,7 @@ public sealed partial class UnityRecipeTests
             if (descentTime >= 0f && landingTime < 0f && branch > .01f) branchHeld = false;
             AnimatorStateInfo state = animator == null ? new AnimatorStateInfo() : animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Override"));
             bool unfolding = state.IsName("Override.RecipeTransitionIn");
+            if (unfolding) unfold.Observe(state.normalizedTime, current, offset, branch);
             if (unfolding) nativeSeen = true;
             if (nativeSeen && (!unfolding || state.normalizedTime >= 1f) && !completed)
             {
@@ -297,6 +322,7 @@ public sealed partial class UnityRecipeTests
         File.WriteAllText(Path.Combine(output, label + "-choreography.txt"), "descent=" + descentTime + " landing=" + landingTime + " reveal=" + revealTime + " duration=" + (landingTime - descentTime) + " target=" + targetHeadTop);
         Check(branchHeld && revealAtDestination && landingTime > descentTime && revealTime >= landingTime,
             "ingredients and cooking steps reveal only after quick landing");
+        unfold.Verify();
         ScreenCapture.CaptureScreenshot(Path.Combine(output, label + "-settled.png"));
     }
     private IEnumerator Settle(List<RecipeWidgetUIController> widgets, Transform space, string label)
@@ -355,6 +381,23 @@ public sealed partial class UnityRecipeTests
             File.AppendAllText(Path.Combine(output, "geometry.tsv"), label + "\t" + i + "\t" + current.xMin + "\t" + current.yMin + "\t" + current.xMax + "\t" + current.yMax + Environment.NewLine);
             Check(Mathf.Abs(current.xMin - left) < .1f && (i == 0 || current.yMax <= previous.yMin - 20.77099f + .1f),
                 label + ": card " + i + " stays in one column with cookware clearance");
+            previous = current;
+        }
+    }
+
+    private void VerifyCappedRows(List<RecipeWidgetUIController> widgets, Transform space, string label)
+    {
+        Rect first = Bounds(widgets[0], space), second = Bounds(widgets[1], space);
+        Rect lastRow = Bounds(widgets[2], space), previous = second;
+        Check(Mathf.Abs(first.yMax - second.yMax) < .1f && lastRow.yMax < first.yMin,
+            label + ": first two orders stay on row one and the third starts row two");
+        for (int i = 2; i < widgets.Count; i++)
+        {
+            Rect current = Bounds(widgets[i], space);
+            File.AppendAllText(Path.Combine(output, "geometry.tsv"), label + "\t" + i + "\t" + current.xMin + "\t" + current.yMin + "\t" + current.xMax + "\t" + current.yMax + "\n");
+            Check(Mathf.Abs(current.yMax - lastRow.yMax) < .1f
+                && (i == 2 ? Mathf.Abs(current.xMin - first.xMin) < .1f : current.xMin >= previous.xMax),
+                label + ": order " + i + " appends to row two in sequence without overlap");
             previous = current;
         }
     }

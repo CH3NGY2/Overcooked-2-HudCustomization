@@ -72,13 +72,15 @@ public static class RecipeBoundsBoundaryTests
         RectTransform pan = RectAt(new Rect(width * .4f, -height, width * .2f, 40f * scale), true);
         RectTransform hidden = RectAt(new Rect(-5000f, -5000f, 10000f, 10000f), false);
         generated = Bare<GameObject>(); active.Add(generated, true);
+        Graphic paperGraphic = Draw(tile);
         Graphic stitchGraphic = Draw(stitch);
-        descendants.Add(generated, new List<Graphic> { Draw(tile), stitchGraphic, Draw(pan), Draw(hidden) });
+        descendants.Add(generated, new List<Graphic> { paperGraphic, stitchGraphic, Draw(pan), Draw(hidden) });
         RecipeWidgetTile recipe = head ? Bare<TopRecipeWidgetTile>() : Bare<RecipeWidgetTile>(); transforms.Add(recipe, tile);
         if (head)
         {
-            UnityEngine.UI.Image paper = (Image)stitchGraphic;
-            typeof(RecipeWidgetTile).GetField("m_backgroundTop", Members).SetValue(recipe, paper);
+            typeof(RecipeWidgetTile).GetField("m_background", Members).SetValue(recipe, paperGraphic);
+            typeof(RecipeWidgetTile).GetField("m_backgroundTop", Members).SetValue(recipe, stitchGraphic);
+            descendants[generated].Add(Draw(RectAt(new Rect(0, -10f, width, 30f), true)));
         }
         typeof(UISubElementContainer).GetField("m_container", Members).SetValue(recipe, generated);
         object card = FormatterServices.GetUninitializedObject(type);
@@ -89,6 +91,7 @@ public static class RecipeBoundsBoundaryTests
             else if (field.FieldType.IsGenericType && field.FieldType.GetGenericTypeDefinition() == typeof(List<>)) field.SetValue(card, Activator.CreateInstance(field.FieldType));
             else if (field.Name == "_motion") field.SetValue(card, Activator.CreateInstance(field.FieldType, Members, null, new object[] { false }, null));
             else if (field.Name == "_container") field.SetValue(card, typeof(UISubElementContainer).GetField("m_container", Members));
+            else if (field.Name == "_headPaperField") field.SetValue(card, typeof(RecipeWidgetTile).GetField("m_background", Members));
             else if (field.Name == "_topPaper") field.SetValue(card, typeof(RecipeWidgetTile).GetField("m_backgroundTop", Members));
             else if (field.Name == "_boundsDirty") field.SetValue(card, true);
             else if (field.Name == "_trimmed") field.SetValue(card, head);
@@ -97,7 +100,7 @@ public static class RecipeBoundsBoundaryTests
     }
     private static Rect Measure(object card, Transform space)
     {
-        object[] arguments = { space, new Rect() };
+        object[] arguments = { space, new Rect(), new Rect() };
         Check((bool)card.GetType().GetMethod("Measure", Members).Invoke(card, arguments), "production Measure found finite card bounds");
         return (Rect)arguments[1];
     }
@@ -119,7 +122,7 @@ public static class RecipeBoundsBoundaryTests
             object first = Card(cardType, scale, out firstFull, out firstStitch, out firstRoot);
             object second = Card(cardType, scale, out secondFull, out secondStitch, out secondRoot);
             Rect a = Measure(first, flow), b = Measure(second, flow);
-            object layout = Activator.CreateInstance(layoutType, Members, null, new object[] { a.xMin, a.yMax, 1, 5f, 8f, 2000f }, null);
+            object layout = Activator.CreateInstance(layoutType, Members, null, new object[] { a.xMin, a.yMax, 1, 0, 5f, 8f, 2000f }, null);
             float firstTop = Place(layout, a.width, a.height), nextTop = Place(layout, b.width, b.height);
             float lowerPaperTop = secondFull.yMax + nextTop - b.yMax;
             float upperPanBottom = firstFull.yMin + firstTop - a.yMax;
@@ -142,12 +145,14 @@ public static class RecipeBoundsBoundaryTests
             object head = Card(cardType, scale, true, out headFull, out headStitch, out headRoot);
             Rect trimmed = Measure(head, flow);
             Check(Math.Abs(trimmed.yMax) < .001f && Math.Abs(trimmed.yMin + 180f * scale) < .001f,
-                "trimmed head excludes upward blank paper without reserving invisible space at scale " + scale);
+                "trimmed bounds use the main paper edge instead of projecting the branch stitch above it at scale " + scale);
             Check(!active[objects[headStitch]], "only head extension is hidden");
             System.Collections.IEnumerable owned = (System.Collections.IEnumerable)cardType.GetField("_headers", Members).GetValue(head);
             foreach (object property in owned) property.GetType().GetMethod("Restore", Members).Invoke(property, null);
+            cardType.GetField("_trimmed", Members).SetValue(head, false);
             Check(active[objects[headStitch]] && Math.Abs(Measure(head, flow).yMax - 53f) < .001f,
                 "restoration returns the native head paper and its original bounds");
+            cardType.GetField("_trimmed", Members).SetValue(head, true);
             cardType.GetMethod("InvalidateBounds", Members).Invoke(head, null);
             Check(Math.Abs(Measure(head, flow).yMax) < .001f, "rebuild applies trimming to refreshed head");
         }
@@ -163,8 +168,7 @@ public static class RecipeBoundsBoundaryTests
         FieldInfo motion = cardType.GetField("_motion", Members);
         if (motion != null) motion.SetValue(card, Activator.CreateInstance(motion.FieldType, Members, null, new object[] { true }, null));
         MethodInfo move = cardType.GetMethod("Move", Members);
-        object[] arguments = move.GetParameters().Length == 1
-            ? new object[] { new Vector2(0, -300) } : new object[] { new Vector2(0, -300), new Vector2(200, 0), new Rect(0, -100, 100, 100), Bare<RectTransform>(), 1f / 60f };
+        object[] arguments = { new Vector2(0, -300), new Vector2(200, 0), new Rect(0, -100, 100, 100), 1f / 60f };
         move.Invoke(card, arguments);
         Console.WriteLine("new lower-row card initial Y=" + pixelOffset.y + "; expected first-row Y=0 during native horizontal entrance");
         Check(Math.Abs(pixelOffset.y) < .001f, "new card enters at first row before descending to target row");

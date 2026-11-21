@@ -24,6 +24,10 @@
     <Reference Include="UnityEngine.ScreenCaptureModule"><HintPath>$(Managed)\UnityEngine.ScreenCaptureModule.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="UnityEngine.TextRenderingModule"><HintPath>$(Managed)\UnityEngine.TextRenderingModule.dll</HintPath><Private>false</Private></Reference>
   </ItemGroup>
-  <ItemGroup><Compile Include="UnityRecipeTests.cs" /><Compile Include="UnityRecipeScenario.cs" /><Compile Include="UnityEditorScenario.cs" /><Compile Include="UnityNativePanelTests.cs" /><Compile Include="UnityRecipeEditorTests.cs" /><Compile Include="UnityHeatEditorTests.cs" /><Compile Include="UnityContentsEditorTests.cs" /><Compile Include="UnityPlateContentsTests.cs" /></ItemGroup>
+  <ItemGroup>
+    <Compile Include="UnityRecipeTests.cs" /><Compile Include="UnityRecipeScenario.cs" /><Compile Include="UnityRecipeUnfoldTests.cs" />
+    <Compile Include="UnityEditorScenario.cs" /><Compile Include="UnityNativePanelTests.cs" /><Compile Include="UnityRecipeEditorTests.cs" />
+    <Compile Include="UnityHeatEditorTests.cs" /><Compile Include="UnityContentsEditorTests.cs" /><Compile Include="UnityPlateContentsTests.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

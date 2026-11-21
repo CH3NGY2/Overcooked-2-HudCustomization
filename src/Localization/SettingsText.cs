@@ -81,6 +81,22 @@ namespace OC2HudCustomization
             "행당 카드 수 상한입니다(1~20). 0은 원래 한 줄 배치입니다. 넓은 카드는 영역 경계에서 일찍 줄바꿈하며 주문 수는 바꾸지 않습니다.",
             "每行最多顯示 1–20 張卡片；0 保留原版單行。寬食譜到達父區域邊界時提前換行，不改變訂單總量。");
 
+        internal static readonly SettingsMessage RecipeMaxRows = new SettingsMessage(
+            "Maximum recipe rows", "Nombre max. de lignes", "Numero massimo di righe", "Maximale Rezeptzeilen", "Máximo de filas", "Макс. строк рецептов", "Máx. de linhas de receitas", "Limit wierszy przepisów", "菜谱最大行数", "レシピの最大行数", "최대 레시피 행 수", "食譜最大行數");
+        internal static readonly SettingsMessage RecipeMaxRowsDescription = new SettingsMessage(
+            "Caps recipe rows when wrapping is enabled. 0 means no limit. Extra orders continue to the right on the last row.",
+            "Limite le nombre de lignes de recettes si le retour à la ligne est activé. 0 signifie sans limite. Les commandes en plus continuent à droite sur la dernière ligne.",
+            "Limita il numero di righe se è attivo il ritorno a capo. 0 indica nessun limite. Gli ordini in più proseguono a destra sull'ultima riga.",
+            "Begrenzt bei aktiviertem Zeilenumbruch die Anzahl der Zeilen. 0 bedeutet unbegrenzt. Weitere Bestellungen werden rechts an die letzte Zeile angehängt.",
+            "Limita el número de filas cuando se habilita el salto de fila. 0 significa sin límite. Los pedidos adicionales se añaden a la derecha de la última fila.",
+            "Ограничивает число строк при включённом переносе. 0 означает отсутствие ограничения. Остальные заказы добавляются справа в последней строке.",
+            "Limita o número de linhas quando a quebra de linha está ativada. 0 significa sem limite. Os pedidos restantes continuam à direita na última linha.",
+            "Ogranicza liczbę wierszy przy włączonym zawijaniu. 0 oznacza brak limitu. Kolejne zamówienia są dopisywane po prawej stronie ostatniego wiersza.",
+            "启用换行时限制菜谱行数。0 表示不限。达到上限后，余下的订单按顺序接在末行右侧。",
+            "折り返しが有効な場合にレシピの行数を制限します。0 は無制限です。残りの注文は最終行の右側に並びます。",
+            "줄바꿈이 켜져 있을 때 레시피 행 수를 제한합니다. 0은 제한 없음입니다. 남은 주문은 마지막 행의 오른쪽에 이어집니다.",
+            "啟用換行時限制食譜行數。0 表示不限。達到上限後，餘下的訂單依序接在末行右側。");
+
         internal static readonly SettingsMessage RecipeRowSpacing = new SettingsMessage(
             "Recipe row spacing", "Espacement des lignes", "Spaziatura righe ricette", "Rezept-Zeilenabstand", "Espacio entre filas", "Интервал строк рецептов", "Espaço entre linhas", "Odstęp między wierszami", "菜谱行间距", "レシピの行間", "레시피 행 간격", "食譜行距");
         internal static readonly SettingsMessage RecipeRowSpacingDescription = new SettingsMessage(

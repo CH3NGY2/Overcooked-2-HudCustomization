@@ -16,6 +16,7 @@ namespace OC2HudCustomization
         internal readonly FieldInfo Margin = Field("m_distanceFromEndOfScreen", typeof(float));
         internal readonly FieldInfo Tiles = Required.Field(typeof(RecipeWidgetUIController), "m_recipeTiles", typeof(List<RecipeWidgetTile>));
         internal readonly FieldInfo Container = Required.Field(typeof(UISubElementContainer), "m_container", typeof(GameObject));
+        internal readonly FieldInfo HeadPaper = Required.Field(typeof(RecipeWidgetTile), "m_background", typeof(Image));
         internal readonly FieldInfo TopPaper = Required.Field(typeof(RecipeWidgetTile), "m_backgroundTop", typeof(Image));
         private static FieldInfo Field(string name, Type type) { return Required.Field(typeof(RecipeFlowGUI), name, type); }
     }

@@ -26,7 +26,7 @@ namespace OC2HudCustomization
                 return Text(Targets.HasInstance((HudTargetKind)_editingKind) ? EditorText.CategoryActive : EditorText.NoInstance);
             }
         }
-        internal int NumberCount { get { return _editingKind < 0 ? 0 : _editingKind < 8 ? 6 : _editingKind == 8 ? 4 : 8; } }
+        internal int NumberCount { get { return _editingKind < 0 ? 0 : _editingKind < 8 ? 6 : _editingKind == 8 ? 5 : 8; } }
         internal string NumberLabel(int index)
         {
             if (_editingKind < 8)
@@ -36,14 +36,14 @@ namespace OC2HudCustomization
             }
             if (_editingKind == 8)
                 return Text(index == 0 ? SettingsText.RecipeScale : index == 1 ? SettingsText.RecipesPerRow
-                    : index == 2 ? SettingsText.RecipeRowSpacing : SettingsText.RecipeOpacity);
+                    : index == 2 ? SettingsText.RecipeMaxRows : index == 3 ? SettingsText.RecipeRowSpacing : SettingsText.RecipeOpacity);
             if (index == 0) return "X (%)"; if (index == 1) return "Y (%)";
             return Text(index == 2 ? EditorText.Scale : index == 3 ? EditorText.Width : index == 4 ? EditorText.Height
                 : index == 5 ? SettingsText.ContentsPerRow : index == 6 ? EditorText.IngredientOpacity : EditorText.EmptySlotOpacity);
         }
         internal void NumberRange(int index, out float min, out float max, out bool integer)
         {
-            integer = (_editingKind == 8 && index == 1) || (_editingKind == 9 && index == 5);
+            integer = (_editingKind == 8 && (index == 1 || index == 2)) || (_editingKind == 9 && index == 5);
             if (_editingKind < 8 || _editingKind == 9)
             {
                 min = index < 2 ? -100 : index == 2 ? .2f : index < 5 ? .25f : 0;
@@ -54,7 +54,7 @@ namespace OC2HudCustomization
                     if (index == 5) max = 20;
                 }
             }
-            else { min = index == 0 ? .5f : 0; max = index == 0 ? 2 : index == 1 ? 20 : 100; }
+            else { min = index == 0 ? .5f : 0; max = index == 0 ? 2 : index == 1 ? 20 : index == 2 ? HudSettings.MaxRecipeRows : 100; }
         }
         internal float GetNumber(int index)
         {
@@ -66,7 +66,8 @@ namespace OC2HudCustomization
                     : index == 3 ? value.Width : index == 4 ? value.Height : value.Opacity * 100;
             }
             HudOptions o = DraftOptions;
-            if (_editingKind == 8) return index == 0 ? o.RecipeScale : index == 1 ? o.RecipesPerRow : index == 2 ? o.RecipeRowSpacing : o.RecipeOpacity * 100;
+            if (_editingKind == 8) return index == 0 ? o.RecipeScale : index == 1 ? o.RecipesPerRow : index == 2 ? o.RecipeMaxRows
+                : index == 3 ? o.RecipeRowSpacing : o.RecipeOpacity * 100;
             return index == 0 ? o.ContentsX * 100 : index == 1 ? o.ContentsY * 100 : index == 2 ? o.ContentsScale
                 : index == 3 ? o.ContentsWidth : index == 4 ? o.ContentsHeight : index == 5 ? o.ContentsPerRow
                 : (index == 6 ? o.IngredientOpacity : o.EmptySlotOpacity) * 100;
@@ -91,8 +92,9 @@ namespace OC2HudCustomization
                 bool recipes = _editingKind == 8;
                 DraftOptions = new HudOptions(o.Enabled,
                     recipes && index == 0 ? value : o.RecipeScale, recipes && index == 1 ? (int)value : o.RecipesPerRow,
-                    recipes && index == 2 ? value : o.RecipeRowSpacing, !recipes && index == 2 ? value : o.ContentsScale,
-                    !recipes && index == 5 ? (int)value : o.ContentsPerRow, recipes && index == 3 ? value / 100 : o.RecipeOpacity,
+                    recipes && index == 2 ? (int)value : o.RecipeMaxRows, recipes && index == 3 ? value : o.RecipeRowSpacing,
+                    !recipes && index == 2 ? value : o.ContentsScale,
+                    !recipes && index == 5 ? (int)value : o.ContentsPerRow, recipes && index == 4 ? value / 100 : o.RecipeOpacity,
                     !recipes && index == 7 ? value / 100 : o.EmptySlotOpacity,
                     !recipes && index == 6 ? value / 100 : o.IngredientOpacity,
                     !recipes && index == 0 ? value / 100 : o.ContentsX, !recipes && index == 1 ? value / 100 : o.ContentsY,
@@ -104,7 +106,7 @@ namespace OC2HudCustomization
         {
             if (_editingKind < 0) return;
             if (_editingKind < 8) Targets.Values[_editingKind] = new HudGeometry();
-            else if (_editingKind == 8) { SetNumber(0, 1); SetNumber(1, 0); SetNumber(2, 8); SetNumber(3, 100); }
+            else if (_editingKind == 8) { SetNumber(0, 1); SetNumber(1, 0); SetNumber(2, 0); SetNumber(3, 8); SetNumber(4, 100); }
             else { SetNumber(0, 0); SetNumber(1, 0); SetNumber(2, 1); SetNumber(3, 1); SetNumber(4, 1); SetNumber(5, 0); SetNumber(6, 100); SetNumber(7, 100); }
             ClearText();
         }
@@ -123,7 +125,7 @@ namespace OC2HudCustomization
         {
             if (category < 8) { Targets.Values[category] = value; return; }
             HudOptions o = DraftOptions;
-            DraftOptions = new HudOptions(o.Enabled, o.RecipeScale, o.RecipesPerRow, o.RecipeRowSpacing,
+            DraftOptions = new HudOptions(o.Enabled, o.RecipeScale, o.RecipesPerRow, o.RecipeMaxRows, o.RecipeRowSpacing,
                 value.Scale, o.ContentsPerRow, o.RecipeOpacity, o.EmptySlotOpacity, o.IngredientOpacity,
                 value.X, value.Y, value.Width, value.Height);
             if (Plugin.Runtime != null) Plugin.Runtime.SetOptions(DraftOptions);

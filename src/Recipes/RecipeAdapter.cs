@@ -87,7 +87,7 @@ namespace OC2HudCustomization
 
         private void Apply(FlowState state, HudOptions options, bool preview)
         {
-            bool customLayout = options.RecipesPerRow > 0 || !Mathf.Approximately(options.RecipeScale, 1f);
+            bool customLayout = options.UsesCustomRecipeLayout;
             Transform space = state.Flow.transform;
             RectTransform area = space as RectTransform;
             float safeWidth = float.MaxValue;
@@ -102,25 +102,24 @@ namespace OC2HudCustomization
                 card.Prepare(options);
                 card.Preview(preview);
                 if (!customLayout) continue;
-                Rect bounds;
-                if (!card.Measure(space, out bounds)) continue;
-                Rect head;
-                float headTop = card.MeasureHead(space, out head) ? head.yMax : bounds.yMax;
+                Rect bounds, head;
+                if (!card.Measure(space, out bounds, out head)) continue;
                 if (!started)
                 {
                     started = true;
                     if (area && area.rect.xMax > bounds.xMin + state.Margin) safeWidth = area.rect.xMax - bounds.xMin - state.Margin;
-                    layout = new HudRowLayout(bounds.xMin, headTop, options.RecipesPerRow, state.Gap, options.RecipeRowSpacing, safeWidth);
-                    firstTop = headTop; firstLeft = bounds.xMin;
+                    layout = new HudRowLayout(bounds.xMin, head.yMax, options.RecipesPerRow, options.RecipeMaxRows,
+                        state.Gap, options.RecipeRowSpacing, safeWidth);
+                    firstTop = head.yMax; firstLeft = bounds.xMin;
                 }
                 if (bounds.width > safeWidth)
                     _log.WarnOnce("wide-recipe", "A single recipe exceeds the parent safe width; its chosen scale is preserved.");
                 float left, top;
                 layout.Place(bounds.width, bounds.height, out left, out top);
-                bool firstRow = Mathf.Abs(top - firstTop) < .01f;
+                bool firstRow = layout.RowIndex == 0;
                 if (firstRow) firstRight = left + bounds.width;
                 float entryLeft = firstRow ? left : Mathf.Max(firstLeft, Mathf.Min(firstRight + state.Gap, firstLeft + safeWidth - bounds.width));
-                card.Move(new Vector2(left, top), new Vector2(entryLeft, firstTop), bounds, space, deltaTime);
+                card.Move(new Vector2(left, top), new Vector2(entryLeft, firstTop), head, deltaTime);
             }
         }
 

@@ -109,8 +109,8 @@ public sealed partial class UnityRecipeTests
         Check((Vector2)AccessTools.Property(panel.GetType(), "Position").GetValue(panel, null) == Vector2.zero, "panel clamps to screen top-left");
         AccessTools.Property(panel.GetType(), "Position").SetValue(panel, start, null);
         yield return NativeClick(editor, "Category_8");
-        Check((int)ReadField(editor, "_editingKind") == 8 && root.GetComponentsInChildren<Slider>().Length == 4,
-            "recipe category exposes original layout parameters inside native editor");
+        Check((int)ReadField(editor, "_editingKind") == 8 && root.GetComponentsInChildren<Slider>().Length == 5,
+            "recipe category exposes all five layout parameters inside native editor");
         Check(!popup.gameObject.activeSelf && root.transform.Find("HudEditorPanel/CategoryPicker/Label").GetComponent<Text>().text
             == (string)Call(editor, "CategoryName", 8), "choosing dropdown category closes list and updates localized caption");
         string disk = File.ReadAllText(hud.Config.ConfigFilePath);
@@ -141,15 +141,28 @@ public sealed partial class UnityRecipeTests
         Check(IsEditing(editor) && NativeRoot(editor) == root, "native panel reused safely on second entry");
         yield return NativeClick(editor, "Category_8");
         field = root.transform.Find("HudEditorPanel/ParameterViewport/Parameters/Parameter_1/Value").GetComponent<InputField>();
+        InputField maxRows = root.transform.Find("HudEditorPanel/ParameterViewport/Parameters/Parameter_2/Value").GetComponent<InputField>();
         int savedColumns = (int)hud.Config["Recipes", "RecipesPerRow"].BoxedValue;
+        int originalMaxRows = (int)hud.Config["Recipes", "RecipeMaxRows"].BoxedValue;
+        int newMaxRows = originalMaxRows == 2 ? 1 : 2;
+        maxRows.text = newMaxRows.ToString();
         field.text = savedColumns == 3 ? "2" : "3";
         yield return NativeClick(editor, "Save");
-        Check(!IsEditing(editor) && (int)hud.Config["Recipes", "RecipesPerRow"].BoxedValue == (savedColumns == 3 ? 2 : 3),
-            "native Save button commits original visible layout settings through real ConfigEntry");
+        Check(!IsEditing(editor) && (int)hud.Config["Recipes", "RecipesPerRow"].BoxedValue == (savedColumns == 3 ? 2 : 3)
+            && (int)hud.Config["Recipes", "RecipeMaxRows"].BoxedValue == newMaxRows,
+            "native Save button commits both the column and row caps through real ConfigEntry");
+        Call(editor, "Begin"); yield return null;
+        yield return NativeClick(editor, "Category_8");
+        Check(maxRows.text == newMaxRows.ToString(), "reopening editor shows the saved row cap");
+        yield return NativeClick(editor, "ResetCategory");
+        Check(maxRows.text == "0" && (int)hud.Config["Recipes", "RecipeMaxRows"].BoxedValue == newMaxRows,
+            "recipe defaults reset row cap in the draft only");
+        yield return NativeClick(editor, "Cancel");
         Call(editor, "Begin"); yield return null;
         yield return NativeClick(editor, "Category_8");
         field = root.transform.Find("HudEditorPanel/ParameterViewport/Parameters/Parameter_1/Value").GetComponent<InputField>();
         field.text = savedColumns.ToString();
+        maxRows.text = originalMaxRows.ToString();
         yield return NativeClick(editor, "Save");
         Call(editor, "Begin"); yield return null;
         AccessTools.Property(panel.GetType(), "Position").SetValue(panel, new Vector2(Screen.width / scale * .4f, 18f), null);

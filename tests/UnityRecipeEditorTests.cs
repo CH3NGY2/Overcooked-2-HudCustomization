@@ -51,8 +51,10 @@ public sealed partial class UnityRecipeTests
         GameObject root = NativeRoot(editor);
         Slider scale = root.transform.Find("HudEditorPanel/ParameterViewport/Parameters/Parameter_0/Slider").GetComponent<Slider>();
         InputField columns = root.transform.Find("HudEditorPanel/ParameterViewport/Parameters/Parameter_1/Value").GetComponent<InputField>();
-        Slider spacing = root.transform.Find("HudEditorPanel/ParameterViewport/Parameters/Parameter_2/Slider").GetComponent<Slider>();
-        scale.value = .5f; columns.text = "2"; spacing.value = 22;
+        InputField maxRows = root.transform.Find("HudEditorPanel/ParameterViewport/Parameters/Parameter_2/Value").GetComponent<InputField>();
+        Slider spacing = root.transform.Find("HudEditorPanel/ParameterViewport/Parameters/Parameter_3/Slider").GetComponent<Slider>();
+        int savedMaxRows = (int)hud.Config["Recipes", "RecipeMaxRows"].BoxedValue;
+        scale.value = .5f; columns.text = "2"; spacing.value = 22; maxRows.text = "0";
         yield return new WaitForSecondsRealtime(1f);
         yield return new WaitForEndOfFrame();
         Rect first = HeadBounds(cards[0], area), third = HeadBounds(cards[2], area);
@@ -67,6 +69,14 @@ public sealed partial class UnityRecipeTests
         File.AppendAllText(Path.Combine(output, "editor-recipe-geometry.tsv"), "one-column\tfirst=" + first + "\tsecond=" + second + "\tupper=" + upper + "\tlower=" + lower + "\n");
         Check(Mathf.Abs(upper.yMin - lower.yMax - 35f) < 2f && Mathf.Abs(first.xMin - second.xMin) < 2f,
             "repeated scale and spacing edits converge to new rows without unpausing");
+        maxRows.text = "2";
+        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForEndOfFrame();
+        second = HeadBounds(cards[1], area); Rect fourth = HeadBounds(cards[3], area);
+        File.AppendAllText(Path.Combine(output, "editor-recipe-geometry.tsv"), "max-rows-2\tsecond=" + second + "\tfourth=" + fourth + "\n");
+        Check(Mathf.Abs(second.yMax - fourth.yMax) < .1f && fourth.xMin > second.xMax
+            && (int)hud.Config["Recipes", "RecipeMaxRows"].BoxedValue == savedMaxRows,
+            "row cap previews on the frozen HUD without writing the saved setting");
         ScreenCapture.CaptureScreenshot(Path.Combine(output, "editor-recipe-live-layout.png"));
         yield return new WaitForEndOfFrame(); yield return null;
         Check(UnityEngine.Object.FindObjectOfType<LevelTimerUIController>().Value == round
@@ -77,6 +87,8 @@ public sealed partial class UnityRecipeTests
         time.SetPaused(TimeManager.PauseLayer.Main, true, other); yield return null; yield return null;
         Check(!(bool)AccessTools.Property(editor.GetType(), "AllowsRecipePreview").GetValue(editor, null), "another pause owner suspends the recipe display clock");
         Call(editor, "End", false);
+        object runtime = AccessTools.Field(hud.GetType(), "Runtime").GetValue(null);
+        Check((int)ReadField(ReadField(runtime, "Options"), "RecipeMaxRows") == savedMaxRows, "cancel restores committed recipe maximum rows");
         File.AppendAllText(Path.Combine(output, "editor-recipe-geometry.tsv"), "foreign-pause-exit\tlayer=" + animator.gameObject.layer
             + "\tdelta=" + TimeManager.GetDeltaTime(animator.gameObject) + "\tspeed=" + animator.speed + "\tmode=" + animator.updateMode + "\n");
         Check(TimeManager.IsPaused(TimeManager.PauseLayer.Main) && animator.speed == 0f,

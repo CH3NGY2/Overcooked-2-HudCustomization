@@ -11,7 +11,7 @@ internal static partial class BehaviorTests
     {
         FieldInfo[] messages = typeof(SettingsText).GetFields(BindingFlags.Static | BindingFlags.NonPublic);
         Array languages = Enum.GetValues(typeof(HudLanguage));
-        Check(languages.Length == 12 && messages.Length == 22, "twelve game languages and 22 display messages");
+        Check(languages.Length == 12 && messages.Length == 24, "twelve game languages and 24 display messages");
         foreach (FieldInfo message in messages)
         {
             SettingsMessage text = (SettingsMessage)message.GetValue(null);
@@ -37,7 +37,7 @@ internal static partial class BehaviorTests
             visible.Add(pair.Key);
         }
         ConfigDefinition[] definitions = visible.ToArray();
-        Check(definitions.Length == 9, "nine visible localized controls preserved");
+        Check(definitions.Length == 10, "ten visible localized controls");
         ConfigEntryBase[] entries = new ConfigEntryBase[definitions.Length];
         ModSettingsAttributes[] tags = new ModSettingsAttributes[definitions.Length];
         int[] priorities = new int[definitions.Length], orders = new int[definitions.Length];
@@ -49,7 +49,7 @@ internal static partial class BehaviorTests
             descriptions[i] = entries[i].Description.Description;
             Check(!string.IsNullOrEmpty(tags[i].DispName) && tags[i].Description == descriptions[i], "English metadata bound: " + definitions[i]);
         }
-        settings.RecipeScale.Value = 1.5f; settings.RecipesPerRow.Value = 3; settings.EmptySlotOpacity.Value = 25f;
+        settings.RecipeScale.Value = 1.5f; settings.RecipesPerRow.Value = 3; settings.RecipeMaxRows.Value = 2; settings.EmptySlotOpacity.Value = 25f;
         object[] values = new object[entries.Length];
         for (int i = 0; i < entries.Length; i++) values[i] = entries[i].BoxedValue;
         config.Save(); string disk = File.ReadAllText(config.ConfigFilePath);
